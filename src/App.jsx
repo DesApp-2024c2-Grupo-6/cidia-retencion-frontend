@@ -21,7 +21,6 @@ export function App() {
   return (
     <BrowserRouter>
       <Stack direction='column'>
-        
         <Grid container direction='row'>
           <Grid item xs={12} md={8}>
             <TopMenu />
