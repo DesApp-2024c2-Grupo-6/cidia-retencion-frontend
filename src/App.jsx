@@ -19,6 +19,7 @@ export function App() {
   //}, []);
 
   return (
+<<<<<<< HEAD
       <BrowserRouter>
         <Footer />
       {/*<Stack direction='column'>*/}
@@ -34,6 +35,10 @@ export function App() {
       {/*    <AppRouter />*/}
       {/*  </Box>*/}
       {/*</Stack>*/}
+=======
+    <BrowserRouter>
+        <Header/>
+>>>>>>> d015975439734833a2477da80e78de7906cfdc9b
     </BrowserRouter>
   )
 }
