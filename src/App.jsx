@@ -6,6 +6,7 @@ import { AppRouter } from "./AppRouter";
 import { getCurrentWeather } from "./services/WeatherService";
 import { WeatherIndicator } from "./components/WeatherIndicator";
 
+
 export function App() {
   const [weatherData, setWeatherData] = useState();
 
@@ -20,6 +21,7 @@ export function App() {
   return (
     <BrowserRouter>
       <Stack direction='column'>
+        
         <Grid container direction='row'>
           <Grid item xs={12} md={8}>
             <TopMenu />
