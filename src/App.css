@@ -1,0 +1,10 @@
+/*
+@import url(styles/Main.css);
+@import url(styles/Footer.css);
+*/
+@import url(styles/Header.css);
+
+.root {
+    display: flex;
+    flex-direction: column;
+}
