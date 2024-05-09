@@ -1,9 +1,13 @@
 import ButtonGeneral  from './components/ButtonGeneral'
 import './App.css'
 import Header from './components/Header'
-import Card from './components/Draft/Card';
+import CardDraft from './components/Draft/CardDraft';
 
 function App() {
+
+    const saludar = () =>{
+        alert("Hola")
+    }
     return (
         <>
             <Header />
@@ -11,10 +15,11 @@ function App() {
             <ButtonGeneral 
                 clr='success'
                 name='SALUDAR'
-                callback={() => alert("Hola!")}
+                callback={saludar}
             />
 
-            <Card />
+            <CardDraft/>
+            
         </>
     )
 }
