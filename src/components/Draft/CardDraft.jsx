@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@mui/material';
 import ButtonGeneral from '../ButtonGeneral';
 
-function Card(){
+function CardDraft(){
     return(
         <Card sx={{maxWidth: 300}}>
             <CardContent>
@@ -20,4 +20,4 @@ function Card(){
         </Card>
     );
 }
-export default Card;
+export default CardDraft;
