@@ -1,6 +1,7 @@
 import ButtonGeneral  from './components/ButtonGeneral'
 import './App.css'
 import Header from './components/Header'
+import Card from './components/Draft/Card';
 
 function App() {
     return (
@@ -12,6 +13,8 @@ function App() {
                 name='SALUDAR'
                 callback={() => alert("Hola!")}
             />
+
+            <Card />
         </>
     )
 }
