@@ -1,21 +1,62 @@
-import React from 'react';
-import { Typography, IconButton } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import React, { useState } from 'react';
+import { Typography, IconButton, TextField } from '@mui/material';
+import { Edit, Delete, Save, Cancel } from '@mui/icons-material';
 
-const ParagraphComponent = ({ text, onEdit, onDelete }) => {
+const ParrafoPlantilla = ({ text, onEdit, onDelete }) => {
+  const [editing, setEditing] = useState(false);
+  const [editedText, setEditedText] = useState(text);
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    onEdit(editedText);
+    setEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    setEditedText(text);
+    setEditing(false);
+  };
+
+  const handleChange = (e) => {
+    setEditedText(e.target.value);
+  };
+
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Typography variant="body1" style={{ flexGrow: 1 }}>
-        {text}
-      </Typography>
-      <IconButton onClick={onEdit} aria-label="Editar">
-        <Edit />
-      </IconButton>
-      <IconButton onClick={onDelete} aria-label="Eliminar">
-        <Delete />
-      </IconButton>
+      {editing ? (
+        <>
+          <TextField
+            value={editedText}
+            onChange={handleChange}
+            fullWidth
+            variant="outlined"
+            size="small"
+          />
+          <IconButton onClick={handleSaveClick} aria-label="Guardar">
+            <Save />
+          </IconButton>
+          <IconButton onClick={handleCancelClick} aria-label="Cancelar">
+            <Cancel />
+          </IconButton>
+        </>
+      ) : (
+        <>
+          <Typography variant="body1" style={{ flexGrow: 1 }}>
+            {text}
+          </Typography>
+          <IconButton onClick={handleEditClick} aria-label="Editar">
+            <Edit />
+          </IconButton>
+          <IconButton onClick={onDelete} aria-label="Eliminar">
+            <Delete />
+          </IconButton>
+        </>
+      )}
     </div>
   );
 };
 
-export default ParagraphComponent;
+export default ParrafoPlantilla;
