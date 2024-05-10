@@ -1,5 +1,5 @@
 import { Card, CardContent, Stack } from '@mui/material';
-import ButtonGeneral from '../ButtonGeneral';
+import ButtonR from '../ButtonR';
 import BoxConfigSignaturee from './BoxConfigMateria';
 
 function CardDraft(){
@@ -13,12 +13,11 @@ function CardDraft(){
                 <h3>Prueba</h3>
                 <p>Lorem ipsum dolor sit amet.</p>
                 <Stack direction={'row'} spacing = {4}>
-                    <ButtonGeneral 
-                        clr='secondary'
+                    <ButtonR 
                         name='ACCIÓN 1'
                         callback={() => alert('Bien Heecho!')}
                     />
-                    <ButtonGeneral 
+                    <ButtonR 
                         clr='success'
                         name='ACCIÓN 2'
                         callback={despedir}
