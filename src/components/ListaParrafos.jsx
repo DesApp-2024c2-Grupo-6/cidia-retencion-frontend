@@ -2,26 +2,26 @@ import React, { useState } from 'react';
 import ParrafoPlantilla from './ParrafoPlantilla';
 
 const ParagraphList = () => {
-  const [paragraphs, setParagraphs] = useState([]);
+  const [parrafo, setParrafo] = useState([]);
 
-  const addParagraph = () => {
-    const newParagraph = {
-      id: paragraphs.length + 1,
-      text: `Párrafo ${paragraphs.length + 1}`
+  const agregarParrafo = () => {
+    const nuevoParrafo = {
+      id: parrafo.length + 1,
+      text: `Comunicado ${parrafo.length + 1}`
     };
-    setParagraphs([...paragraphs, newParagraph]);
+    setParrafo([...parrafo, nuevoParrafo]);
   };
 
-  const editParagraph = (index, newText) => {
-    const updatedParagraphs = [...paragraphs];
-    updatedParagraphs[index].text = newText;
-    setParagraphs(updatedParagraphs);
+  const editarParrafo = (index, newText) => {
+    const updatedParrafos = [...parrafo];
+    updatedParrafos[index].text = newText;
+    setParrafo(updatedParrafos);
   };
 
-  const deleteParagraph = (index) => {
-    const updatedParagraphs = [...paragraphs];
-    updatedParagraphs.splice(index, 1);
-    setParagraphs(updatedParagraphs);
+  const eliminarParrafo = (index) => {
+    const updatedParrafos = [...parrafo];
+    updatedParrafos.splice(index, 1);
+    setParrafo(updatedParrafos);
   };
 
   const handleDragStart = (e, index) => {
@@ -34,18 +34,18 @@ const ParagraphList = () => {
 
   const handleDrop = (e, newIndex) => {
     const oldIndex = e.dataTransfer.getData('index');
-    const updatedParagraphs = [...paragraphs];
-    const draggedParagraph = updatedParagraphs[oldIndex];
+    const updatedParrafos = [...parrafo];
+    const draggedParagraph = updatedParrafos[oldIndex];
 
-    updatedParagraphs.splice(oldIndex, 1);
-    updatedParagraphs.splice(newIndex, 0, draggedParagraph);
+    updatedParrafos.splice(oldIndex, 1);
+    updatedParrafos.splice(newIndex, 0, draggedParagraph);
 
-    setParagraphs(updatedParagraphs);
+    setParrafo(updatedParrafos);
   };
 
   return (
     <div>
-      {paragraphs.map((paragraph, index) => (
+      {parrafo.map((paragraph, index) => (
         <div
           key={paragraph.id}
           draggable
@@ -55,12 +55,12 @@ const ParagraphList = () => {
         >
           <ParrafoPlantilla
             text={paragraph.text}
-            onEdit={(newText) => editParagraph(index, newText)}
-            onDelete={() => deleteParagraph(index)}
+            onEdit={(newText) => editarParrafo(index, newText)}
+            onDelete={() => eliminarParrafo(index)}
           />
         </div>
       ))}
-      <button variant="contained" onClick={addParagraph}>Añadir Párrafo</button>
+      <button variant="contained" onClick={agregarParrafo}>Añadir Comunicado</button>
     </div>
   );
 };

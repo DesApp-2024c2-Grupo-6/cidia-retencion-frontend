@@ -6,8 +6,8 @@ import ListaParrafos from './components/ListaParrafos'
 function App() {
     return (
         <>
-            <ParrafoPlantilla text="hola" onEdit={() => console.log('Editar párrafo')} onDelete={() => console.log('Eliminar párrafo')}></ParrafoPlantilla>
             <ListaParrafos></ListaParrafos> 
+            <VentanaEmergente></VentanaEmergente>
      
      </>
     )

@@ -16,7 +16,7 @@ const ModalExample = () => {
   };
 
   const handleSave = () => {
-    // Aquí puedes manejar la lógica para guardar los datos
+    // aca podes manejar la lógica para guardar los datos
     console.log('Input 1:', input1);
     console.log('Input 2:', input2);
     console.log('Input 3:', input3);
