@@ -1,14 +1,18 @@
 import './App.css'
 import Header from './components/Header'
-import Footer from './components/Footer'
-import ConfiguracionCarreras from './components/ConfiguracionCarreras'
+import CardDraft from './components/Draft/CardDraft';
 
 function App() {
+
+    const saludar = () =>{
+        alert("Hola")
+    }
     return (
         <>
-            <Header></Header>
-            <ConfiguracionCarreras></ConfiguracionCarreras>
-            <Footer></Footer>
+            <Header />
+            <h1>Pruebas locas</h1>
+            <CardDraft/>
+            
         </>
     )
 }
