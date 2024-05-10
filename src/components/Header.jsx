@@ -1,14 +1,15 @@
 import logo from '../../assets/img/Logo-UNAHUR.png';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+//import Box from '@mui/material/Box';
 
 const buttons = [
     <Button key="Configuraciones" variant="contained">Configuraciones</Button>,
-    <Button key="two" variant="contained">opci髇 2</Button>,
-    <Button key="three" variant="contained">opci髇 3</Button>,
-    <Button key="four" variant="contained">opci髇 4</Button>,
-    <Button key="four" variant="contained">opci髇 4</Button>,
-    <Button key="four" variant="contained">opci髇 4</Button>,
+    <Button key="two" variant="contained">opci贸n 2</Button>,
+    <Button key="three" variant="contained">opci贸n 3</Button>,
+    <Button key="four" variant="contained">opci贸n 4</Button>,
+    <Button key="four" variant="contained">opci贸n 4</Button>,
+    <Button key="four" variant="contained">opci贸n 4</Button>,
 ];
 // 
 function Header() {
