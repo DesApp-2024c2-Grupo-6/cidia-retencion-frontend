@@ -1,6 +1,7 @@
 import './App.css'
 import Header from './components/Header'
 import CardDraft from './components/Draft/CardDraft';
+import ConfiguracionListadoMaterias from './components/ConfiguracionListadoMaterias';
 
 function App() {
 
@@ -12,7 +13,7 @@ function App() {
             <Header />
             <h1>Pruebas locas</h1>
             <CardDraft/>
-            
+            <ConfiguracionListadoMaterias />
         </>
     )
 }
