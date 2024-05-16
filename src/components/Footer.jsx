@@ -8,12 +8,11 @@ function Footer() {
             <Box
                 component="footer"
                 sx={{
-                    position: 'fixed',
-                    bottom: 0,
+                    //position: 'fixed',
+                    //bottom: 0,
                     width: "100%",
-                    height: '20vh',
+                    height: 'calc(100px + 3vh)',
                     backgroundColor: '#333333',
-
                 }}>
             </Box>
         </>

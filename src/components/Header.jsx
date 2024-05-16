@@ -16,7 +16,7 @@ function Header() {
     return (
         <header>
             <img src={logo} alt="UNAHUR" />
-            <ButtonGroup size="large" aria-label="Large button group">{buttons}</ButtonGroup>
+            {<ButtonGroup size="large" aria-label="Large button group">{buttons}</ButtonGroup>}
         </header>
     );
 }

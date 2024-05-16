@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 
 function SelectComponent({ options, onSelect, className, placeholder }) {
@@ -12,14 +15,20 @@ function SelectComponent({ options, onSelect, className, placeholder }) {
 
     return (
         <>
-            <select id="selectOption" className={className} value={selectedOption} onChange={handleChange}>
-                <option value="">{placeholder}</option>
-                {options.map((option, index) => (
-                    <option key={index} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
+            <FormControl fullWidth>
+                <Select
+                    id="selectOption"
+                    className={className}
+                    value={selectedOption}
+                    onChange={handleChange}
+                    displayEmpty
+                >
+                    <MenuItem disabled value="">{placeholder}</MenuItem>
+                    {options.map((option, index) => (
+                        <MenuItem key={index} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </>
     );
 }
