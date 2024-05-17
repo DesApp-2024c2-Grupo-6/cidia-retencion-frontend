@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from './ParrafoPlantilla';
+import { Button } from '@mui/material';
 
 const ParagraphList = () => {
   const [parrafo, setParrafo] = useState([]);
@@ -60,9 +61,10 @@ const ParagraphList = () => {
           />
         </div>
       ))}
-      <button variant="contained" onClick={agregarParrafo}>Añadir Comunicado</button>
+      <Button variant="contained" onClick={agregarParrafo}>
+        Añadir Comunicado
+      </Button>
     </div>
   );
 };
-
 export default ParagraphList;
