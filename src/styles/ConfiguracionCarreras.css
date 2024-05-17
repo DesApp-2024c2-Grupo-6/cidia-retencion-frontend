@@ -10,3 +10,9 @@
 .label{
     margin-bottom:5px;
 }
+
+
+/*acomodar solo para los botones del componente, ahora le cambia a todos*/
+button{
+  width:200px;
+}

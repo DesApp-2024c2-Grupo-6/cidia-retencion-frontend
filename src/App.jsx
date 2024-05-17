@@ -3,25 +3,22 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import { Routes, Route } from 'react-router-dom'
 import ConfiguracionCarreras from '../src/pages/ConfiguracionCarreras'
-import CardDraft from './components/Draft/CardDraft';
+import { Box } from "@mui/material";
 
 
 function App() {
 
-    const saludar = () =>{
-        alert("Hola")
-    }
     return (
         <>
-            <div className="app-container">
+            <Box className="app-container">
                 <Header />
-                <main className="main-content">
+                <Box component="main"  className="main-content">
                     <Routes>
                         <Route path="/Configuracion" element={ <ConfiguracionCarreras></ConfiguracionCarreras> }></Route>
                     </Routes>
-                </main>
+                </Box>
                 <Footer />
-            </div>
+            </Box>
         </>
     )
 }
