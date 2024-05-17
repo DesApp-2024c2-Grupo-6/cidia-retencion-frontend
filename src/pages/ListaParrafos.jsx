@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ParrafoPlantilla from './ParrafoPlantilla';
+import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import { Button } from '@mui/material';
 
 const ParagraphList = () => {
