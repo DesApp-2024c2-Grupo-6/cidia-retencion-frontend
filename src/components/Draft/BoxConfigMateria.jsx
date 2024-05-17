@@ -1,8 +1,7 @@
 
 
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Button } from '@mui/material';
 import './BoxConfigMateria.css';
-import ButtonR from '../ButtonR';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,7 +15,6 @@ export default function BoxConfigSignaturee(){
                 <label>Materias para generar sugerencias: </label>
                 <TextField 
                     variant='standard'
-                    type='number'
                     className='container-box__input' /> 
             </Box>
 
@@ -37,23 +35,20 @@ export default function BoxConfigSignaturee(){
             </Box>
 
             <Box>
-                <ButtonR
-                    name={'Materias'}
-                    startIcon={<ListIcon />}>
-                </ButtonR>    
-                <ButtonR
-                    name={'Editar'}
-                    startIcon={<EditIcon />}>
-                </ButtonR>  
-                <ButtonR
-                    name={'Condiciones'}
+                <Button
+                    variant='contained'
+                    startIcon={<ListIcon />}>MATERIAS</Button>    
+                <Button
+                    variant='contained'
+                    startIcon={<EditIcon />}>EDITAR</Button>  
+                <Button
+                    variant='contained'
                     startIcon={<BuildIcon />}
-                    >
-                </ButtonR>  
-                <ButtonR
-                    name={'Guardar'}
+                    >CONDICIONES</Button>  
+                <Button
+                    variant='contained'
                     startIcon={<SaveIcon />}>
-                </ButtonR>  
+                GUARDAR</Button>  
             </Box>
 
         </>

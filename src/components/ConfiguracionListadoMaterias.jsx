@@ -1,7 +1,13 @@
-import { Box } from "@mui/material"
+import { Box , Button} from "@mui/material"
+
 
 
 function ConfiguracionListadoMaterias(){
+
+    const calcularIva = () => {
+        console.log(9+10)
+    }
+
     return(
         <Box sx={
             { 
@@ -11,6 +17,11 @@ function ConfiguracionListadoMaterias(){
                 flexDirection:'column'}
             }>
             <h2>Agregar Materia</h2>
+            <Button 
+                onClick={calcularIva}
+                variant='contained'
+                color="success"
+                >HACER ALGO</Button>
             {
                 //Este select reemplazarlo por el que armó Javi
             }
