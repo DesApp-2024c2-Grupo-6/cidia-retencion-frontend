@@ -1,7 +1,6 @@
 import './App.css'
 import Header from './components/Header'
-import CardDraft from './components/Draft/CardDraft';
-import ConfiguracionListadoMaterias from './components/ConfiguracionListadoMaterias';
+import { Router } from './Router';
 
 function App() {
 
@@ -12,9 +11,7 @@ function App() {
 
         <>
             <Header />
-            <h1>Pruebas locas</h1>
-            <CardDraft/>
-            <ConfiguracionListadoMaterias />
+            <Router />
         </>
 
     )
