@@ -9,16 +9,14 @@ function App() {
         alert("Hola")
     }
     return (
+
         <>
             <Header />
             <h1>Pruebas locas</h1>
             <CardDraft/>
             <ConfiguracionListadoMaterias />
         </>
+
     )
 }
-
-
-
-
 export default App;
