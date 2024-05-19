@@ -1,8 +1,7 @@
 
 
 import { Box, TextField, Button } from '@mui/material';
-import './BoxConfigMateria.css';
-import ButtonR from '../ButtonR';
+import '../styles/BoxConfigMateria.css';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';

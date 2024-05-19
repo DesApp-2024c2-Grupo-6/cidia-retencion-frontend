@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import '../styles/ConfiguracionCarreras.css';
-import BoxConfigMateria from '../components/Draft/BoxConfigMateria'
+import BoxConfigMateria from '../components/BoxConfigMateria'
 
 function ConfiguracionCarrera( /*lascarreras*/) {
 
