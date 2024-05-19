@@ -34,7 +34,7 @@ function SeleccionCarrera( /*lascarreras*/ ) {
     return (
         <>
             <Box sx={{
-                height: '100vh',
+                height: '50vh',
                 width: '100vw',
                 display: 'flex',
                 justifyContent: 'center',
