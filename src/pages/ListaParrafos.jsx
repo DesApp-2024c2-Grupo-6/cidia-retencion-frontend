@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
-import { Button } from '@mui/material';
+import { Button, Box, Container, Typography } from '@mui/material';
 
 const ParagraphList = () => {
   const [parrafo, setParrafo] = useState([]);
@@ -45,26 +45,58 @@ const ParagraphList = () => {
   };
 
   return (
-    <div>
-      {parrafo.map((paragraph, index) => (
-        <div
-          key={paragraph.id}
-          draggable
-          onDragStart={(e) => handleDragStart(e, index)}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, index)}
-        >
-          <ParrafoPlantilla
-            text={paragraph.text}
-            onEdit={(newText) => editarParrafo(index, newText)}
-            onDelete={() => eliminarParrafo(index)}
-          />
-        </div>
-      ))}
+    <Container
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '16px',
+        boxSizing: 'border-box'
+      }}
+    >
+      <Typography variant="h4" component="h1" gutterBottom>
+        Plantilla de E-mail
+      </Typography>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '600px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          marginBottom: '24px'
+        }}
+      >
+        {parrafo.map((paragraph, index) => (
+          <Box
+            key={paragraph.id}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, index)}
+            sx={{
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              backgroundColor: '#fafafa',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+            }}
+          >
+            <ParrafoPlantilla
+              text={paragraph.text}
+              onEdit={(newText) => editarParrafo(index, newText)}
+              onDelete={() => eliminarParrafo(index)}
+            />
+          </Box>
+        ))}
+      </Box>
       <Button variant="contained" onClick={agregarParrafo}>
         Añadir Comunicado
       </Button>
-    </div>
+    </Container>
   );
 };
+
 export default ParagraphList;
