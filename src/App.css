@@ -9,6 +9,19 @@
     flex-direction: column;
 }
 
+
+div[draggable] {
+    cursor: move;
+  }
+  
+  div[draggable]:hover {
+    opacity: 0.6;
+  }
+  
+  div[draggable]:active {
+    cursor: grabbing;
+  }
+
 .app-container {
     display: flex;
     flex-direction: column;
@@ -19,3 +32,4 @@
     flex: 1;
     min-height:300px;
 }
+

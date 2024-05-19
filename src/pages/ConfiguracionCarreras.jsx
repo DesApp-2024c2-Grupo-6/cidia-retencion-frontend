@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import SelectComponent from '../components/SelectR';
-import ButtonR from '../components/ButtonR';
+import { Button } from '@mui/material';
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import '../styles/ConfiguracionCarreras.css';
@@ -51,14 +52,14 @@ function ConfiguracionCarreras( /*lascarreras*/ ) {
 
                         }}
                     >
-                        <ButtonR
+                        <Button
                             name={'Configurar'}
                             startIcon={<BuildIcon />}>
-                        </ButtonR>
-                        <ButtonR
-                            name={'Plantillas e-mail'}
-                            startIcon={<ListIcon />}>
-                        </ButtonR>
+                        </Button>
+                        
+                        <Link key="ListaParafos" to={'/ListaParafos'}>
+                            <Button variant="contained" name={'Plantillas e-mail'} startIcon={<ListIcon />}>ListaParafos</Button>
+                        </Link>
                     </Box>
                 </Box>
             </Box>
