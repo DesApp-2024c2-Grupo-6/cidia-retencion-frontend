@@ -6,7 +6,9 @@ import BoxConfigMateria from '../components/BoxConfigMateria'
 
 function ConfiguracionCarrera() {
 
+
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
+    console.log(IdCarrera);
 
     return (
         <>

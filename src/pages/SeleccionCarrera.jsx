@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 function SeleccionCarrera() {
     const dispatch = useDispatch();
-    const IdCarrera = useSelector((state) => state.carrera.IdCarrera)
+    //const IdCarrera = useSelector((state) => state.carrera.IdCarrera)
 
     const navigate = useNavigate();
     const [carreras, setCarrerasList] = useState([]);
