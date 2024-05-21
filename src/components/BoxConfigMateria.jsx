@@ -1,7 +1,7 @@
 
 
 import { Box, TextField, Button } from '@mui/material';
-import './BoxConfigMateria.css';
+import '../styles/BoxConfigMateria.css';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +15,7 @@ export default function BoxConfigSignaturee(){
                 <label>Materias para generar sugerencias: </label>
                 <TextField 
                     variant='standard'
+                    type='number'
                     className='container-box__input' /> 
             </Box>
 

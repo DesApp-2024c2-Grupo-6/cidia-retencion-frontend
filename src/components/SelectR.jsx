@@ -22,6 +22,13 @@ function SelectComponent({ options, onSelect, className, placeholder }) {
                     value={selectedOption}
                     onChange={handleChange}
                     displayEmpty
+                    MenuProps={{
+                        PaperProps: {
+                            style: {
+                                maxHeight: '200px',
+                            },
+                        },
+                }}
                 >
                     <MenuItem disabled value="">{placeholder}</MenuItem>
                     {options.map((option, index) => (
