@@ -1,6 +1,6 @@
 
 
-import { Box, TextField, Button } from '@mui/material';
+import { Box, TextField, Button, ButtonGroup } from '@mui/material';
 import '../styles/BoxConfigMateria.css';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
@@ -9,50 +9,48 @@ import SaveIcon from '@mui/icons-material/Save';
 
 export default function BoxConfigSignaturee(){
     return(
-        <>
+        <Box className='container-config'>
             <Box
-                className='container-box'>
+                className='container-config-item'>
                 <label>Materias para generar sugerencias: </label>
                 <TextField 
                     variant='standard'
-                    type='number'
-                    className='container-box__input' /> 
+                    className='container-config-item-input' /> 
             </Box>
 
             <Box
-                className='container-box'>
+                className='container-config-item'>
                 <label>Minimo de materias sugeridas para inscribirse: </label>
                 <TextField 
                     variant='standard'
-                    className='container-box__input' /> 
+                    className='container-config-item-input' 
+                 /> 
             </Box>
 
             <Box
-                className='container-box'>
+                className='container-config-item'>
                 <label>Nombre especial: </label>
                 <TextField 
                     variant='standard'
-                    className='container-box__input' /> 
+                 /> 
             </Box>
 
-            <Box>
+            <ButtonGroup 
+                variant='outlined'
+            >
                 <Button
-                    variant='contained'
                     startIcon={<ListIcon />}>MATERIAS</Button>    
                 <Button
-                    variant='contained'
                     startIcon={<EditIcon />}>EDITAR</Button>  
                 <Button
-                    variant='contained'
                     startIcon={<BuildIcon />}
                     >CONDICIONES</Button>  
                 <Button
-                    variant='contained'
                     startIcon={<SaveIcon />}>
                 GUARDAR</Button>  
-            </Box>
+            </ButtonGroup>
 
-        </>
+        </Box>
         
     )
 }
