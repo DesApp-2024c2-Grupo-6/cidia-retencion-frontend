@@ -1,35 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SelectComponent from '../components/SelectR';
 import { Button } from '@mui/material';
 import { Box } from '@mui/material';
-import { Link } from 'react-router-dom';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import '../styles/ConfiguracionCarreras.css';
+import listadoCarreras from '../services/listadoCarreras';
+import { useSelector, useDispatch } from 'react-redux';
+import { addCarrera } from '../redux/carreraSlice';
 
 import { useNavigate } from 'react-router-dom';
 
-function SeleccionCarrera( /*lascarreras*/ ) {
+function SeleccionCarrera() {
+    const dispatch = useDispatch();
+    const IdCarrera = useSelector((state) => state.carrera.IdCarrera)
 
- // const [selectedItem, setSelectedItem] = useState('');
+    const navigate = useNavigate();
+    const [carreras, setCarrerasList] = useState([]);
 
- // const listacarreras = lascarreras;
-  const navigate = useNavigate();
-    const carreras = [
-    { label: 'Introducción ', value: '1' },
-    { label: 'Objetos 1', value: '2' },
-    { label: 'Matemáticas', value: '3' },
-    ];
+    useEffect(() => {
+        const lista = listadoCarreras.map(c => ({
+            label: `Carrera ${c.careerId}`,
+            value: c.careerId
+        }));
+        setCarrerasList(lista);
+    }, [])
 
 
     const handleSelect = (selectedValue) => {
-        console.log(selectedValue);
-  };
+        dispatch(addCarrera({ IdCarrera: selectedValue }));
+    };
 
+    const handleOnClickConfiguracionCarrera = () => {
+        navigate('/configuracion/carrera')
+    };
 
-  const handleOnClickConfiguracionCarrera = () => {
-    navigate('/configuracion/carrera')
-  }
+    const handleOnClickConfiguracionParrafos = () => {
+        navigate('/configuracion/parrafos')
+    };
 
     return (
         <>
@@ -46,7 +54,7 @@ function SeleccionCarrera( /*lascarreras*/ ) {
                         minWidth: '250px'
                     }}
                 >
-                    <h3 className="label">Selecciona una Carrera</h3>
+                    <h3 className="label">Seleccione una Carrera</h3>
                     <SelectComponent options={carreras} onSelect={handleSelect} className={'selectcarreras'} placeholder='Carreras' />
                     <Box
                         sx={{
@@ -59,22 +67,21 @@ function SeleccionCarrera( /*lascarreras*/ ) {
 
                         }}
                     >
-              <Button
-                onClick={handleOnClickConfiguracionCarrera}
+                        <Button
+                            onClick={handleOnClickConfiguracionCarrera}
                             variant="contained"
                             name={'Configurar'}
                             startIcon={<BuildIcon />}>Configurar
                         </Button>
-              {
-                //aca cambiar el link por el buton con navigare como en el header
-              }
-                        <Link key="ListaParafos" to={'/ListaParafos'}>
-                            <Button variant="contained" name={'Plantillas e-mail'} startIcon={<ListIcon />}>Lista Párrafos</Button>
-                        </Link>
+                        <Button
+                            onClick={handleOnClickConfiguracionParrafos}
+                            variant="contained"
+                            name={'Plantillas-e-mail'}
+                            startIcon={<ListIcon />}>Lista Párrafos
+                        </Button>
                     </Box>
                 </Box>
             </Box>
-      
         </>
     );
 }
