@@ -1,13 +1,13 @@
 
 
 import { Box, TextField, Button, ButtonGroup } from '@mui/material';
-import '../styles/BoxConfigMateria.css';
+import '../styles/PanelConfiguradorGral.css';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 
-export default function BoxConfigSignaturee(){
+export default function PanelConfiguradorGral(){
     return(
         <Box className='container-config'>
             <Box

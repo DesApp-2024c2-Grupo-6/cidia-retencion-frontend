@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import '../styles/ConfiguracionCarreras.css';
-import BoxConfigMateria from '../components/BoxConfigMateria'
+import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 
 function ConfiguracionCarrera() {
 
@@ -18,7 +18,7 @@ function ConfiguracionCarrera() {
                 alignItems: 'center'
                 }}>
                 <h1>Esta pantalla tiene que llevar lo de Dami y Cris</h1>
-                <BoxConfigMateria></BoxConfigMateria>
+                <PanelConfiguradorGral />
             </Box>
         </>
     );
