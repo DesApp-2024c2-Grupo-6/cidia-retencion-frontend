@@ -9,8 +9,6 @@ function ConfiguracionCarrera() {
   const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
   const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
 
-  console.log(IdCarrera);
-
     return (
         <>
             <Box sx={{

@@ -6,8 +6,17 @@ import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import { useNavigate } from 'react-router-dom';
 
-export default function PanelConfiguradorGral(){
+export default function PanelConfiguradorGral() {
+
+    const navigate = useNavigate();
+
+    const handleOnClickCondiciones = () => {
+        navigate('/configuracion/condiciones')
+    }
+
+
     return(
         <Box className='container-config'>
             <Box
@@ -44,6 +53,7 @@ export default function PanelConfiguradorGral(){
                     startIcon={<EditIcon />}>EDITAR</Button>  
                 <Button
                     startIcon={<BuildIcon />}
+                    onClick={ handleOnClickCondiciones }
                     >CONDICIONES</Button>  
                 <Button
                     startIcon={<SaveIcon />}>
