@@ -6,9 +6,10 @@ import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 
 function ConfiguracionCarrera() {
 
+  const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
+  const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
 
-    const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
-    console.log(IdCarrera);
+  console.log(IdCarrera);
 
     return (
         <>
@@ -18,9 +19,10 @@ function ConfiguracionCarrera() {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'
-                }}>
-                <h1>Esta pantalla tiene que llevar lo de Dami y Cris</h1>
-                <PanelConfiguradorGral />
+        }}>
+          <h1>{nombreCarrera}</h1>  
+          
+              <PanelConfiguradorGral />
             </Box>
         </>
     );
