@@ -1,9 +1,0 @@
-.container-box{
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid grey;
-}
-
-.container-box__input{
-    width: auto;
-}
