@@ -9,9 +9,9 @@ function SelectComponent({ options, onSelect, className, placeholder }) {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleChange = (event) => {
-        var ob = event.target.value;
-        setSelectedOption(ob);
-        onSelect(ob.v, ob.l);
+        var valor = event.target.value;
+        setSelectedOption(valor);
+        onSelect(valor);
     };
 
     return (

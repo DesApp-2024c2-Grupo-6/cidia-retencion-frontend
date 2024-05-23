@@ -27,8 +27,8 @@ function SeleccionCarrera() {
     }, [])
 
 
-  const handleSelect = (selectedValue, nomSelected) => {
-    dispatch(addCarrera({ IdCarrera: selectedValue, nombreCarrera: nomSelected }));
+    const handleSelect = (value) => {
+        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
     };
 
     const handleOnClickConfiguracionCarrera = () => {
