@@ -18,10 +18,10 @@ const listadoDeParrafos= [
                 key: 'materiasCorrelativas',
                 text: [
                     "Por un lado, considerando las materias que regularizaste hasta ahora, <i>te sugerimos</i> que consideres para " +
-                    "tu inscripción algunas de las siguientes materias, en función de las correlatividades de tu plan de estudios:",
-                    "",
-                    "${materiasCorrelativas}",
-                    "<b><u>Aclaración</u></b>: ",
+                    "tu inscripción algunas de las siguientes materias, en función de las correlatividades de tu plan de estudios:"+
+                    ""+
+                    "${materiasCorrelativas}"+
+                    "<b><u>Aclaración</u></b>: "+
                     "Si entre las sugerencias ves una materia que ya regularizaste o tenés en curso, no te preocupes, se debe a una cuestión administrativa interna.",
                     "",
                 ],
@@ -185,8 +185,7 @@ const listadoDeParrafos= [
                 key: 'final',
                 text: [
                     "Frente a cualquier duda, podés comunicarte con la dirección del Instituto al que pertenece tu carrera. " +
-                    "En la UNAHUR estamos para acompañarte.",
-                    "",
+                    "En la UNAHUR estamos para acompañarte."+
                     "Para referencia UNAHUR - DNI: ${dni}"
                 ],
                 conditions: [

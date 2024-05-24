@@ -2,27 +2,61 @@ import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import { Button, Box, Container, Typography } from '@mui/material';
 
+const listadoPrueba = [
+  {texto: "En función de tu recorrido académico en la carrera ${nombreDeLaCarrera}, te enviamos las siguientes sugerencias de inscripción para el próximo período.", clave: "intro"}, 
+  {texto: "patricio", clave: "materiasCorrelativas" },
+  {texto: "patricio", clave: "recomendacionCantidadMaterias" },
+  {texto: "Recordá que también podés cursar las siguientes materias comunes en cualquier momento de la carrera y que, " +
+  "por su carga horaria semanal, pueden ser un buen complemento para materias con mayor carga teórica:"
+  +
+  "${materiasComunesPendientes}", clave: "materiasComunes"},
+  {texto: "Te sugerimos que no dejes para último momento la cursada de ${informaticaMateriasBasicas}; esto es importante " +
+  "para incorporar otros conocimientos y fundamental para poder seguir avanzando en tu trayecto.", clave: "informatica1MateriasBasicas"},
+  {texto: "Te sugerimos que por tu grado de avance en la carrera consideres hacer Inglés 1 dada " +
+  "la importancia del idioma al momento de encarar materias avanzadas.", clave: "informatica2Ingles"},
+  {texto: "Te sugerimos que no dejes para los últimos años la cursada de ${materiasNatacionFaltantes}. " +
+  "Tené en cuenta esto, sobre todo, si no tenés experiencia en natación.", clave: "educFisica1Natacion"},
+  {texto: "Te sugerimos que no dejes para último momento la cursada de ${metalurgiaMateriasTroncalesAnio1Pendientes} del primer año; " +
+  "esto es fundamental para poder seguir avanzando en tu trayectoria académica.", clave: "metalurgia1MateriasTroncalesAnio1"},
+  {texto: "Asimismo, es importante que en la planificación de tu cursada consideres también " +
+  "la preparación de los exámenes finales de las siguientes materias que ya tenés regularizadas:"
+  +
+  "${materiasConFinalPendiente}", clave: "finalesPendientes"},
+  {texto: "(1) Si no te presentás a rendir el final en los próximos llamados, se vencerá tu regularidad y deberás recursar la materia. " +
+  "Para conocer las fechas de llamados a exámenes finales, podés consultar el Calendario Académico: " +
+  "http://www.unahur.edu.ar/es/calendario-academico.", clave: "finalesFechasLimite"},
+  {texto: "<b>IMPORTANTE</b>: esta información podría no tener en cuenta los datos de la cursada inmediata anterior. " +
+  "No te preocupes si eso sucede, la información está siendo procesada.", clave: "avisoImportante"},
+  {texto: "Si necesitás asesoramiento en la planificación de tu carrera o acompañamiento para retomar tu cursada, " +
+  "podés acercarte a la Dirección de Orientación al Estudiante o también al Instituto que te corresponde.", clave: "orientacion"},
+  {texto: "Frente a cualquier duda, podés comunicarte con la dirección del Instituto al que pertenece tu carrera. " +
+  "En la UNAHUR estamos para acompañarte."+
+  "Para referencia UNAHUR - DNI: ${dni}", clave: "final"}
+];
+
 const ParagraphList = () => {
-  const [parrafo, setParrafo] = useState([]);
+  const [parrafos, setParrafos] = useState(listadoPrueba); // Inicializamos el estado con listadoPrueba
 
   const agregarParrafo = () => {
     const nuevoParrafo = {
-      id: parrafo.length + 1,
-      text: `Comunicado ${parrafo.length + 1}`
+      id: parrafos.length + 1,
+      text: `Comunicado ${parrafos.length + 1}`,
+      clave: "" // Agregamos un campo para la clave, inicialmente vacío
     };
-    setParrafo([...parrafo, nuevoParrafo]);
+    setParrafos([...parrafos, nuevoParrafo]);
   };
 
-  const editarParrafo = (index, newText) => {
-    const updatedParrafos = [...parrafo];
+  const editarParrafo = (index, newText, newClave) => {
+    const updatedParrafos = [...parrafos];
     updatedParrafos[index].text = newText;
-    setParrafo(updatedParrafos);
+    updatedParrafos[index].clave = newClave; // Actualizamos el valor de la clave
+    setParrafos(updatedParrafos);
   };
 
   const eliminarParrafo = (index) => {
-    const updatedParrafos = [...parrafo];
+    const updatedParrafos = [...parrafos];
     updatedParrafos.splice(index, 1);
-    setParrafo(updatedParrafos);
+    setParrafos(updatedParrafos);
   };
 
   const handleDragStart = (e, index) => {
@@ -35,13 +69,13 @@ const ParagraphList = () => {
 
   const handleDrop = (e, newIndex) => {
     const oldIndex = e.dataTransfer.getData('index');
-    const updatedParrafos = [...parrafo];
+    const updatedParrafos = [...parrafos];
     const draggedParagraph = updatedParrafos[oldIndex];
 
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
 
-    setParrafo(updatedParrafos);
+    setParrafos(updatedParrafos);
   };
 
   return (
@@ -69,7 +103,7 @@ const ParagraphList = () => {
           marginBottom: '24px'
         }}
       >
-        {parrafo.map((paragraph, index) => (
+        {parrafos.map((paragraph, index) => (
           <Box
             key={paragraph.id}
             draggable
@@ -85,8 +119,9 @@ const ParagraphList = () => {
             }}
           >
             <ParrafoPlantilla
-              text={paragraph.text}
-              onEdit={(newText) => editarParrafo(index, newText)}
+              text={paragraph.texto}
+              clave={paragraph.clave} // Pasamos la clave como una propiedad al componente ParrafoPlantilla
+              onEdit={(newText, newClave) => editarParrafo(index, newText, newClave)}
               onDelete={() => eliminarParrafo(index)}
             />
           </Box>
