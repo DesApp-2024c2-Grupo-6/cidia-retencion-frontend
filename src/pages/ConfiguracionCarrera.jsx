@@ -35,14 +35,18 @@ function ConfiguracionCarrera() {
           <h1>{nombreCarrera}</h1>  
             <Box 
             sx={{display: 'flex'}}>
-               <MateriasCross isEdit={isEdit} title={"MATERIAS UNAHUR"}/>
-               <MateriasCross isEdit={isEdit} title={"NIVELES INGLES"}/>
-               <PanelConfiguradorGral isEdit={isEdit}/>
-            </Box>
-              <ButtonGroup 
-                variant='outlined'
-                sx={{p:2, m:2}}
-              >
+                <Box
+                    sx={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+                 <MateriasCross isEdit={isEdit} title={"MATERIAS UNAHUR"}/>
+                 <MateriasCross isEdit={isEdit} title={"NIVELES INGLES"}/>
+                </Box>
+
+               <Box>
+                  <PanelConfiguradorGral isEdit={isEdit}/>
+                  <Box>
+                  <ButtonGroup 
+                    variant='contained'
+                     sx={{mt: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px'}}>
                 <Button
                     startIcon={<ListIcon />}>MATERIAS</Button>    
                 <Button
@@ -56,6 +60,11 @@ function ConfiguracionCarrera() {
                     startIcon={<SaveIcon />}>
                 GUARDAR</Button>  
             </ButtonGroup>
+                  </Box>
+               </Box>
+               
+            </Box>
+
 
             </Box>
         </>
