@@ -1,20 +1,10 @@
 
 
-import { Box, TextField, Button, ButtonGroup } from '@mui/material';
+import { Box, TextField, } from '@mui/material';
 import '../styles/PanelConfiguradorGral.css';
-import BuildIcon from '@mui/icons-material/Build';
-import ListIcon from '@mui/icons-material/List';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import { useNavigate } from 'react-router-dom';
 
 export default function PanelConfiguradorGral() {
 
-    const navigate = useNavigate();
-
-    const handleOnClickCondiciones = () => {
-        navigate('/configuracion/condiciones')
-    }
 
 
     return(
@@ -43,22 +33,6 @@ export default function PanelConfiguradorGral() {
                     variant='standard'
                  /> 
             </Box>
-
-            <ButtonGroup 
-                variant='outlined'
-            >
-                <Button
-                    startIcon={<ListIcon />}>MATERIAS</Button>    
-                <Button
-                    startIcon={<EditIcon />}>EDITAR</Button>  
-                <Button
-                    startIcon={<BuildIcon />}
-                    onClick={ handleOnClickCondiciones }
-                    >CONDICIONES</Button>  
-                <Button
-                    startIcon={<SaveIcon />}>
-                GUARDAR</Button>  
-            </ButtonGroup>
 
         </Box>
         
