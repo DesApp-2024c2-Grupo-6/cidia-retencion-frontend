@@ -21,7 +21,8 @@ import Modal from '@mui/material/Modal';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import SelectComponent from '../components/SelectR';
-import listadoCarreras from '../services/listadoCarreras';
+import listadoRegistracionCondiciones from '../services/listadoRegistracionCondiciones';
+import listadoSubjectData from '../services/listadoSubjectData';
 
 
 function createData(key, id, anio, materia, tiporestriccion, condicion) {
@@ -72,14 +73,23 @@ function ConfiguracionCondicionCarrera() {
         setCondicionesList(lista);
     }, [])
 
-    const [carreras, setCarrerasList] = useState([]);
-
+    
+    const [tiposCondicionList, setTiposCondicionList] = useState([]);
     useEffect(() => {
-        const lista = listadoCarreras.map(c => ({
-            label: `Carrera ${c.careerId}`,
-            value: c.careerId
+        const lista = listadoRegistracionCondiciones.map(c => ({
+            label: c.codigo,
+            value: c.codigo
         }));
-        setCarrerasList(lista);
+        setTiposCondicionList(lista);
+    }, [])
+
+    const [materiasCondicionList, setMateriasCondicionList] = useState([]);
+    useEffect(() => {
+        const lista = listadoSubjectData.filter(c => c.id_carrera == IdCarrera).map(c => ({
+            label: `Materia ${c.id_materia}`,
+            value: c.id_materia
+        }));
+        setMateriasCondicionList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
     }, [])
 
     //const handleSelect = (selectedValue, nomSelected) => {
@@ -147,6 +157,14 @@ function ConfiguracionCondicionCarrera() {
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={style}>
+                                    <Box
+                                        sx={{
+                                            textAlign: "center"
+                                        }}>
+                                        <Typography variant="h6" >
+                                            Nueva condición
+                                        </Typography>
+                                    </Box>
                                     <Box sx={{
                                         display: 'flex',
                                         gap:'5px'
@@ -161,15 +179,16 @@ function ConfiguracionCondicionCarrera() {
                                                 }}
                                                 placeholder="Ingrese el año" onInput={ setearAnio } />
                                         </FormControl>
-                                        <SelectComponent options={carreras} onSelect={setearMateria} className={'selectcarreras'} placeholder='Materias' />
+                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Materias' />
                                     </Box>
                                     <Box >
-                                        <SelectComponent options={carreras} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Condiciones' />
+                                        <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Condiciones' />
                                     </Box>
                                     <Box
                                         sx={{
                                             display: 'flex',
-                                            justifyContent:'center',
+                                            justifyContent: 'center',
+                                            marginTop:'25px'
                                         }}>
                                         <Button variant="contained" onClick={guardarCondicion}>
                                             Guardar
