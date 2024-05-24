@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState }from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box , Button, ButtonGroup} from '@mui/material';
@@ -10,14 +10,18 @@ import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasCross from '../components/MateriasCross';
 
-function ConfiguracionCarrera() {
-
-  const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
-  const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
-  const navigate = useNavigate();
-  const handleOnClickCondiciones = () => {
-    navigate('/configuracion/condiciones')
+function ConfiguracionCarrera() { 
+    const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
+    const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+    const [isEdit, setIsEdit] = useState(false);
+    const navigate = useNavigate();
+    const handleOnClickCondiciones = () => {
+        navigate('/configuracion/condiciones')
 }
+    const handleOnClickEdit = () => {
+        setIsEdit(!isEdit);
+    }
+
     return (
         <>
             <Box sx={{
@@ -31,9 +35,9 @@ function ConfiguracionCarrera() {
           <h1>{nombreCarrera}</h1>  
             <Box 
             sx={{display: 'flex'}}>
-               <MateriasCross />
-               <MateriasCross />
-               <PanelConfiguradorGral />
+               <MateriasCross isEdit={isEdit} title={"MATERIAS UNAHUR"}/>
+               <MateriasCross isEdit={isEdit} title={"NIVELES INGLES"}/>
+               <PanelConfiguradorGral isEdit={isEdit}/>
             </Box>
               <ButtonGroup 
                 variant='outlined'
@@ -42,7 +46,8 @@ function ConfiguracionCarrera() {
                 <Button
                     startIcon={<ListIcon />}>MATERIAS</Button>    
                 <Button
-                    startIcon={<EditIcon />}>EDITAR</Button>  
+                    startIcon={<EditIcon />}
+                    onClick={handleOnClickEdit}>{isEdit ? 'GUARDAR':'EDITAR'}</Button>  
                 <Button
                     startIcon={<BuildIcon />}
                     onClick={ handleOnClickCondiciones }

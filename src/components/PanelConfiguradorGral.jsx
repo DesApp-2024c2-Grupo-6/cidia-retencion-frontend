@@ -3,7 +3,7 @@
 import { Box, TextField, } from '@mui/material';
 import '../styles/PanelConfiguradorGral.css';
 
-export default function PanelConfiguradorGral() {
+export default function PanelConfiguradorGral({isEdit}) {
 
 
 
@@ -14,7 +14,8 @@ export default function PanelConfiguradorGral() {
                 <label>Materias para generar sugerencias: </label>
                 <TextField 
                     variant='standard'
-                    className='container-config-item-input' /> 
+                    className='container-config-item-input'
+                    inputProps={{readOnly: !isEdit}} /> 
             </Box>
 
             <Box
@@ -23,7 +24,7 @@ export default function PanelConfiguradorGral() {
                 <TextField 
                     variant='standard'
                     className='container-config-item-input' 
-                 /> 
+                    inputProps={{readOnly: !isEdit}} /> 
             </Box>
 
             <Box
@@ -31,7 +32,7 @@ export default function PanelConfiguradorGral() {
                 <label>Nombre especial: </label>
                 <TextField 
                     variant='standard'
-                 /> 
+                    inputProps={{readOnly: !isEdit}}/> 
             </Box>
 
         </Box>

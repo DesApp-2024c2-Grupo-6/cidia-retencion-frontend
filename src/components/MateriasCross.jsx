@@ -2,13 +2,13 @@ import { Margin } from "@mui/icons-material";
 import { Box , Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
 import '../styles/MateriasCross.css';
 
-export default function MateriasCross (){
-
+export default function MateriasCross ({isEdit, title}){
+    console.log("se recivio el estado: ", isEdit)
     return(
         <Box
             className='materias-cross-tarjeta'>
                 <TableContainer >
-                    <h5 className="materias-cross-tarjeta-title">MATERIA UNAHUR</h5>
+                    <h5 className="materias-cross-tarjeta-title">{title}</h5>
                     <Table className="materias-cross-tarjeta-tabla">
                         <TableHead>
                             <TableRow>
@@ -20,21 +20,29 @@ export default function MateriasCross (){
                             <TableRow >
                                 <TableCell >
                                     <TextField 
-                                        variant='standard' className="materias-cross-tarjeta-input"/>
+                                        variant='standard' 
+                                        className="materias-cross-tarjeta-input"
+                                        inputProps={{readOnly: !isEdit}}/>
                                 </TableCell>
                                 <TableCell >
                                       <TextField 
-                                      variant='standard' className="materias-cross-tarjeta-input"/>
+                                      variant='standard' 
+                                      className="materias-cross-tarjeta-input"
+                                      inputProps={{readOnly: !isEdit}}/>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
                                     <TextField 
-                                    variant='standard' className="materias-cross-tarjeta-input"/>
+                                    variant='standard' 
+                                    className="materias-cross-tarjeta-input"
+                                    inputProps={{readOnly: !isEdit}}/>
                                 </TableCell>
                                 <TableCell>
                                     <TextField 
-                                    variant='standard' className="materias-cross-tarjeta-input"/>
+                                    variant='standard' 
+                                    className="materias-cross-tarjeta-input"
+                                    inputProps={{readOnly: !isEdit}}/>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
