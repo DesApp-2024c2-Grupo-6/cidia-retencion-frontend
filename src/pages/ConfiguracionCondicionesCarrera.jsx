@@ -23,6 +23,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import SelectComponent from '../components/SelectR';
 import listadoRegistracionCondiciones from '../services/listadoRegistracionCondiciones';
 import listadoSubjectData from '../services/listadoSubjectData';
+import SelectMultipleR from '../components/SelectMultipleR';
 
 
 function createData(key, id, anio, materia, tiporestriccion, condicion) {
@@ -39,8 +40,7 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-    display: 'grid',
-    gap:'5px'
+    display: 'block',
 };
 
 function ConfiguracionCondicionCarrera() {
@@ -100,6 +100,11 @@ function ConfiguracionCondicionCarrera() {
     const [materia, setmateria] = useState("");
     const [condicion, setCondicion] = useState("");
     const [anio, setAnio] = useState("");
+    const [mostrarCamposCompletos, setMostrarCamposCompletos] = useState(false); 
+    const [mostrarMateriasEspecificas, setMostrarMateriasEspecificas] = useState(false);
+    const [mostrarCantidadMaterias, setMostrarCantidadMaterias] = useState(false);
+    const [mostrarAniosCompletos, setMostrarAniosCompletos] = useState(false);
+    const [mostrarCantidadMateriasAnio, setMostrarCantidadMateriasAnio] = useState(false);
     const setearAnio = (event) => {
         setAnio(event.target.value);
     }
@@ -108,21 +113,61 @@ function ConfiguracionCondicionCarrera() {
     }
     const setearCondicion = (valor) => {
         setCondicion(valor);
+        //setMostrarN-1(valor == "N-1");
+        //setMostrarN-2(valor == "N-2");
+        //setMostrarN-1R-2A(valor == "N-1R-2A");
+        setMostrarCantidadMaterias(valor == "CANT-MATERIAS");
+        setMostrarAniosCompletos(valor == "ANIOS-COMPLETOS");
+        setMostrarCamposCompletos(valor == "CAMPOS-COMPLETOS");
+        setMostrarCantidadMateriasAnio(valor == "CANT-MATERIAS-ANIO");
+        setMostrarMateriasEspecificas(valor == "MATERIAS-ESPECIFICAS");
     }
-    const guardarCondicion = () => {
-        console.log("se guardo, año: " + anio + ", materia: " + materia + ", condición: " + condicion);
 
-        const nuevaCondicion = {
-            key: condicionesList.length,
-            id_carrera: IdCarrera,
-            anio: anio,
-            materia: materia,
-            tiporestriccion: '',
-            condicion: condicion
+    const [camposList, setCamposList] = useState([]);
+
+    useEffect(() => {
+        const lista = listadoSubjectData
+            .filter(c => c.id_carrera === IdCarrera)
+            .map(c => ({
+                label: c.campo,
+                value: c.campo
+            }));
+
+        const eliminarDuplicados = (arr) => {
+            const map = new Map();
+            return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
         };
 
-        setCondicionesList([...condicionesList, nuevaCondicion]);
-        setOpen(false);
+        const listaSinDuplicados = eliminarDuplicados(lista);
+
+        setCamposList(listaSinDuplicados);
+    }, [IdCarrera]);
+
+    const [camposSeleccionados, setCamposSeleccionados] = useState([]);
+    const setearcamposSeleccionados = (value) => {
+
+        setCamposSeleccionados([...camposSeleccionados, value]);
+    }
+
+
+
+
+    const guardarCondicion = () => {
+
+        console.log(camposSeleccionados)
+        //console.log("se guardo, año: " + anio + ", materia: " + materia + ", condición: " + condicion);
+
+        //const nuevaCondicion = {
+        //    key: condicionesList.length,
+        //    id_carrera: IdCarrera,
+        //    anio: anio,
+        //    materia: materia,
+        //    tiporestriccion: '',
+        //    condicion: condicion
+        //};
+
+        //setCondicionesList([...condicionesList, nuevaCondicion]);
+        //setOpen(false);
     }
 
     const paginaAnterior = () => {
@@ -159,7 +204,8 @@ function ConfiguracionCondicionCarrera() {
                                 <Box sx={style}>
                                     <Box
                                         sx={{
-                                            textAlign: "center"
+                                            textAlign: "center",
+                                            marginBottom:'10px'
                                         }}>
                                         <Typography variant="h6" >
                                             Nueva condición
@@ -167,33 +213,177 @@ function ConfiguracionCondicionCarrera() {
                                     </Box>
                                     <Box sx={{
                                         display: 'flex',
-                                        gap:'5px'
-                                        }}>
+                                        gap: '10px',
+                                        marginBottom: '10px'
+                                    }}>
                                         <FormControl sx={{
-                                            width: '250px'
+                                            width: '100px'
                                         }}>
                                             <OutlinedInput
                                                 sx={{
-                                                    height: '40px',
-                                                    textAlign: 'center'
+                                                    '& input': {
+                                                        textAlign: 'center',
+                                                        height: '7px'
+                                                    }
                                                 }}
-                                                placeholder="Ingrese el año" onInput={ setearAnio } />
+                                                placeholder="Año" onInput={setearAnio} />
                                         </FormControl>
-                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Materias' />
+                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' />
                                     </Box>
-                                    <Box >
-                                        <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Condiciones' />
+                                    <Box
+                                        sx={{
+                                            marginBottom: '10px'
+                                        }}>
+                                        <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Condiciones' />
                                     </Box>
+                                    {
+                                        mostrarCamposCompletos && (
+                                            <Box
+                                                >
+                                                <FormControl sx={{
+                                                    width: '180px'
+                                                }}>
+                                                    <OutlinedInput
+                                                        sx={{
+                                                            '& input': {
+                                                                textAlign: 'center',
+                                                                height: '7px',
+                                                                padding: '16.5px 5px 16.5px 5px'
+                                                            }
+                                                        }}
+                                                        placeholder="Salvo Cantidad" onInput={setearAnio} />
+                                                </FormControl>
+                                                <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' />
+                                            </Box>
+                                        )
+                                    }
+                                    {
+                                        mostrarMateriasEspecificas && (
+                                            <Box
+                                                >
+                                                <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Materias específicas' />
+                                            </Box>
+                                        )
+                                    }
+                                    {
+                                        mostrarCantidadMaterias && (
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: '5px',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                <FormControl sx={{
+                                                    width: '100px'
+                                                }}>
+                                                    <OutlinedInput
+                                                        sx={{
+                                                            '& input': {
+                                                                textAlign: 'center',
+                                                                height: '7px',
+                                                                padding: '16.5px 0px 16.5px 0px'
+                                                            }
+                                                        }}
+                                                        placeholder="Cantidad" onInput={setearAnio} />
+                                                </FormControl>
+                                                <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' />
+                                            </Box>
+                                        )
+                                    }
+                                    {
+                                        mostrarAniosCompletos && (
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: '10px',
+                                                    justifyContent: 'center',
+                                                }}>
+                                                <FormControl sx={{
+                                                    width: '100%'
+                                                }}>
+                                                    <OutlinedInput
+                                                        sx={{
+                                                            '& input': {
+                                                                textAlign: 'center',
+                                                                height: '7px',
+                                                                padding: '16.5px 0px 16.5px 0px'
+                                                            }
+                                                        }}
+                                                        placeholder="Año" onInput={setearAnio} />
+                                                </FormControl>
+                                                <FormControl sx={{
+                                                    width: '100%'
+                                                }}>
+                                                    <OutlinedInput
+                                                        sx={{
+                                                            '& input': {
+                                                                textAlign: 'center',
+                                                                height: '7px',
+                                                                padding: '16.5px 5px 16.5px 5px'
+                                                            }
+                                                        }}
+                                                        placeholder="Salvo Cantidad" onInput={setearAnio} />
+                                                </FormControl>
+                                            </Box>
+                                        )
+                                    }
+                                    {
+                                        mostrarCantidadMateriasAnio && (
+                                            <Box>
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        gap: '10px',
+                                                        marginBottom:'10px'
+                                                    }}>
+                                                    <FormControl sx={{
+                                                        width: '100%'
+                                                    }}>
+                                                        <OutlinedInput
+                                                            sx={{
+                                                                '& input': {
+                                                                    textAlign: 'center',
+                                                                    height: '7px',
+                                                                    padding: '16.5px 0px 16.5px 0px'
+                                                                }
+                                                            }}
+                                                            placeholder="Año" onInput={setearAnio} />
+                                                    </FormControl>
+                                                    <FormControl sx={{
+                                                        width: '100%'
+                                                    }}>
+                                                        <OutlinedInput
+                                                            sx={{
+                                                                '& input': {
+                                                                    textAlign: 'center',
+                                                                    height: '7px',
+                                                                    padding: '16.5px 0px 16.5px 0px'
+                                                                }
+                                                            }}
+                                                            placeholder="Cantidad" onInput={setearAnio} />
+                                                    </FormControl>
+                                                    
+                                                </Box>
+
+                                                <Box>
+                                                    <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' />
+                                                </Box>
+                                            </Box>
+
+                                        )
+                                    }
                                     <Box
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'center',
-                                            marginTop:'25px'
+                                            marginTop: '25px'
                                         }}>
+
                                         <Button variant="contained" onClick={guardarCondicion}>
                                             Guardar
                                         </Button>
                                     </Box>
+                                    
                                 </Box>
                             </Modal>
                         </Box>
