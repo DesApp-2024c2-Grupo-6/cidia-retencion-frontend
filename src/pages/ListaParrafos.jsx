@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
+import EdicionParrafo from '../components/EdicionParrafo';
 import { Button, Box, Container, Typography } from '@mui/material';
 
 const listadoPrueba = [
@@ -35,22 +36,19 @@ const listadoPrueba = [
 ];
 
 const ParagraphList = () => {
-  const [parrafos, setParrafos] = useState(listadoPrueba); // Inicializamos el estado con listadoPrueba
+  const [parrafos, setParrafos] = useState(listadoPrueba);
+  const [editIndex, setEditIndex] = useState(null);
 
-  const agregarParrafo = () => {
-    const nuevoParrafo = {
-      id: parrafos.length + 1,
-      text: `Comunicado ${parrafos.length + 1}`,
-      clave: "" // Agregamos un campo para la clave, inicialmente vacío
-    };
+  const agregarParrafo = (clave, texto) => {
+    const nuevoParrafo = { texto, clave };
     setParrafos([...parrafos, nuevoParrafo]);
   };
 
-  const editarParrafo = (index, newText, newClave) => {
+  const editarParrafo = (index, newClave, newText) => {
     const updatedParrafos = [...parrafos];
-    updatedParrafos[index].text = newText;
-    updatedParrafos[index].clave = newClave; // Actualizamos el valor de la clave
+    updatedParrafos[index] = { texto: newText, clave: newClave };
     setParrafos(updatedParrafos);
+    setEditIndex(null);
   };
 
   const eliminarParrafo = (index) => {
@@ -87,49 +85,60 @@ const ParagraphList = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '16px',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
         Plantilla de E-mail
       </Typography>
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: '600px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          marginBottom: '24px'
-        }}
-      >
-        {parrafos.map((paragraph, index) => (
+      {editIndex === null ? (
+        <>
           <Box
-            key={paragraph.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, index)}
             sx={{
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              backgroundColor: '#fafafa',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              width: '100%',
+              maxWidth: '600px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              marginBottom: '24px',
             }}
           >
-            <ParrafoPlantilla
-              text={paragraph.texto}
-              clave={paragraph.clave} // Pasamos la clave como una propiedad al componente ParrafoPlantilla
-              onEdit={(newText, newClave) => editarParrafo(index, newText, newClave)}
-              onDelete={() => eliminarParrafo(index)}
-            />
+            {parrafos.map((paragraph, index) => (
+              <Box
+                key={index}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, index)}
+                sx={{
+                  padding: '8px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  backgroundColor: '#fafafa',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <ParrafoPlantilla
+                  text={paragraph.texto}
+                  clave={paragraph.clave}
+                  onEditClick={() => setEditIndex(index)}
+                  onDelete={() => eliminarParrafo(index)}
+                />
+              </Box>
+            ))}
           </Box>
-        ))}
-      </Box>
-      <Button variant="contained" onClick={agregarParrafo}>
-        Añadir Comunicado
-      </Button>
+          <Button variant="contained" onClick={() => agregarParrafo("", "")}>
+            Añadir Comunicado
+          </Button>
+        </>
+      ) : (
+        <EdicionParrafo
+          initialClave={parrafos[editIndex].clave}
+          initialTexto={parrafos[editIndex].texto}
+          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
+          onCancel={() => setEditIndex(null)}
+        />
+      )}
     </Container>
   );
 };
