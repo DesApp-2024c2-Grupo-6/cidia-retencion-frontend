@@ -3,7 +3,7 @@ import { Box , Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
 import '../styles/MateriasCross.css';
 
 export default function MateriasCross ({isEdit, title}){
-    console.log("se recivio el estado: ", isEdit)
+
     return(
         <Box
             className='materias-cross-tarjeta'>

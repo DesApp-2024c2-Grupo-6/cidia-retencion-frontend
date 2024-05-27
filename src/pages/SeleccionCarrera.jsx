@@ -21,14 +21,14 @@ function SeleccionCarrera() {
     useEffect(() => {
       const lista = listadoCarreras.map(c => ({
         label: `Carrera ${c.careerId}`,
-        value: { v: c.careerId, l: `Carrera ${c.careerId}` }
+        value: { v: c.careerId, l: `Carrera ${c.careerId}`, us: c.unahurSubjects, el: c.englishLevels, mpgs: c.suggestionThresholdRegularizedSubjects }
       }));
         setCarrerasList(lista);
     }, [])
 
 
     const handleSelect = (value) => {
-        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
+        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l, unaHurSubjects: value.us, englishLevel: value.el, suggestionSubjects: value.mpgs }));
     };
 
     const handleOnClickConfiguracionCarrera = () => {
