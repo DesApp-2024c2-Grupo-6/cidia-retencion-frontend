@@ -1,53 +1,85 @@
 import { Margin } from "@mui/icons-material";
-import { Box , Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
+import { Box , TextField, FormLabel} from "@mui/material";
 import '../styles/MateriasCross.css';
 
 export default function MateriasCross ({isEdit, title}){
 
     return(
-        <Box
-            className='materias-cross-tarjeta'>
-                <TableContainer >
-                    <h5 className="materias-cross-tarjeta-title">{title}</h5>
-                    <Table className="materias-cross-tarjeta-tabla">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell sx={{fontWeight: 'bold', p:0, textAlign: 'center'}}>Año</TableCell>
-                                <TableCell sx={{fontWeight: 'bold', p:0, textAlign: 'center'}}>Campo</TableCell>
-                            </TableRow>
-                        </TableHead >
-                        <TableBody >
-                            <TableRow >
-                                <TableCell >
-                                    <TextField 
-                                        variant='standard' 
-                                        className="materias-cross-tarjeta-input"
-                                        inputProps={{readOnly: !isEdit}}/>
-                                </TableCell>
-                                <TableCell >
-                                      <TextField 
-                                      variant='standard' 
-                                      className="materias-cross-tarjeta-input"
-                                      inputProps={{readOnly: !isEdit}}/>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    <TextField 
-                                    variant='standard' 
-                                    className="materias-cross-tarjeta-input"
-                                    inputProps={{readOnly: !isEdit}}/>
-                                </TableCell>
-                                <TableCell>
-                                    <TextField 
-                                    variant='standard' 
-                                    className="materias-cross-tarjeta-input"
-                                    inputProps={{readOnly: !isEdit}}/>
-                                </TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+        <Box className='card-materia'>
+                <h5 className="card-materia-title">{"MATERIAS UNAHUR"}</h5>
+                <div className="card-materia-item">
+                    <FormLabel
+                    sx={
+                        {
+                            fontWeight: 'bold',
+                            maxWidth: 'calc(20% - 5px)', 
+                            fontSize: '12px'
+                        }
+                    }>Año</FormLabel>
+                    <FormLabel
+                    sx={
+                        {
+                            fontWeight: 'bold',
+                            maxWidth: 'calc(20% - 5px)', 
+                            fontSize: '12px'
+                        }
+                    }>Campo</FormLabel>
+                </div>
+                <div className="card-materia-item">
+                    <TextField
+                        defaultValue={1}
+                        variant='standard'
+                        sx={
+                            {
+                                maxWidth: 'calc(20% - 5px)', 
+                                '& .MuiInputBase-input': { 
+                                    fontSize: '12px', 
+                                    textAlign: 'center' }
+                            }
+                        }
+                        inputProps={{readOnly: !isEdit}}/>
+                    <TextField
+                        defaultValue={"AyR"}
+                        variant='standard'
+                        sx={
+                            {
+                                maxWidth: 'calc(20% - 5px)', 
+                                '& .MuiInputBase-input': { 
+                                    fontSize: '12px', 
+                                    textAlign: 'center' }
+                            }
+                        }
+                        inputProps={{readOnly: !isEdit}}/>
+                </div>
+
+                <div className="card-materia-item">
+                    <TextField
+                        defaultValue={3}
+                        variant='standard'
+                        sx={
+                            {
+                                maxWidth: 'calc(20% - 5px)', 
+                                '& .MuiInputBase-input': { 
+                                    fontSize: '12px', 
+                                    textAlign: 'center' }
+                            }
+                        }
+                        inputProps={{readOnly: !isEdit}}/>
+                    <TextField
+                        defaultValue={"AyM"}
+                        variant='standard'
+                        sx={
+                            {
+                                maxWidth: 'calc(20% - 5px)', 
+                                '& .MuiInputBase-input': { 
+                                    fontSize: '12px', 
+                                    textAlign: 'center' }
+                            }
+                        }
+                        inputProps={{readOnly: !isEdit}}/>
+                </div>
+
+
         </Box>
     )
 }

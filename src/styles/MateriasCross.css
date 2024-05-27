@@ -1,18 +1,20 @@
-.materias-cross-tarjeta{
-    padding: 5px;
-    margin: 0 20px 0 20px;
+.card-materia{
     border: 1px solid grey;
+    max-width: 160px;
     display: flex;
     flex-direction: column;
+    text-align: center;
+    padding: 10px;
+    gap: 10px;
+    margin: 0 15px 0 15px;
 }
-.materias-cross-tarjeta-title{
+.card-materia-title{
     margin: 5px;
     text-align: center;
 }
-.materias-cross-tarjeta-tabla{
-    max-width: 200px;
-}
-.materias-cross-tarjeta-input{
-    max-width: 5vh;
-    
+.card-materia-item{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
 }
