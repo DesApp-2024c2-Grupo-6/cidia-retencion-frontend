@@ -1,12 +1,13 @@
-import { Margin } from "@mui/icons-material";
 import { Box , TextField, FormLabel} from "@mui/material";
 import '../styles/MateriasCross.css';
 
-export default function MateriasCross ({isEdit, title}){
+export default function MateriasCross ({isEdit, title, array}){
+
 
     return(
+
         <Box className='card-materia'>
-                <h5 className="card-materia-title">{"MATERIAS UNAHUR"}</h5>
+                <h5 className="card-materia-title">{title}</h5>
                 <div className="card-materia-item">
                     <FormLabel
                     sx={
@@ -25,61 +26,39 @@ export default function MateriasCross ({isEdit, title}){
                         }
                     }>Campo</FormLabel>
                 </div>
-                <div className="card-materia-item">
-                    <TextField
-                        defaultValue={1}
-                        variant='standard'
-                        sx={
-                            {
-                                maxWidth: 'calc(20% - 5px)', 
-                                '& .MuiInputBase-input': { 
-                                    fontSize: '12px', 
-                                    textAlign: 'center' }
+                
+                    {
+                        array?.map( registro => (
+                        <div className="card-materia-item">
+                            
+                            <TextField
+                            defaultValue={registro.year}
+                            variant='standard'
+                            sx={
+                                {
+                                    maxWidth: 'calc(20% - 5px)', 
+                                    '& .MuiInputBase-input': { 
+                                        fontSize: '12px', 
+                                        textAlign: 'center' }
+                                }
                             }
-                        }
-                        inputProps={{readOnly: !isEdit}}/>
-                    <TextField
-                        defaultValue={"AyR"}
-                        variant='standard'
-                        sx={
-                            {
-                                maxWidth: 'calc(20% - 5px)', 
-                                '& .MuiInputBase-input': { 
-                                    fontSize: '12px', 
-                                    textAlign: 'center' }
-                            }
-                        }
-                        inputProps={{readOnly: !isEdit}}/>
-                </div>
+                            inputProps={{readOnly: !isEdit}}/>
 
-                <div className="card-materia-item">
-                    <TextField
-                        defaultValue={3}
-                        variant='standard'
-                        sx={
-                            {
-                                maxWidth: 'calc(20% - 5px)', 
-                                '& .MuiInputBase-input': { 
-                                    fontSize: '12px', 
-                                    textAlign: 'center' }
+                            <TextField
+                            defaultValue={registro.campo}
+                            variant='standard'
+                            sx={
+                                {
+                                    maxWidth: 'calc(20% - 5px)', 
+                                    '& .MuiInputBase-input': { 
+                                        fontSize: '12px', 
+                                        textAlign: 'center' }
+                                }
                             }
-                        }
-                        inputProps={{readOnly: !isEdit}}/>
-                    <TextField
-                        defaultValue={"AyM"}
-                        variant='standard'
-                        sx={
-                            {
-                                maxWidth: 'calc(20% - 5px)', 
-                                '& .MuiInputBase-input': { 
-                                    fontSize: '12px', 
-                                    textAlign: 'center' }
-                            }
-                        }
-                        inputProps={{readOnly: !isEdit}}/>
-                </div>
-
-
+                            inputProps={{readOnly: !isEdit}}/>
+                        </div>
+                        ))
+                    }
         </Box>
     )
 }

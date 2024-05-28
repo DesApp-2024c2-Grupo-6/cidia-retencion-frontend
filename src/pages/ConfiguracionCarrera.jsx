@@ -10,9 +10,9 @@ import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasCross from '../components/MateriasCross';
 
-function ConfiguracionCarrera() { 
-    const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
-    const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+function ConfiguracionCarrera() {
+    //recupero el store. Invoco useSelector 
+    const { IdCarrera, nombreCarrera, unahur, englishLevel, suggestionSubjets} = useSelector((state) => state.carrera)
     const [isEdit, setIsEdit] = useState(false);
     const navigate = useNavigate();
     const handleOnClickCondiciones = () => {
@@ -37,8 +37,8 @@ function ConfiguracionCarrera() {
             sx={{display: 'flex'}}>
                 <Box
                     sx={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
-                 <MateriasCross isEdit={isEdit} title={"MATERIAS UNAHUR"}/>
-                 <MateriasCross isEdit={isEdit} title={"NIVELES INGLES"}/>
+                 <MateriasCross isEdit={isEdit} title={"MATERIAS UNAHUR"} array={unahur}/>
+                 <MateriasCross isEdit={isEdit} title={"NIVELES INGLES"} array={englishLevel}/>
                 </Box>
 
                <Box>
