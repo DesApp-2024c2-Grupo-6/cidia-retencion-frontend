@@ -41,6 +41,7 @@ const style = {
     boxShadow: 24,
     p: 4,
     display: 'block',
+    borderRadius:3
 };
 
 function ConfiguracionCondicionCarrera() {
@@ -95,21 +96,27 @@ function ConfiguracionCondicionCarrera() {
     //const handleSelect = (selectedValue, nomSelected) => {
     //    dispatch(addCarrera({ IdCarrera: selectedValue, nombreCarrera: nomSelected }));
     //};
-
+    const [selectCarreraDisabled, setselectCarreraDisabled] = useState(false);
+    const [inputAnio, setinputAnio] = useState(false); 
 
     const [materia, setmateria] = useState("");
     const [condicion, setCondicion] = useState("");
     const [anio, setAnio] = useState("");
+    const [cantidad, setCantidad] = useState("");
     const [mostrarCamposCompletos, setMostrarCamposCompletos] = useState(false); 
     const [mostrarMateriasEspecificas, setMostrarMateriasEspecificas] = useState(false);
     const [mostrarCantidadMaterias, setMostrarCantidadMaterias] = useState(false);
     const [mostrarAniosCompletos, setMostrarAniosCompletos] = useState(false);
     const [mostrarCantidadMateriasAnio, setMostrarCantidadMateriasAnio] = useState(false);
+
     const setearAnio = (event) => {
-        setAnio(event.target.value);
+        const valorAnio = event.target.value;
+        setAnio(valorAnio);
+        setselectCarreraDisabled(!!valorAnio);
     }
     const setearMateria = (valor) => {
         setmateria(valor);
+        setinputAnio(!!valor)
     }
     const setearCondicion = (valor) => {
         setCondicion(valor);
@@ -154,7 +161,19 @@ function ConfiguracionCondicionCarrera() {
 
     const guardarCondicion = () => {
 
-        console.log(camposSeleccionados)
+        console.log(camposSeleccionados);
+
+        if (condicion === "CAMPOS-COMPLETOS") {
+
+            const nuevaCondicion = {
+                key: condicionesList.length,
+                id_carrera: IdCarrera,
+                anio: anio,
+                materia: materia,
+                tiporestriccion: '',
+                condicion: condicion
+            };
+        }
         //console.log("se guardo, año: " + anio + ", materia: " + materia + ", condición: " + condicion);
 
         //const nuevaCondicion = {
@@ -220,6 +239,7 @@ function ConfiguracionCondicionCarrera() {
                                             width: '100px'
                                         }}>
                                             <OutlinedInput
+                                                disabled={ inputAnio }
                                                 sx={{
                                                     '& input': {
                                                         textAlign: 'center',
@@ -228,7 +248,8 @@ function ConfiguracionCondicionCarrera() {
                                                 }}
                                                 placeholder="Año" onInput={setearAnio} />
                                         </FormControl>
-                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' />
+                                        <Box></Box>
+                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
                                     </Box>
                                     <Box
                                         sx={{
@@ -239,21 +260,30 @@ function ConfiguracionCondicionCarrera() {
                                     {
                                         mostrarCamposCompletos && (
                                             <Box
-                                                >
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: '10px',
+                                                    marginBottom: '10px',
+                                                    }}>
                                                 <FormControl sx={{
-                                                    width: '180px'
+                                                    width: '100px'
                                                 }}>
                                                     <OutlinedInput
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
                                                                 height: '7px',
-                                                                padding: '16.5px 5px 16.5px 5px'
                                                             }
                                                         }}
-                                                        placeholder="Salvo Cantidad" onInput={setearAnio} />
+                                                        placeholder="Salvo" onInput={setearCantidad} title='Coloque aqui la cantidad'/>
                                                 </FormControl>
-                                                <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' />
+                                                <Box sx={{
+                                                    width:'100%',
+                                                    overflow: 'hidden'
+                                                }}>
+                                                    <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
+                                                </Box>
+                                                
                                             </Box>
                                         )
                                     }

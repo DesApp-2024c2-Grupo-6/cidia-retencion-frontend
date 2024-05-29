@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 
-function SelectComponent({ options, onSelect, className, placeholder }) {
+function SelectComponent({ options, onSelect, className, placeholder, disabled }) {
 
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -23,6 +23,7 @@ function SelectComponent({ options, onSelect, className, placeholder }) {
                     value={selectedOption}
                     onChange={handleChange}
                     displayEmpty
+                    disabled={disabled}
                     MenuProps={{
                         PaperProps: {
                             style: {

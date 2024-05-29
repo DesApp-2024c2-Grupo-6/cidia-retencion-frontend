@@ -31,7 +31,10 @@ export default function SelectMultipleR({ options, onSelect, className, placehol
     };
 
     return (
-        <div>
+        <Box
+            sx={{
+                width:'100%'
+            }}>
             <FormControl fullWidth>
                 <Select
                     id="selectOption"
@@ -71,6 +74,6 @@ export default function SelectMultipleR({ options, onSelect, className, placehol
                     ))}
                 </Select>
             </FormControl>
-        </div>
+        </Box>
     );
 }
