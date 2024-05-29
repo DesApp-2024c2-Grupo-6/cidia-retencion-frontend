@@ -26,8 +26,8 @@ import listadoSubjectData from '../services/listadoSubjectData';
 import SelectMultipleR from '../components/SelectMultipleR';
 
 
-function createData(key, id, anio, materia, tiporestriccion, condicion) {
-    return {key, id, anio, materia, tiporestriccion, condicion };
+function createData(key, id, anio, materia, codigo_condicion, config_condicion) {
+    return {key, id, anio, materia, codigo_condicion, config_condicion };
 }
 
 const style = {
@@ -97,38 +97,13 @@ function ConfiguracionCondicionCarrera() {
     //    dispatch(addCarrera({ IdCarrera: selectedValue, nombreCarrera: nomSelected }));
     //};
     const [selectCarreraDisabled, setselectCarreraDisabled] = useState(false);
-    const [inputAnio, setinputAnio] = useState(false); 
-
-    const [materia, setmateria] = useState("");
-    const [condicion, setCondicion] = useState("");
-    const [anio, setAnio] = useState("");
-    const [cantidad, setCantidad] = useState("");
-    const [mostrarCamposCompletos, setMostrarCamposCompletos] = useState(false); 
+    const [inputAnio, setinputAnio] = useState(false);
+    const [mostrarCamposCompletos, setMostrarCamposCompletos] = useState(false);
     const [mostrarMateriasEspecificas, setMostrarMateriasEspecificas] = useState(false);
     const [mostrarCantidadMaterias, setMostrarCantidadMaterias] = useState(false);
     const [mostrarAniosCompletos, setMostrarAniosCompletos] = useState(false);
     const [mostrarCantidadMateriasAnio, setMostrarCantidadMateriasAnio] = useState(false);
 
-    const setearAnio = (event) => {
-        const valorAnio = event.target.value;
-        setAnio(valorAnio);
-        setselectCarreraDisabled(!!valorAnio);
-    }
-    const setearMateria = (valor) => {
-        setmateria(valor);
-        setinputAnio(!!valor)
-    }
-    const setearCondicion = (valor) => {
-        setCondicion(valor);
-        //setMostrarN-1(valor == "N-1");
-        //setMostrarN-2(valor == "N-2");
-        //setMostrarN-1R-2A(valor == "N-1R-2A");
-        setMostrarCantidadMaterias(valor == "CANT-MATERIAS");
-        setMostrarAniosCompletos(valor == "ANIOS-COMPLETOS");
-        setMostrarCamposCompletos(valor == "CAMPOS-COMPLETOS");
-        setMostrarCantidadMateriasAnio(valor == "CANT-MATERIAS-ANIO");
-        setMostrarMateriasEspecificas(valor == "MATERIAS-ESPECIFICAS");
-    }
 
     const [camposList, setCamposList] = useState([]);
 
@@ -150,30 +125,106 @@ function ConfiguracionCondicionCarrera() {
         setCamposList(listaSinDuplicados);
     }, [IdCarrera]);
 
-    const [camposSeleccionados, setCamposSeleccionados] = useState([]);
-    const setearcamposSeleccionados = (value) => {
+    //VARIABLES PARA EL OBJETO A GUARDAR
 
-        setCamposSeleccionados([...camposSeleccionados, value]);
+    const [materia, setmateria] = useState("");
+    const [condicion, setCondicion] = useState("");
+    const [anio, setAnio] = useState("");
+    const [anioCompleto, setAnioCompleto] = useState("");
+    const [cantidad, setCantidad] = useState("");
+
+
+    const setearAnio = (event) => {
+        const valorAnio = event.target.value;
+        setAnio(valorAnio);
+        setselectCarreraDisabled(!!valorAnio && valorAnio > 0);
+    }
+    const setearMateria = (valor) => {
+        setmateria(valor);
+        setinputAnio(!!valor)
+    }
+    const setearCantidad = (event) => {
+        setCantidad(event.target.value);
+    }
+    const setearAnioCompleto = (event) => {
+            setAnioCompleto(event.target.value);
+    }
+    const setearCondicion = (valor) => {
+        setCondicion(valor);
+        //setMostrarN-1(valor == "N-1");
+        //setMostrarN-2(valor == "N-2");
+        //setMostrarN-1R-2A(valor == "N-1R-2A");
+        setMostrarCantidadMaterias(valor == "CANT-MATERIAS");
+        setMostrarAniosCompletos(valor == "ANIOS-COMPLETOS");
+        setMostrarCamposCompletos(valor == "CAMPOS-COMPLETOS");
+        setMostrarCantidadMateriasAnio(valor == "CANT-MATERIAS-ANIO");
+        setMostrarMateriasEspecificas(valor == "MATERIAS-ESPECIFICAS");
     }
 
 
 
+    const [camposSeleccionados, setCamposSeleccionados] = useState([]);
+    const setearcamposSeleccionados = (value) => {
+        setCamposSeleccionados(value);
+    }
+
+    const [materiasSeleccionadas, setMateriasSeleccionadas] = useState([]);
+    const setearMateriasSeleccionadas = (value) => {
+        setMateriasSeleccionadas(value);
+    }
+
+    const [exceptuadosSeleccionados, setExceptuadosSeleccionados] = useState([]);
+    const setearExceptuadosSeleccionados = (value) => {
+        setExceptuadosSeleccionados(value);
+    }
 
     const guardarCondicion = () => {
 
-        console.log(camposSeleccionados);
-
-        if (condicion === "CAMPOS-COMPLETOS") {
-
-            const nuevaCondicion = {
-                key: condicionesList.length,
-                id_carrera: IdCarrera,
-                anio: anio,
-                materia: materia,
-                tiporestriccion: '',
-                condicion: condicion
-            };
+        let nuevaCondicion = {
+            key: condicionesList.length,
+            id_carrera: IdCarrera,
+            anio: anio,
+            materia: materia,
+            codigo_condicion: condicion
         }
+
+        if (condicion === "N-2" || condicion === "N-1R-2A") {
+            nuevaCondicion.anio = "";
+            nuevaCondicion.materia = "";
+        }
+        else if (condicion === "CAMPOS-COMPLETOS") {
+            nuevaCondicion.config_condicion = { campos: camposSeleccionados }
+        }
+        else if (condicion === "MATERIAS-ESPECIFICAS") {
+            nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
+        }
+        else if (condicion === "CANT-MATERIAS") {
+            if (camposSeleccionados.length > 0) {
+                nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
+            }
+            else {
+                nuevaCondicion.config_condicion = { cantidad: cantidad };
+            }
+        }
+        else if (condicion === "ANIOS-COMPLETOS") {
+            if (cantidad > 0) {
+                nuevaCondicion.config_condicion = { anio: anioCompleto, salvo_cantidad: cantidad };
+            }
+            else {
+                nuevaCondicion.config_condicion = { anio: anioCompleto };
+            }
+        }
+        else if (condicion === "CANT-MATERIAS-ANIO") {
+            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: camposSeleccionados }
+        }
+        
+        //}
+        console.log(nuevaCondicion);
+
+        setearcamposSeleccionados([]);
+        setearMateriasSeleccionadas([]);
+        setearExceptuadosSeleccionados([]);
+
         //console.log("se guardo, año: " + anio + ", materia: " + materia + ", condición: " + condicion);
 
         //const nuevaCondicion = {
@@ -187,6 +238,8 @@ function ConfiguracionCondicionCarrera() {
 
         //setCondicionesList([...condicionesList, nuevaCondicion]);
         //setOpen(false);
+
+        handleClose();
     }
 
     const paginaAnterior = () => {
@@ -194,7 +247,15 @@ function ConfiguracionCondicionCarrera() {
     }
 
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {
+        setAnio("");
+        setmateria("");
+        setCantidad("");
+        setinputAnio(false);
+        setselectCarreraDisabled(false);
+        setOpen(true);
+    }
+        
     const handleClose = () => setOpen(false);
 
     return (
@@ -232,24 +293,31 @@ function ConfiguracionCondicionCarrera() {
                                     </Box>
                                     <Box sx={{
                                         display: 'flex',
-                                        gap: '10px',
+                                        gap: '5px',
                                         marginBottom: '10px'
                                     }}>
                                         <FormControl sx={{
                                             width: '100px'
                                         }}>
                                             <OutlinedInput
-                                                disabled={ inputAnio }
+                                                disabled={inputAnio}
+                                                type="number"
+                                                title="Coloque el número del año, ejemplo 2"
                                                 sx={{
                                                     '& input': {
                                                         textAlign: 'center',
                                                         height: '7px'
                                                     }
                                                 }}
-                                                placeholder="Año" onInput={setearAnio} />
+                                                placeholder="Año" onInput={ setearAnio } />
                                         </FormControl>
-                                        <Box></Box>
-                                        <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
+                                        <Box sx={{
+                                            width: '100%',
+                                            overflow: 'hidden'
+                                        }}>
+                                            <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
+                                        </Box>
+                                        
                                     </Box>
                                     <Box
                                         sx={{
@@ -259,39 +327,24 @@ function ConfiguracionCondicionCarrera() {
                                     </Box>
                                     {
                                         mostrarCamposCompletos && (
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    gap: '10px',
-                                                    marginBottom: '10px',
-                                                    }}>
-                                                <FormControl sx={{
-                                                    width: '100px'
-                                                }}>
-                                                    <OutlinedInput
-                                                        sx={{
-                                                            '& input': {
-                                                                textAlign: 'center',
-                                                                height: '7px',
-                                                            }
-                                                        }}
-                                                        placeholder="Salvo" onInput={setearCantidad} title='Coloque aqui la cantidad'/>
-                                                </FormControl>
-                                                <Box sx={{
-                                                    width:'100%',
-                                                    overflow: 'hidden'
-                                                }}>
-                                                    <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
-                                                </Box>
-                                                
+
+                                            <Box sx={{
+                                                width:'100%',
+                                                overflow: 'hidden'
+                                            }}>
+                                                <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
                                             </Box>
+                                                
                                         )
                                     }
                                     {
                                         mostrarMateriasEspecificas && (
-                                            <Box
-                                                >
-                                                <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Materias específicas' />
+
+                                            <Box sx={{
+                                                width:'100%',
+                                                overflow: 'hidden'
+                                            }}>
+                                                <SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />
                                             </Box>
                                         )
                                     }
@@ -307,16 +360,24 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100px'
                                                 }}>
                                                     <OutlinedInput
+                                                        type='number'
+                                                        title="Coloque la cantidad de materias, ejemplo 12"
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
                                                                 height: '7px',
-                                                                padding: '16.5px 0px 16.5px 0px'
                                                             }
                                                         }}
-                                                        placeholder="Cantidad" onInput={setearAnio} />
+                                                        placeholder="Cant" onInput={ setearCantidad } />
                                                 </FormControl>
-                                                <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' />
+                                                <Box sx={{
+                                                    width: '100%',
+                                                    overflow: 'hidden'
+                                                    
+                                                }}>
+                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />
+                                                </Box>
+                                                
                                             </Box>
                                         )
                                     }
@@ -332,6 +393,7 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        title="Coloque el número del año que debe estar completo."
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
@@ -339,12 +401,13 @@ function ConfiguracionCondicionCarrera() {
                                                                 padding: '16.5px 0px 16.5px 0px'
                                                             }
                                                         }}
-                                                        placeholder="Año" onInput={setearAnio} />
+                                                        placeholder="Año" onInput={setearAnioCompleto} />
                                                 </FormControl>
                                                 <FormControl sx={{
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        title="Coloque la cantidad de materias exceptuadas."
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
@@ -352,7 +415,7 @@ function ConfiguracionCondicionCarrera() {
                                                                 padding: '16.5px 5px 16.5px 5px'
                                                             }
                                                         }}
-                                                        placeholder="Salvo Cantidad" onInput={setearAnio} />
+                                                        placeholder="Salvo Cantidad" onInput={setearCantidad} />
                                                 </FormControl>
                                             </Box>
                                         )
@@ -396,7 +459,7 @@ function ConfiguracionCondicionCarrera() {
                                                 </Box>
 
                                                 <Box>
-                                                    <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' />
+                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
                                                 </Box>
                                             </Box>
 
