@@ -188,7 +188,7 @@ function ConfiguracionCondicionCarrera() {
             codigo_condicion: condicion
         }
 
-        if (condicion === "N-2" || condicion === "N-1R-2A") {
+        if (condicion === "N-1" || condicion === "N-2" || condicion === "N-1R-2A") {
             nuevaCondicion.anio = "";
             nuevaCondicion.materia = "";
         }
@@ -218,26 +218,11 @@ function ConfiguracionCondicionCarrera() {
             nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: camposSeleccionados }
         }
         
-        //}
         console.log(nuevaCondicion);
 
         setearcamposSeleccionados([]);
         setearMateriasSeleccionadas([]);
         setearExceptuadosSeleccionados([]);
-
-        //console.log("se guardo, año: " + anio + ", materia: " + materia + ", condición: " + condicion);
-
-        //const nuevaCondicion = {
-        //    key: condicionesList.length,
-        //    id_carrera: IdCarrera,
-        //    anio: anio,
-        //    materia: materia,
-        //    tiporestriccion: '',
-        //    condicion: condicion
-        //};
-
-        //setCondicionesList([...condicionesList, nuevaCondicion]);
-        //setOpen(false);
 
         handleClose();
     }
