@@ -19,16 +19,16 @@ function SeleccionCarrera() {
     const [carreras, setCarrerasList] = useState([]);
 
     useEffect(() => {
-      const lista = listadoCarreras.map(c => ({
-        label: `Carrera ${c.careerId}`,
-        value: { v: c.careerId, l: `Carrera ${c.careerId}`, us: c.unahurSubjects, el: c.englishLevels, mpgs: c.suggestionThresholdRegularizedSubjects }
-      }));
-        setCarrerasList(lista);
-    }, [])
+        const lista = listadoCarreras.map(c => ({
+          label: `Carrera ${c.careerId}`,
+          value: { v: c.careerId, l: `Carrera ${c.careerId}` }
+        }));
+          setCarrerasList(lista);
+      }, [])
 
 
     const handleSelect = (value) => {
-        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l, unaHurSubjects: value.us, englishLevel: value.el, suggestionSubjects: value.mpgs }));
+        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
     };
 
     const handleOnClickConfiguracionCarrera = () => {
