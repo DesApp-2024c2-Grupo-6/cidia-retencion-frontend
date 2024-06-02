@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import listadoCondicionesCarrera from '../services/listadoCondicionesCarrera';
 import { useNavigate } from 'react-router-dom';
+import SelectMultipleAR from '../components/SelectMultipleAR';
 
 //import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -71,6 +72,7 @@ function ConfiguracionCondicionCarrera() {
                 }
                 return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion);
             });
+
         setCondicionesList(lista);
     }, [])
 
@@ -84,13 +86,14 @@ function ConfiguracionCondicionCarrera() {
         setTiposCondicionList(lista);
     }, [])
 
+    const [materiasList, setMateriasList] = useState([]);
     const [materiasCondicionList, setMateriasCondicionList] = useState([]);
     useEffect(() => {
         const lista = listadoSubjectData.filter(c => c.id_carrera == IdCarrera).map(c => ({
             label: `Materia ${c.id_materia}`,
             value: c.id_materia
         }));
-        setMateriasCondicionList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+        setMateriasList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
     }, [])
 
     //const handleSelect = (selectedValue, nomSelected) => {
@@ -137,11 +140,14 @@ function ConfiguracionCondicionCarrera() {
     const setearAnio = (event) => {
         const valorAnio = event.target.value;
         setAnio(valorAnio);
+        setMateriasCondicionList(materiasList);
         setselectCarreraDisabled(!!valorAnio && valorAnio > 0);
     }
     const setearMateria = (valor) => {
         setmateria(valor);
-        setinputAnio(!!valor)
+        const lista = materiasList.filter((a) => parseInt(a.value) !== valor)
+        setMateriasCondicionList(lista);
+        setinputAnio(!!valor);
     }
     const setearCantidad = (event) => {
         setCantidad(event.target.value);
@@ -300,7 +306,7 @@ function ConfiguracionCondicionCarrera() {
                                             width: '100%',
                                             overflow: 'hidden'
                                         }}>
-                                            <SelectComponent options={materiasCondicionList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
+                                            <SelectComponent options={materiasList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
                                         </Box>
                                         
                                     </Box>
@@ -317,7 +323,8 @@ function ConfiguracionCondicionCarrera() {
                                                 width:'100%',
                                                 overflow: 'hidden'
                                             }}>
-                                                <SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
+                                                {/*<SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                <SelectMultipleAR options={camposList} onSelect={setearcamposSeleccionados}  placeholder='Seleccione Campos'></SelectMultipleAR>
                                             </Box>
                                                 
                                         )
@@ -518,15 +525,15 @@ function ConfiguracionCondicionCarrera() {
                                                 <TableCell component="th" scope="row" align="center">
                                                     {row.anio}
                                                 </TableCell>
-                                                <TableCell align="center">{row.materia}</TableCell>
-                                                <TableCell align="center">{row.tiporestriccion}</TableCell>
-                                                <TableCell align="center">
-                                                    {typeof row.condicion === 'string' ? row.condicion.split('-').map((c, idx) => (
+                                                    <TableCell align="center">{row.materia}</TableCell>
+                                                    <TableCell align="center">{row.codigo_condicion}</TableCell>
+                                                    <TableCell align="center">
+                                                        {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
                                                     <React.Fragment key={idx}>
                                                         {c}
-                                                        {idx < row.condicion.split('-').length - 1 && <br />}
+                                                                {idx < row.config_condicion.split('-').length - 1 && <br />}
                                                     </React.Fragment>
-                                                    )) : row.condicion}
+                                                        )) : row.config_condicion}
                                                 </TableCell>
                                                 <TableCell align="center">
                                                     {/*<IconButton color="primary" aria-label="editar" sx={{ width: '40px' }}*/}
