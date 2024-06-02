@@ -1,8 +1,11 @@
 import { Box, TextField, FormLabel} from '@mui/material';
 import '../styles/PanelConfiguradorGral.css';
 
-export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegularizedSubjects, minimumSubjectsRecommended, specialCarrerName}) {
+export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegularizedSubjects, minimumSubjectsRecommended, specialCarrerName, handleUpdateCarrer}) {
    
+    const handleInputChange_1 = (e) => {handleUpdateCarrer(e.target.value)}
+    const handleInputChange_2 = (e) => {handleUpdateCarrer(e.target.value)}
+    const handleInputChange_3 = (e) => {handleUpdateCarrer(e.target.value)}
     return(
         <Box className='container-config'>
             <Box
@@ -19,7 +22,9 @@ export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegula
                     value={suggestionThresholdRegularizedSubjects}
                     variant='standard'
                     className='container-config-item-input'
-                    inputProps={{readOnly: !isEdit, style:{fontSize: '12px', textAlign: 'center'}}}/>
+                    onChange={handleInputChange_1}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
@@ -36,7 +41,9 @@ export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegula
                     value={minimumSubjectsRecommended}
                     variant='standard'
                     className='container-config-item-input' 
-                    inputProps={{readOnly: !isEdit, style:{fontSize: '12px', textAlign: 'center'}}}/>
+                    onChange={handleInputChange_2}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
@@ -53,7 +60,9 @@ export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegula
                 sx={{width: '280px'}}
                     value={specialCarrerName}
                     variant='standard'
-                    inputProps={{readOnly: !isEdit, style:{fontSize: '12px', textAlign: 'right', paddingRight: '5px'}}}/> 
+                    onChange={handleInputChange_3}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'right', paddingRight: '5px'}}}/>
             </Box>
 
         </Box>

@@ -7,23 +7,23 @@ import { update } from "lodash";
 
 export default function MateriasEspeciales ({isEdit, title, array}){
 
-    const [arrayB, setArrayB] = useState(array);
+    const [renderSubjects, setRenderSubjects] = useState(array);
     const [year, setYear] = useState(0);
     const [campo, setCampo] = useState("-");
 
     const handleOnDeleteRow = (index) => {
-        const updateArray = arrayB.filter((_,i) => i != index);
-        setArrayB(updateArray)
+        const updateArray = renderSubjects.filter((_,i) => i != index);
+        setRenderSubjects(updateArray)
     }
 
     const handleOnAddRow = () => {
         const newRow = {year: year, campo: campo};
-        setArrayB([...arrayB, newRow]);
+        setRenderSubjects([...renderSubjects, newRow]);
     
     }
 
+    useEffect( () => {setRenderSubjects([...array])}, [array])
 
-    useEffect( () => {setArrayB([...array])}, [array])
     return(
         <Box className='card-materia'>
             <h5 className="card-materia-title">{title}</h5>
@@ -58,10 +58,10 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                         
                 </div>
                     {
-                        arrayB?.map( (registro, pos )=> (
+                        renderSubjects?.map( (register, pos )=> (
                         <div className="card-materia-item" key={pos} index={pos}>
                             <TextField
-                                value={registro.year}
+                                value={register.year}
                                 variant='standard'
                                 disabled={!isEdit}
                                 sx={
@@ -72,13 +72,10 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                                             textAlign: 'center' }
                                     }
                                 }
-                                onChange={(event) => {
-                                    const updatedArray = update(arrayB, { [pos]: { year: { $set: event.target.value } } });
-                                    setArrayB(updatedArray);
-                                  }}
+
                             />
                             <TextField
-                                value={registro.campo}
+                                value={register.campo}
                                 variant='standard'
                                 disabled={!isEdit}
                                 sx={
@@ -89,10 +86,7 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                                             textAlign: 'center' }
                                     }
                                 }
-                                onChange={(event) => {
-                                    const updatedArray = update(arrayB, { [pos]: { campo: { $set: event.target.value } } });
-                                    setArrayB(updatedArray);
-                                  }}
+
                             />
                             {
                                 isEdit && (

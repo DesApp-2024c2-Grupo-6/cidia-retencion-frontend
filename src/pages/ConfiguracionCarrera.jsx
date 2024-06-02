@@ -40,15 +40,21 @@ function ConfiguracionCarrera() {
         fechData(IdCarrera)
     }, [])
 
+    const handleUpdateCarrer = (newValue) => {
+        const updatedCarrer = {...carrera};
+        updatedCarrer.suggestionThresholdRegularizedSubjects = newValue;
+        updatedCarrer.minimumSubjectsRecommended = newValue
+        updatedCarrer.specialCareerName = newValue;
+        setCarrera(updatedCarrer);
+    }
     return (
         <>
             <Box sx={{
-                height: '50vh',
-                width: '100vw',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
+                    width:'100vw',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
             }}>
                 <Typography 
                     variant="h4"
@@ -74,6 +80,7 @@ function ConfiguracionCarrera() {
                         suggestionThresholdRegularizedSubjects={carrera.suggestionThresholdRegularizedSubjects ? carrera.suggestionThresholdRegularizedSubjects : ""}
                         minimumSubjectsRecommended={carrera.minimumSubjectsRecommended ? carrera.minimumSubjectsRecommended : ""}
                         specialCarrerName={carrera.specialCareerName ? carrera.specialCareerName : ""}
+                        handleUpdateCarrer={handleUpdateCarrer}
                     />
                     </Box>
                         <ButtonGroup 
