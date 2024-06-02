@@ -19,12 +19,12 @@ function SeleccionCarrera() {
     const [carreras, setCarrerasList] = useState([]);
 
     useEffect(() => {
-      const lista = listadoCarreras.map(c => ({
-        label: `Carrera ${c.careerId}`,
-        value: { v: c.careerId, l: `Carrera ${c.careerId}` }
-      }));
-        setCarrerasList(lista);
-    }, [])
+        const lista = listadoCarreras.map(c => ({
+          label: `Carrera ${c.careerId}`,
+          value: { v: c.careerId, l: `Carrera ${c.careerId}` }
+        }));
+          setCarrerasList(lista);
+      }, [])
 
 
     const handleSelect = (value) => {
