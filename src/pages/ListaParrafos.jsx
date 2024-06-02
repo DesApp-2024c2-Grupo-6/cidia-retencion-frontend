@@ -5,8 +5,20 @@ import { Button, Box, Container, Typography } from '@mui/material';
 
 const listadoPrueba = [
   {texto: "En función de tu recorrido académico en la carrera ${nombreDeLaCarrera}, te enviamos las siguientes sugerencias de inscripción para el próximo período.", clave: "intro"}, 
-  {texto: "patricio", clave: "materiasCorrelativas" },
-  {texto: "patricio", clave: "recomendacionCantidadMaterias" },
+  {texto: "Por un lado, considerando las materias que regularizaste hasta ahora, <i>te sugerimos</i> que consideres para " +
+  "tu inscripción algunas de las siguientes materias, en función de las correlatividades de tu plan de estudios:"+
+  ""+
+  "${materiasCorrelativas}"+
+  "<b><u>Aclaración</u></b>: "+
+  "Si entre las sugerencias ves una materia que ya regularizaste o tenés en curso, no te preocupes, se debe a una cuestión administrativa interna.",
+   clave: "materiasCorrelativas" },
+  {texto: "Por otro lado, hemos notado que en tus últimos dos cuatrimestres " +
+  "${cantidadMateriasInscriptoTotal} y ${cantidadMateriasRegularizadasTotal}. " +
+  "Por lo tanto, para el próximo cuatrimestre <i>te sugerimos</i> que ${cantidadMateriasRecomendacion}${anualesQueSeRestan}."+
+  "Es importante que consideres el tiempo que deberás dedicarle a cada materia, " +
+  "tanto de cursada como por fuera de las clases, y el tiempo del que podrás disponer para el estudio." +
+  "La planificación del cuatrimestre es un acto fundamental para el sostenimiento de la cursada en la universidad."
+, clave: "recomendacionCantidadMaterias" },
   {texto: "Recordá que también podés cursar las siguientes materias comunes en cualquier momento de la carrera y que, " +
   "por su carga horaria semanal, pueden ser un buen complemento para materias con mayor carga teórica:"
   +
@@ -79,66 +91,66 @@ const ParagraphList = () => {
   return (
     <Container
       sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '16px',
-        boxSizing: 'border-box',
-      }}
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '16px',
+            boxSizing: 'border-box',
+          }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Plantilla de E-mail
-      </Typography>
-      {editIndex === null ? (
-        <>
-          <Box
-            sx={{
-              width: '100%',
-              maxWidth: '600px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              marginBottom: '24px',
-            }}
-          >
-            {parrafos.map((paragraph, index) => (
-              <Box
-                key={index}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, index)}
-                sx={{
-                  padding: '8px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: '#fafafa',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <ParrafoPlantilla
-                  text={paragraph.texto}
-                  clave={paragraph.clave}
-                  onEditClick={() => setEditIndex(index)}
-                  onDelete={() => eliminarParrafo(index)}
+              <Typography variant="h4" component="h1" gutterBottom>
+                Plantilla de E-mail
+              </Typography>
+              {editIndex === null ? (
+                <>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      maxWidth: '600px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '16px',
+                      marginBottom: '24px',
+                    }}
+                  >
+                    {parrafos.map((paragraph, index) => (
+                      <Box
+                        key={index}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={handleDragOver}
+                        onDrop={(e) => handleDrop(e, index)}
+                        sx={{
+                          padding: '8px',
+                          border: '1px solid #ccc',
+                          borderRadius: '4px',
+                          backgroundColor: '#fafafa',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        }}
+                      >
+                        <ParrafoPlantilla
+                          text={paragraph.texto}
+                          clave={paragraph.clave}
+                          onEditClick={() => setEditIndex(index)}
+                          onDelete={() => eliminarParrafo(index)}
+                        />
+                      </Box>
+                    ))}
+                  </Box>
+                  <Button variant="contained" onClick={() => agregarParrafo("", "")}>
+                    Añadir Comunicado
+                  </Button>
+                </>
+              ) : (
+                <EdicionParrafo
+                  initialClave={parrafos[editIndex].clave}
+                  initialTexto={parrafos[editIndex].texto}
+                  onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
+                  onCancel={() => setEditIndex(null)}
                 />
-              </Box>
-            ))}
-          </Box>
-          <Button variant="contained" onClick={() => agregarParrafo("", "")}>
-            Añadir Comunicado
-          </Button>
-        </>
-      ) : (
-        <EdicionParrafo
-          initialClave={parrafos[editIndex].clave}
-          initialTexto={parrafos[editIndex].texto}
-          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
-          onCancel={() => setEditIndex(null)}
-        />
-      )}
+              )}
     </Container>
   );
 };
