@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import EdicionParrafo from '../components/EdicionParrafo';
-import { Button, Box, Container, Typography } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 
 const listadoPrueba = [
   {texto: "En función de tu recorrido académico en la carrera ${nombreDeLaCarrera}, te enviamos las siguientes sugerencias de inscripción para el próximo período.", clave: "intro", condiciones:[
@@ -170,15 +170,14 @@ const ParagraphList = () => {
   };
 
   return (
-    <Container
+    <Box
       sx={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '16px',
-            boxSizing: 'border-box',
+        height: '50vh',
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
           }}
     >
               <Typography variant="h4" component="h1" gutterBottom>
@@ -232,7 +231,7 @@ const ParagraphList = () => {
                   onCancel={() => setEditIndex(null)}
                 />
               )}
-    </Container>
+    </Box>
   );
 };
 

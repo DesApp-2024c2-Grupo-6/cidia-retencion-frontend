@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import TarjetaDeCondiciones from './TarjetaDeCondiciones';
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
@@ -52,13 +52,14 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         multiline
         rows={4}
       />
-      <Box>
+      <FormControl fullWidth>
+        <InputLabel id="condiciones-select-label">Condiciones</InputLabel>
         <Select
-          label="Condiciones"
+          labelId="condiciones-select-label"
           value={condicionSeleccionada}
           onChange={handleCondicionChange}
         >
-          <MenuItem value="">Seleccionar Condición</MenuItem>
+          
           <MenuItem value="SIEMPRE">Siempre</MenuItem>
           <MenuItem value="NUNCA">Nunca</MenuItem>
           <MenuItem value="EN_CARRERA">En Carrera</MenuItem>
@@ -70,10 +71,10 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
           <MenuItem value="LIMITE_FINALES_PENDIENTES">Límite de Finales Pendientes</MenuItem>
           <MenuItem value="ORIENTACION">Orientación</MenuItem>
         </Select>
-        {condicionSeleccionada && (
-          <TarjetaDeCondiciones condicion={condicionSeleccionada} />
-        )}
-      </Box>
+      </FormControl>
+      {condicionSeleccionada && (
+        <TarjetaDeCondiciones condicion={condicionSeleccionada} />
+      )}
       <Box display="flex" justifyContent="space-between">
         <Button type="submit" variant="contained" color="primary">
           Guardar
