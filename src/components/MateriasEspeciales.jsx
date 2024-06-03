@@ -5,21 +5,32 @@ import '../styles/MateriasCross.css';
 import { useState, useEffect } from "react";
 import { update } from "lodash";
 
-export default function MateriasEspeciales ({isEdit, title, array}){
+export default function MateriasEspeciales (
+    {isEdit, 
+    title,
+    array, 
+    handleUpdateYear,
+    handleUpdateCampo}){
 
     const [renderSubjects, setRenderSubjects] = useState(array);
-    const [year, setYear] = useState(0);
-    const [campo, setCampo] = useState("-");
-
+    
     const handleOnDeleteRow = (index) => {
         const updateArray = renderSubjects.filter((_,i) => i != index);
-        setRenderSubjects(updateArray)
+        setRenderSubjects(updateArray) //actualizo estado local sino no cambia
+        handleUpdateCampo(updateArray) //actualizo estado comp padre.
     }
 
     const handleOnAddRow = () => {
-        const newRow = {year: year, campo: campo};
+        const newRow = {year: "", campo: ""};
         setRenderSubjects([...renderSubjects, newRow]);
-    
+    }
+
+    const handleInputChange = (e, pos, field) => {
+        const value = e.target.value
+        //Actualiza array segun donde esté parado
+        const updatedArray = renderSubjects.map( (item, index) =>  index === pos ? {...item, [field]: value} : item)
+        setRenderSubjects(updatedArray)
+        field === 'year' ? handleUpdateYear(updatedArray) : handleUpdateCampo(updatedArray);    
     }
 
     useEffect( () => {setRenderSubjects([...array])}, [array])
@@ -55,7 +66,6 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                         </IconButton>
                         )
                     }
-                        
                 </div>
                     {
                         renderSubjects?.map( (register, pos )=> (
@@ -64,6 +74,7 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                                 value={register.year}
                                 variant='standard'
                                 disabled={!isEdit}
+                                onChange={(e) => handleInputChange(e,pos,'year')}
                                 sx={
                                     {
                                         maxWidth: 'calc(20% - 5px)', 
@@ -78,6 +89,7 @@ export default function MateriasEspeciales ({isEdit, title, array}){
                                 value={register.campo}
                                 variant='standard'
                                 disabled={!isEdit}
+                                onChange={(e) => handleInputChange(e,pos,'campo')}
                                 sx={
                                     {
                                         maxWidth: 'calc(30% - 5px)', 

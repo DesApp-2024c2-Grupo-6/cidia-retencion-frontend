@@ -1,11 +1,18 @@
 import { Box, TextField, FormLabel} from '@mui/material';
 import '../styles/PanelConfiguradorGral.css';
 
-export default function PanelConfiguradorGral({isEdit, suggestionThresholdRegularizedSubjects, minimumSubjectsRecommended, specialCarrerName, handleUpdateCarrer}) {
+export default function PanelConfiguradorGral(
+    {isEdit, 
+    suggestionThresholdRegularizedSubjects, 
+    minimumSubjectsRecommended, 
+    specialCarrerName,
+    handleUpdateCarrerRegularSuggest, 
+    handleUpdateCarrerMinimunSubject, 
+    handleUpdateCarrerName}) {
    
-    const handleInputChange_1 = (e) => {handleUpdateCarrer(e.target.value)}
-    const handleInputChange_2 = (e) => {handleUpdateCarrer(e.target.value)}
-    const handleInputChange_3 = (e) => {handleUpdateCarrer(e.target.value)}
+    const handleInputChange_1 = (e) => {handleUpdateCarrerRegularSuggest(e.target.value)}
+    const handleInputChange_2 = (e) => {handleUpdateCarrerMinimunSubject(e.target.value)}
+    const handleInputChange_3 = (e) => {handleUpdateCarrerName(e.target.value)}
     return(
         <Box className='container-config'>
             <Box
