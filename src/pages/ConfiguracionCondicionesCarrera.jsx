@@ -336,7 +336,8 @@ function ConfiguracionCondicionCarrera() {
                                                 width:'100%',
                                                 overflow: 'hidden'
                                             }}>
-                                                <SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />
+                                                {/*<SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                <SelectMultipleAR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} placeholder='Seleccione Materias'></SelectMultipleAR>
                                             </Box>
                                         )
                                     }
@@ -367,7 +368,8 @@ function ConfiguracionCondicionCarrera() {
                                                     overflow: 'hidden'
                                                     
                                                 }}>
-                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />
+                                                    {/*<SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                    <SelectMultipleAR options={camposList} onSelect={setearExceptuadosSeleccionados} placeholder='Seleccione Campos Exceptuados'></SelectMultipleAR>
                                                 </Box>
                                                 
                                             </Box>
@@ -451,7 +453,8 @@ function ConfiguracionCondicionCarrera() {
                                                 </Box>
 
                                                 <Box>
-                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
+                                                    {/*<SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                    <SelectMultipleAR options={camposList} onSelect={setearExceptuadosSeleccionados} placeholder='Seleccione Campos'></SelectMultipleAR>
                                                 </Box>
                                             </Box>
 
