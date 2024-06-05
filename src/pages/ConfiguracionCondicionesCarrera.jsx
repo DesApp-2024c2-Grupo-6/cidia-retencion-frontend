@@ -52,6 +52,33 @@ function ConfiguracionCondicionCarrera() {
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
 
+
+    //PARA CUANDO ESTE EL BACKEND
+    //useEffect(() => {
+    //    fetchCondicionesList();
+    //}, []);
+
+    //const fetchCondicionesList = async () => {
+    //    try {
+    //        const response = await fetch('url_para_obtener_lista_actualizada');
+    //        const data = await response.json();
+    //        setCondicionesList(data);
+    //    } catch (error) {
+    //        console.error('Error al obtener la lista de condiciones:', error);
+    //    }
+    //};
+
+    //const eliminarCondicion = async (id) => {
+    //    try {
+    //        await fetch(`url_para_eliminar_condicion/${id}`, {
+    //            method: 'DELETE',
+    //        });
+    //        fetchCondicionesList();
+    //    } catch (error) {
+    //        console.error('Error al eliminar la condición:', error);
+    //    }
+    //};
+
     const [condicionesList, setCondicionesList] = useState([]);
 
     useEffect(() => {
@@ -150,7 +177,10 @@ function ConfiguracionCondicionCarrera() {
         setinputAnio(!!valor);
     }
     const setearCantidad = (event) => {
-        setCantidad(event.target.value);
+        const value = event.target.value;
+        if (value === '' || value >= 0) {
+            setCantidad(value);
+        }
     }
     const setearAnioCompleto = (event) => {
             setAnioCompleto(event.target.value);
@@ -232,6 +262,24 @@ function ConfiguracionCondicionCarrera() {
 
         handleClose();
     }
+
+
+    const eliminarCondicion = (cond) => {
+
+        let nuevaCondicion = {
+            id_carrera: IdCarrera,
+            anio: cond.anio,
+            materia: cond.materia,
+            codigo_condicion: cond.condicion,
+            config_condicion: cond.config_condicion
+        }
+
+        console.log("Se elimina: " + JSON.stringify(nuevaCondicion));
+
+    }
+
+
+
 
     const paginaAnterior = () => {
         navigate('/configuracion/carrera');
@@ -358,7 +406,6 @@ function ConfiguracionCondicionCarrera() {
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
-                                                                height: '7px',
                                                             }
                                                         }}
                                                         placeholder="Cant" onInput={ setearCantidad } />
@@ -543,7 +590,7 @@ function ConfiguracionCondicionCarrera() {
                                                     {/*    <EditIcon />*/}
                                                     {/*</IconButton>*/}
                                                     <Tooltip title="Eliminar condición.">
-                                                        <IconButton color="secondary" aria-label="eliminar" sx={{ width: '40px' }}>
+                                                            <IconButton color="secondary" aria-label="eliminar" onClick={ () => eliminarCondicion(row) } sx={{ width: '40px' }}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Tooltip>
