@@ -139,12 +139,11 @@ function ConfiguracionCondicionCarrera() {
 
     useEffect(() => {
         const lista = listadoSubjectData
-            .filter(c => c.id_carrera === IdCarrera)
+            .filter(c => c.id_carrera === IdCarrera && c.campo != "" && c.campo !== undefined)
             .map(c => ({
                 label: c.campo,
                 value: c.campo
             }));
-
         const eliminarDuplicados = (arr) => {
             const map = new Map();
             return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
@@ -211,6 +210,7 @@ function ConfiguracionCondicionCarrera() {
 
     const [exceptuadosSeleccionados, setExceptuadosSeleccionados] = useState([]);
     const setearExceptuadosSeleccionados = (value) => {
+        console.log(value)
         setExceptuadosSeleccionados(value);
     }
 
@@ -251,7 +251,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         else if (condicion === "CANT-MATERIAS-ANIO") {
-            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: camposSeleccionados }
+            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
         
         console.log(nuevaCondicion);
@@ -270,7 +270,7 @@ function ConfiguracionCondicionCarrera() {
             id_carrera: IdCarrera,
             anio: cond.anio,
             materia: cond.materia,
-            codigo_condicion: cond.condicion,
+            codigo_condicion: cond.codigo_condicion,
             config_condicion: cond.config_condicion
         }
 
@@ -526,7 +526,7 @@ function ConfiguracionCondicionCarrera() {
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                marginTop:'100px;'
+                                marginTop:'50px;'
                             }}>
                             <Typography variant="h4" >
                                 {nombreCarrera}
@@ -537,19 +537,16 @@ function ConfiguracionCondicionCarrera() {
                                 </IconButton>
                             </Tooltip>
                         </Box>
-                        <Box>
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead
-                                        sx={{
-                                            backgroundColor: '#609800',
-                                        }}>
-                                        <TableRow>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Año</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Materia</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Tipo de restricción</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Condiciones</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Acciones</TableCell>
+                        <Box sx={{ maxHeight: '350px', overflowY:'auto' }}>
+                            <TableContainer component={Paper} sx={{ maxHeight: '350px' }}>
+                                <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow sx={{ backgroundColor: '#609800' }}>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Año</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Materia</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Tipo de restricción</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Condiciones</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Acciones</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
