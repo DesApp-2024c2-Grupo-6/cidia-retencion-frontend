@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Autocomplete } from '@mui/material';
+import { TextField, Button, Box, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
 import TarjetaCondicion from './TarjetaCondicion';
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
