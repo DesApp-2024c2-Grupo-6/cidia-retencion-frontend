@@ -170,68 +170,69 @@ const ParagraphList = () => {
   };
 
   return (
-    <Box
-      sx={{
-        height: '50vh',
-        width: '100vw',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-          }}
-    >
-              <Typography variant="h4" component="h1" gutterBottom>
-                Plantilla de E-mail
-              </Typography>
-              {editIndex === null ? (
-                <>
+    <>
                   <Box
                     sx={{
-                      width: '100%',
-                      maxWidth: '600px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    {parrafos.map((paragraph, index) => (
-                      <Box
-                        key={index}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, index)}
-                        onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, index)}
-                        sx={{
-                          padding: '8px',
-                          border: '1px solid #ccc',
-                          borderRadius: '4px',
-                          backgroundColor: '#fafafa',
-                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                  width:'100vw',
+                                  display: 'flex',
+                                  flexDirection:"column",
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
                         }}
-                      >
-                        <ParrafoPlantilla
-                          text={paragraph.texto}
-                          clave={paragraph.clave}
-                          onEditClick={() => setEditIndex(index)}
-                          onDelete={() => eliminarParrafo(index)}
-                        />
-                      </Box>
-                    ))}
+                  >
+                            <Typography variant="h4" component="h1" gutterBottom>
+                              Plantilla de E-mail
+                            </Typography>
+                            {editIndex === null ? (
+                              <>
+                                <Box
+                                  sx={{
+                                    width: '100%',
+                                    maxWidth: '600px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '16px',
+                                    marginBottom: '24px',
+                                  }}
+                                >
+                                  {parrafos.map((paragraph, index) => (
+                                    <Box
+                                      key={index}
+                                      draggable
+                                      onDragStart={(e) => handleDragStart(e, index)}
+                                      onDragOver={handleDragOver}
+                                      onDrop={(e) => handleDrop(e, index)}
+                                      sx={{
+                                        padding: '8px',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '4px',
+                                        backgroundColor: '#fafafa',
+                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                      }}
+                                    >
+                                      <ParrafoPlantilla
+                                        text={paragraph.texto}
+                                        clave={paragraph.clave}
+                                        onEditClick={() => setEditIndex(index)}
+                                        onDelete={() => eliminarParrafo(index)}
+                                      />
+                                    </Box>
+                                  ))}
+                                </Box>
+                                <Button variant="contained" onClick={() => agregarParrafo("", "")}>
+                                  Añadir Comunicado
+                                </Button>
+                              </>
+                            ) : (
+                              <EdicionParrafo
+                                initialClave={parrafos[editIndex].clave}
+                                initialTexto={parrafos[editIndex].texto}
+                                onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
+                                onCancel={() => setEditIndex(null)}
+                              />
+                            )}
                   </Box>
-                  <Button variant="contained" onClick={() => agregarParrafo("", "")}>
-                    Añadir Comunicado
-                  </Button>
-                </>
-              ) : (
-                <EdicionParrafo
-                  initialClave={parrafos[editIndex].clave}
-                  initialTexto={parrafos[editIndex].texto}
-                  onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
-                  onCancel={() => setEditIndex(null)}
-                />
-              )}
-    </Box>
+      </>
   );
 };
 
