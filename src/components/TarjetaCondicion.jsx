@@ -5,14 +5,14 @@ const TarjetaCondicion = ({ condicion, onChange }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Condición</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Materia/Carrera</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Cantidad</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Va en carrera</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Condición</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Materia/Carrera</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Cantidad</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Va en carrera</Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Typography variant="body1">{condicion}</Typography>
-        <Select value={condicion} onChange={(e) => onChange(e.target.value)}>
+        <Typography variant="body1" sx={{ width: '25ch', overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+        <Select value={condicion} onChange={(e) => onChange(e.target.value)} sx={{ width: '25ch' }}>
           <MenuItem value="SIEMPRE">Siempre</MenuItem>
           <MenuItem value="NUNCA">Nunca</MenuItem>
           <MenuItem value="EN_CARRERA">En Carrera</MenuItem>
@@ -24,7 +24,7 @@ const TarjetaCondicion = ({ condicion, onChange }) => {
           <MenuItem value="LIMITE_FINALES_PENDIENTES">Límite de Finales Pendientes</MenuItem>
           <MenuItem value="ORIENTACION">Orientación</MenuItem>
         </Select>
-        <TextField type="number" variant="outlined" />
+        <TextField type="number" variant="outlined" sx={{ width: '10ch' }} />
         <Checkbox />
       </Box>
     </Box>
