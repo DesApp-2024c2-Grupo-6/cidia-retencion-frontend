@@ -20,6 +20,8 @@ function ConfiguracionCarrera() {
 
     const toggleEdit = () => {
         setIsEdit((prevState) => !prevState); // Cambia el estado de edición
+        //llamada al BE
+        console.log("CARRERA ACTUALIZADA: ", carrera)
       }
     const navigate = useNavigate();
     const handleOnClickCondiciones = () => {
@@ -27,6 +29,7 @@ function ConfiguracionCarrera() {
     }
 
     useEffect( () => {
+        //Aca iría llamado a BE
         const fechData = async () => {
             try{
                 const res = await fetch('../../public/carrerData.json');
@@ -40,13 +43,44 @@ function ConfiguracionCarrera() {
         fechData(IdCarrera)
     }, [])
 
-    const handleUpdateCarrer = (newValue) => {
+    const handleUpdateCarrerRegularSuggest = (newValue) => {
         const updatedCarrer = {...carrera};
         updatedCarrer.suggestionThresholdRegularizedSubjects = newValue;
+        setCarrera(updatedCarrer);
+    }
+    const handleUpdateCarrerMinimunSubject = (newValue) => {
+        const updatedCarrer = {...carrera};
         updatedCarrer.minimumSubjectsRecommended = newValue
+        setCarrera(updatedCarrer);
+    }
+    const handleUpdateCarrerName = (newValue) => {
+        const updatedCarrer = {...carrera};
         updatedCarrer.specialCareerName = newValue;
         setCarrera(updatedCarrer);
     }
+
+    const handleUpdateYear = (index,newValue) => {
+        let updateCarrer = {...carrera};
+        if(index === 0){
+            updateCarrer.unahurSubjects = newValue
+        }else if(index === 1){
+            updateCarrer.englishLevels = newValue
+        }
+        console.log("Carrera Actualizada:", updateCarrer)
+        setCarrera(updateCarrer)
+    }
+
+    const handleUpdateCampo = (index, newValue) => {
+        let updateCarrer = {...carrera};
+        if(index === 0){
+            updateCarrer.unahurSubjects = newValue
+        }else if(index === 1){
+            updateCarrer.englishLevels = newValue
+        }
+        console.log("Carrera Actualizada:", updateCarrer)
+        setCarrera(updateCarrer)
+    }
+
     return (
         <>
             <Box sx={{
@@ -55,6 +89,7 @@ function ConfiguracionCarrera() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    marginTop: 3,
             }}>
                 <Typography 
                     variant="h4"
@@ -69,18 +104,26 @@ function ConfiguracionCarrera() {
                         <MateriasEspeciales 
                             isEdit={isEdit}
                             title={"MATERIAS UNAHUR"} 
-                            array={carrera.unahurSubjects ? carrera.unahurSubjects : []}/>
+                            array={carrera.unahurSubjects ? carrera.unahurSubjects : []}
+                            handleUpdateYear={(newValue) => handleUpdateYear(0,newValue)}
+                            handleUpdateCampo={(newValue) => handleUpdateCampo(0,newValue)}
+                            />
+                            
                         <MateriasEspeciales 
                             isEdit={isEdit} 
                             title={"NIVELES INGLES"} 
-                            array={carrera.englishLevels ? carrera.englishLevels : []}/> 
+                            array={carrera.englishLevels ? carrera.englishLevels : []}
+                            handleUpdateYear={(newValue) => handleUpdateYear(1,newValue)}
+                            handleUpdateCampo={(newValue) => handleUpdateCampo(1,newValue)}/> 
                     </Box>
                     <PanelConfiguradorGral 
                         isEdit={isEdit}
                         suggestionThresholdRegularizedSubjects={carrera.suggestionThresholdRegularizedSubjects ? carrera.suggestionThresholdRegularizedSubjects : ""}
                         minimumSubjectsRecommended={carrera.minimumSubjectsRecommended ? carrera.minimumSubjectsRecommended : ""}
                         specialCarrerName={carrera.specialCareerName ? carrera.specialCareerName : ""}
-                        handleUpdateCarrer={handleUpdateCarrer}
+                        handleUpdateCarrerRegularSuggest={handleUpdateCarrerRegularSuggest}
+                        handleUpdateCarrerMinimunSubject={handleUpdateCarrerMinimunSubject}
+                        handleUpdateCarrerName={handleUpdateCarrerName}
                     />
                     </Box>
                         <ButtonGroup 
