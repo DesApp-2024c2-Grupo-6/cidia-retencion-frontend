@@ -52,6 +52,33 @@ function ConfiguracionCondicionCarrera() {
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
 
+
+    //PARA CUANDO ESTE EL BACKEND
+    //useEffect(() => {
+    //    fetchCondicionesList();
+    //}, []);
+
+    //const fetchCondicionesList = async () => {
+    //    try {
+    //        const response = await fetch('url_para_obtener_lista_actualizada');
+    //        const data = await response.json();
+    //        setCondicionesList(data);
+    //    } catch (error) {
+    //        console.error('Error al obtener la lista de condiciones:', error);
+    //    }
+    //};
+
+    //const eliminarCondicion = async (id) => {
+    //    try {
+    //        await fetch(`url_para_eliminar_condicion/${id}`, {
+    //            method: 'DELETE',
+    //        });
+    //        fetchCondicionesList();
+    //    } catch (error) {
+    //        console.error('Error al eliminar la condición:', error);
+    //    }
+    //};
+
     const [condicionesList, setCondicionesList] = useState([]);
 
     useEffect(() => {
@@ -112,12 +139,11 @@ function ConfiguracionCondicionCarrera() {
 
     useEffect(() => {
         const lista = listadoSubjectData
-            .filter(c => c.id_carrera === IdCarrera)
+            .filter(c => c.id_carrera === IdCarrera && c.campo != "" && c.campo !== undefined)
             .map(c => ({
                 label: c.campo,
                 value: c.campo
             }));
-
         const eliminarDuplicados = (arr) => {
             const map = new Map();
             return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
@@ -150,7 +176,10 @@ function ConfiguracionCondicionCarrera() {
         setinputAnio(!!valor);
     }
     const setearCantidad = (event) => {
-        setCantidad(event.target.value);
+        const value = event.target.value;
+        if (value === '' || value >= 0) {
+            setCantidad(value);
+        }
     }
     const setearAnioCompleto = (event) => {
             setAnioCompleto(event.target.value);
@@ -181,6 +210,7 @@ function ConfiguracionCondicionCarrera() {
 
     const [exceptuadosSeleccionados, setExceptuadosSeleccionados] = useState([]);
     const setearExceptuadosSeleccionados = (value) => {
+        console.log(value)
         setExceptuadosSeleccionados(value);
     }
 
@@ -205,7 +235,7 @@ function ConfiguracionCondicionCarrera() {
             nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
         }
         else if (condicion === "CANT-MATERIAS") {
-            if (camposSeleccionados.length > 0) {
+            if (exceptuadosSeleccionados.length > 0) {
                 nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
             }
             else {
@@ -221,7 +251,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         else if (condicion === "CANT-MATERIAS-ANIO") {
-            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: camposSeleccionados }
+            nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
         
         console.log(nuevaCondicion);
@@ -232,6 +262,24 @@ function ConfiguracionCondicionCarrera() {
 
         handleClose();
     }
+
+
+    const eliminarCondicion = (cond) => {
+
+        let nuevaCondicion = {
+            id_carrera: IdCarrera,
+            anio: cond.anio,
+            materia: cond.materia,
+            codigo_condicion: cond.codigo_condicion,
+            config_condicion: cond.config_condicion
+        }
+
+        console.log("Se elimina: " + JSON.stringify(nuevaCondicion));
+
+    }
+
+
+
 
     const paginaAnterior = () => {
         navigate('/configuracion/carrera');
@@ -254,15 +302,17 @@ function ConfiguracionCondicionCarrera() {
         <>
             <Box
                 sx={{
-                    width:'100vw',
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: { xs: 'column' },
                     alignItems: 'center',
+                    bgcolor: 'background.default',
                 }}>
-                <Box>
+                <Box
+                    sx={{
+                        maxWidth: '500px',
+                    }}>
                     <Box
                         sx={{
-                            width: 'auto',
                             marginBottom: '50px'
                         }}>
                         <Box>
@@ -336,7 +386,8 @@ function ConfiguracionCondicionCarrera() {
                                                 width:'100%',
                                                 overflow: 'hidden'
                                             }}>
-                                                <SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />
+                                                {/*<SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                <SelectMultipleAR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} placeholder='Seleccione Materias'></SelectMultipleAR>
                                             </Box>
                                         )
                                     }
@@ -357,7 +408,6 @@ function ConfiguracionCondicionCarrera() {
                                                         sx={{
                                                             '& input': {
                                                                 textAlign: 'center',
-                                                                height: '7px',
                                                             }
                                                         }}
                                                         placeholder="Cant" onInput={ setearCantidad } />
@@ -367,7 +417,8 @@ function ConfiguracionCondicionCarrera() {
                                                     overflow: 'hidden'
                                                     
                                                 }}>
-                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />
+                                                    {/*<SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                    <SelectMultipleAR options={camposList} onSelect={setearExceptuadosSeleccionados} placeholder='Seleccione Campos Exceptuados'></SelectMultipleAR>
                                                 </Box>
                                                 
                                             </Box>
@@ -385,6 +436,7 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        type="number"
                                                         title="Coloque el número del año que debe estar completo."
                                                         sx={{
                                                             '& input': {
@@ -399,6 +451,7 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        type="number"
                                                         title="Coloque la cantidad de materias exceptuadas."
                                                         sx={{
                                                             '& input': {
@@ -425,6 +478,7 @@ function ConfiguracionCondicionCarrera() {
                                                         width: '100%'
                                                     }}>
                                                         <OutlinedInput
+                                                            type="number"
                                                             sx={{
                                                                 '& input': {
                                                                     textAlign: 'center',
@@ -438,6 +492,7 @@ function ConfiguracionCondicionCarrera() {
                                                         width: '100%'
                                                     }}>
                                                         <OutlinedInput
+                                                            type="number"
                                                             sx={{
                                                                 '& input': {
                                                                     textAlign: 'center',
@@ -445,13 +500,14 @@ function ConfiguracionCondicionCarrera() {
                                                                     padding: '16.5px 0px 16.5px 0px'
                                                                 }
                                                             }}
-                                                            placeholder="Cantidad" onInput={setearAnio} />
+                                                            placeholder="Cantidad" onInput={setearCantidad} />
                                                     </FormControl>
                                                     
                                                 </Box>
 
                                                 <Box>
-                                                    <SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />
+                                                    {/*<SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />*/}
+                                                    <SelectMultipleAR options={camposList} onSelect={setearExceptuadosSeleccionados} placeholder='Seleccione Campos'></SelectMultipleAR>
                                                 </Box>
                                             </Box>
 
@@ -476,7 +532,7 @@ function ConfiguracionCondicionCarrera() {
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                marginTop:'100px;'
+                                marginTop:'50px;'
                             }}>
                             <Typography variant="h4" >
                                 {nombreCarrera}
@@ -487,19 +543,22 @@ function ConfiguracionCondicionCarrera() {
                                 </IconButton>
                             </Tooltip>
                         </Box>
-                        <Box>
-                            <TableContainer component={Paper}>
-                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                    <TableHead
-                                        sx={{
-                                            backgroundColor: '#609800',
-                                        }}>
-                                        <TableRow>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Año</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Materia</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Tipo de restricción</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Condiciones</TableCell>
-                                            <TableCell sx={{ color: '#FFFFFF' }} align="center">Acciones</TableCell>
+                        <Box sx={{
+                            overflowY: 'auto', display: 'flex',
+                            flexDirection: { xs: 'column' },
+                            alignItems: 'center',
+                            bgcolor: 'background.default',
+
+                             }}>
+                            <TableContainer component={Paper} sx={{  maxHeight: '350px' }} >
+                                <Table stickyHeader aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow sx={{ backgroundColor: '#609800' }}>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Año</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Materia</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Tipo de restricción</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Condiciones</TableCell>
+                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Acciones</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -540,7 +599,7 @@ function ConfiguracionCondicionCarrera() {
                                                     {/*    <EditIcon />*/}
                                                     {/*</IconButton>*/}
                                                     <Tooltip title="Eliminar condición.">
-                                                        <IconButton color="secondary" aria-label="eliminar" sx={{ width: '40px' }}>
+                                                            <IconButton color="secondary" aria-label="eliminar" onClick={ () => eliminarCondicion(row) } sx={{ width: '40px' }}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Tooltip>
