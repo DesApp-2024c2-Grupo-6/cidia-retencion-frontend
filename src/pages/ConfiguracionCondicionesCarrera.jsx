@@ -235,7 +235,7 @@ function ConfiguracionCondicionCarrera() {
             nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
         }
         else if (condicion === "CANT-MATERIAS") {
-            if (camposSeleccionados.length > 0) {
+            if (exceptuadosSeleccionados.length > 0) {
                 nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
             }
             else {
@@ -251,7 +251,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         else if (condicion === "CANT-MATERIAS-ANIO") {
-            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
+            nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
         
         console.log(nuevaCondicion);
@@ -302,15 +302,17 @@ function ConfiguracionCondicionCarrera() {
         <>
             <Box
                 sx={{
-                    width:'100vw',
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: { xs: 'column' },
                     alignItems: 'center',
+                    bgcolor: 'background.default',
                 }}>
-                <Box>
+                <Box
+                    sx={{
+                        maxWidth: '500px',
+                    }}>
                     <Box
                         sx={{
-                            width: 'auto',
                             marginBottom: '50px'
                         }}>
                         <Box>
@@ -434,6 +436,7 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        type="number"
                                                         title="Coloque el número del año que debe estar completo."
                                                         sx={{
                                                             '& input': {
@@ -448,6 +451,7 @@ function ConfiguracionCondicionCarrera() {
                                                     width: '100%'
                                                 }}>
                                                     <OutlinedInput
+                                                        type="number"
                                                         title="Coloque la cantidad de materias exceptuadas."
                                                         sx={{
                                                             '& input': {
@@ -474,6 +478,7 @@ function ConfiguracionCondicionCarrera() {
                                                         width: '100%'
                                                     }}>
                                                         <OutlinedInput
+                                                            type="number"
                                                             sx={{
                                                                 '& input': {
                                                                     textAlign: 'center',
@@ -487,6 +492,7 @@ function ConfiguracionCondicionCarrera() {
                                                         width: '100%'
                                                     }}>
                                                         <OutlinedInput
+                                                            type="number"
                                                             sx={{
                                                                 '& input': {
                                                                     textAlign: 'center',
@@ -494,7 +500,7 @@ function ConfiguracionCondicionCarrera() {
                                                                     padding: '16.5px 0px 16.5px 0px'
                                                                 }
                                                             }}
-                                                            placeholder="Cantidad" onInput={setearAnio} />
+                                                            placeholder="Cantidad" onInput={setearCantidad} />
                                                     </FormControl>
                                                     
                                                 </Box>
@@ -537,9 +543,15 @@ function ConfiguracionCondicionCarrera() {
                                 </IconButton>
                             </Tooltip>
                         </Box>
-                        <Box sx={{ maxHeight: '350px', overflowY:'auto' }}>
-                            <TableContainer component={Paper} sx={{ maxHeight: '350px' }}>
-                                <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+                        <Box sx={{
+                            overflowY: 'auto', display: 'flex',
+                            flexDirection: { xs: 'column' },
+                            alignItems: 'center',
+                            bgcolor: 'background.default',
+
+                             }}>
+                            <TableContainer component={Paper} sx={{  maxHeight: '350px' }} >
+                                <Table stickyHeader aria-label="simple table">
                                     <TableHead>
                                         <TableRow sx={{ backgroundColor: '#609800' }}>
                                             <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Año</TableCell>
