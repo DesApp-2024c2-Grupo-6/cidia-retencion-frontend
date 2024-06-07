@@ -29,8 +29,7 @@ function ConfiguracionCarrera() {
     }
 
     useEffect(() => {
-
-        if (IdCarrera !== undefined && IdCarrera != "") {
+        if (IdCarrera !== undefined && IdCarrera != ""){
             //Aca iría llamado a BE
             const fechData = async () => {
                 try {
