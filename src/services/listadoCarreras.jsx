@@ -53,7 +53,7 @@ const carreras = [
         unahurSubjects: [{ year: 3, campo: 'Gral' }, { year: 4, campo: 'Gral'}], 
         englishLevels: [{ year: 1, campo: 'Gral' }, { year: 3, campo: 'Gral'}], 
         suggestionThresholdRegularizedSubjects: 3, 
-        specialCareerName: "Tecnicatura / Licenciatura en informática"
+        specialCareerName: "Tecnicatura / Licenciatura en informï¿½tica"
     }
 ];
 

@@ -1,64 +1,76 @@
-
-
-import { Box, TextField, Button, ButtonGroup } from '@mui/material';
+import { Box, TextField, FormLabel} from '@mui/material';
 import '../styles/PanelConfiguradorGral.css';
-import BuildIcon from '@mui/icons-material/Build';
-import ListIcon from '@mui/icons-material/List';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import { useNavigate } from 'react-router-dom';
 
-export default function PanelConfiguradorGral() {
-
-    const navigate = useNavigate();
-
-    const handleOnClickCondiciones = () => {
-        navigate('/configuracion/condiciones')
-    }
-
-
+export default function PanelConfiguradorGral(
+    {isEdit, 
+    suggestionThresholdRegularizedSubjects, 
+    minimumSubjectsRecommended, 
+    specialCarrerName,
+    handleUpdateCarrerRegularSuggest, 
+    handleUpdateCarrerMinimunSubject, 
+    handleUpdateCarrerName}) {
+   
+    const handleInputChange_1 = (e) => {handleUpdateCarrerRegularSuggest(e.target.value)}
+    const handleInputChange_2 = (e) => {handleUpdateCarrerMinimunSubject(e.target.value)}
+    const handleInputChange_3 = (e) => {handleUpdateCarrerName(e.target.value)}
     return(
         <Box className='container-config'>
             <Box
                 className='container-config-item'>
-                <label>Materias para generar sugerencias: </label>
+                <FormLabel
+                    sx={
+                        {
+                            fontWeight: 'bold',
+                            fontSize: '14px'
+                        }
+                    }
+                >Materias para generar sugerencias: </FormLabel>
                 <TextField 
+                    value={suggestionThresholdRegularizedSubjects}
                     variant='standard'
-                    className='container-config-item-input' /> 
+                    className='container-config-item-input'
+                    onChange={handleInputChange_1}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
                 className='container-config-item'>
-                <label>Minimo de materias sugeridas para inscribirse: </label>
+                <FormLabel
+                    sx={
+                        {
+                            fontWeight: 'bold',
+                            fontSize: '14px'
+                        }
+                    }
+                >Minimo de materias sugeridas para inscribirse:</FormLabel>
                 <TextField 
+                    value={minimumSubjectsRecommended}
                     variant='standard'
                     className='container-config-item-input' 
-                 /> 
+                    onChange={handleInputChange_2}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
                 className='container-config-item'>
-                <label>Nombre especial: </label>
+                <FormLabel
+                    sx={
+                        {
+                            fontWeight: 'bold',
+                            fontSize: '14px'
+                        }
+                    }
+                >Nombre especial:</FormLabel>
                 <TextField 
+                sx={{width: '280px'}}
+                    value={specialCarrerName}
                     variant='standard'
-                 /> 
+                    onChange={handleInputChange_3}
+                    disabled={!isEdit}
+                    inputProps={{style:{fontSize: '12px', textAlign: 'right', paddingRight: '5px'}}}/>
             </Box>
-
-            <ButtonGroup 
-                variant='outlined'
-            >
-                <Button
-                    startIcon={<ListIcon />}>MATERIAS</Button>    
-                <Button
-                    startIcon={<EditIcon />}>EDITAR</Button>  
-                <Button
-                    startIcon={<BuildIcon />}
-                    onClick={ handleOnClickCondiciones }
-                    >CONDICIONES</Button>  
-                <Button
-                    startIcon={<SaveIcon />}>
-                GUARDAR</Button>  
-            </ButtonGroup>
 
         </Box>
         
