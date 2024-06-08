@@ -79,7 +79,18 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSave} sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: '600px', margin: '0 auto' }}>
+    <Box
+      component="form"
+      onSubmit={handleSave}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        maxWidth: '1000px', // Ajusta el ancho máximo del contenedor principal
+        width: '100%', // Ocupa todo el ancho disponible
+        margin: '0 auto',
+      }}
+    >
       <TextField label="Clave" value={clave} onChange={handleClaveChange} variant="outlined" fullWidth />
       <TextField label="Texto" value={texto} onChange={handleTextoChange} variant="outlined" fullWidth multiline rows={4} />
       <Autocomplete
@@ -89,9 +100,9 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         value={condicionesSeleccionadas}
         onChange={handleCondicionesChange}
         renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
-        sx={{ mt: 2 }} // Añadimos un margen superior al Autocomplete
+        sx={{ mt: 2 }}
       />
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2, width: '100%' }}> {/* Ajusta el ancho del contenedor interno */}
         {condicionesSeleccionadas.map((condicion, index) => (
           <TarjetaCondicion key={index} condicion={condicion} onChange={(newCondicion) => handleCondicionChange(index, newCondicion)} />
         ))}
