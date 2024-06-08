@@ -170,37 +170,6 @@ const ParagraphList = () => {
     setParrafos(updatedParrafos);
   };
 
-  if (parrafos.length === 0) {
-    return (
-      <Box
-        sx={{
-          width: '100vw',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '20px',
-        }}
-      >
-        <Typography variant="h4" component="h1" gutterBottom>
-          No hay párrafos para mostrar
-        </Typography>
-        <Fab
-          color="primary"
-          aria-label="add"
-          onClick={() => agregarParrafo("", "")}
-          sx={{
-            position: 'fixed',
-            bottom: '16px',
-            right: '16px',
-          }}
-        >
-          <AddIcon />
-        </Fab>
-      </Box>
-    );
-  }
-
   return (
     <Box
       sx={{
@@ -243,18 +212,14 @@ const ParagraphList = () => {
               </Grid>
             ))}
           </Grid>
-          <Fab
+          <Button
+            variant="contained"
             color="primary"
-            aria-label="add"
             onClick={() => agregarParrafo("", "")}
-            sx={{
-              position: 'fixed',
-              bottom: '16px',
-              right: '16px',
-            }}
+            sx={{ marginTop: '16px' }}
           >
-            <AddIcon />
-          </Fab>
+            Añadir Párrafo
+          </Button>
         </>
       ) : (
         <EdicionParrafo
