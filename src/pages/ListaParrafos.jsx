@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import EdicionParrafo from '../components/EdicionParrafo';
-import { Button, Box, Typography } from '@mui/material';
+import { Button, Box, Typography, Fab, Paper, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const listadoPrueba = [
   {texto: "En función de tu recorrido académico en la carrera ${nombreDeLaCarrera}, te enviamos las siguientes sugerencias de inscripción para el próximo período.", clave: "intro", condiciones:[
@@ -169,70 +170,101 @@ const ParagraphList = () => {
     setParrafos(updatedParrafos);
   };
 
+  if (parrafos.length === 0) {
+    return (
+      <Box
+        sx={{
+          width: '100vw',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom>
+          No hay párrafos para mostrar
+        </Typography>
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={() => agregarParrafo("", "")}
+          sx={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      </Box>
+    );
+  }
+
   return (
-    <>
-                  <Box
-                    sx={{
-                                  width:'100vw',
-                                  display: 'flex',
-                                  flexDirection:"column",
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                        }}
-                  >
-                            <Typography variant="h4" component="h1" gutterBottom>
-                              Plantilla de E-mail
-                            </Typography>
-                            {editIndex === null ? (
-                              <>
-                                <Box
-                                  sx={{
-                                    width: '100%',
-                                    maxWidth: '600px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '16px',
-                                    marginBottom: '24px',
-                                  }}
-                                >
-                                  {parrafos.map((paragraph, index) => (
-                                    <Box
-                                      key={index}
-                                      draggable
-                                      onDragStart={(e) => handleDragStart(e, index)}
-                                      onDragOver={handleDragOver}
-                                      onDrop={(e) => handleDrop(e, index)}
-                                      sx={{
-                                        padding: '8px',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '4px',
-                                        backgroundColor: '#fafafa',
-                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                      }}
-                                    >
-                                      <ParrafoPlantilla
-                                        text={paragraph.texto}
-                                        clave={paragraph.clave}
-                                        onEditClick={() => setEditIndex(index)}
-                                        onDelete={() => eliminarParrafo(index)}
-                                      />
-                                    </Box>
-                                  ))}
-                                </Box>
-                                <Button variant="contained" onClick={() => agregarParrafo("", "")}>
-                                  Añadir Comunicado
-                                </Button>
-                              </>
-                            ) : (
-                              <EdicionParrafo
-                                initialClave={parrafos[editIndex].clave}
-                                initialTexto={parrafos[editIndex].texto}
-                                onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
-                                onCancel={() => setEditIndex(null)}
-                              />
-                            )}
-                  </Box>
-      </>
+    <Box
+      sx={{
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '20px',
+      }}
+    >
+      <Typography variant="h4" component="h1" gutterBottom>
+        Plantilla de E-mail
+      </Typography>
+      {editIndex === null ? (
+        <>
+          <Grid container spacing={2} sx={{ maxWidth: '1200px', width: '100%' }}>
+            {parrafos.map((paragraph, index) => (
+              <Grid item xs={12} key={index}>
+                <Paper
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
+                  sx={{
+                    padding: '16px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    backgroundColor: '#fafafa',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <ParrafoPlantilla
+                    text={paragraph.texto}
+                    clave={paragraph.clave}
+                    onEditClick={() => setEditIndex(index)}
+                    onDelete={() => eliminarParrafo(index)}
+                  />
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={() => agregarParrafo("", "")}
+            sx={{
+              position: 'fixed',
+              bottom: '16px',
+              right: '16px',
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </>
+      ) : (
+        <EdicionParrafo
+          initialClave={parrafos[editIndex].clave}
+          initialTexto={parrafos[editIndex].texto}
+          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
+          onCancel={() => setEditIndex(null)}
+        />
+      )}
+    </Box>
   );
 };
 
