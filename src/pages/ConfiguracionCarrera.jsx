@@ -108,9 +108,9 @@ function ConfiguracionCarrera() {
                 </Typography>  
                 <Box sx={{}}>
                 <Box
-                    sx={{display: 'flex', flexDirection: 'row'}}>
+                    sx={{display: 'flex', flexDirection: 'column'}}>
                     <Box
-                        sx={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+                        sx={{display: 'flex'}}>
                         <MateriasEspeciales 
                             isEdit={isEdit}
                             title={"MATERIAS UNAHUR"} 

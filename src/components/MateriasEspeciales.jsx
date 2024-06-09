@@ -57,17 +57,15 @@ export default function MateriasEspeciales (
                         }
                     }
                     >Campo</FormLabel>
-                    {
-                        isEdit && (
-                            <IconButton
-                                color='success'
-                                sx={{ width: '25px' }}
-                                onClick={handleOnAddRow} >
-                                
+                    <IconButton
+                        color='success'
+                        disabled={!isEdit}
+                        sx={{ width: '25px' }}
+                        onClick={handleOnAddRow} >        
                             <AddIcon />
-                        </IconButton>
-                        )
-                    }
+                    </IconButton>
+                        
+                    
                 </div>
                     {
                         renderSubjects?.map( (register, pos )=> (
@@ -79,7 +77,7 @@ export default function MateriasEspeciales (
                                 onChange={(e) => handleInputChange(e,pos,'year')}
                                 sx={
                                     {
-                                        maxWidth: 'calc(20% - 5px)', 
+                                        maxWidth: 'calc(30% - 5px)', 
                                         '& .MuiInputBase-input': { 
                                             fontSize: '12px', 
                                             textAlign: 'center' }
@@ -127,17 +125,18 @@ export default function MateriasEspeciales (
                                 }
 
                             />
-                            {
-                                isEdit && (
+                            
+                                
                                 <IconButton
+                                    disabled={!isEdit}
                                     sx={{ width: '25px' }}
                                     onClick={() => handleOnDeleteRow(pos)}> 
                                     <DeleteIcon
                                         fontSize="small"
-                                        sx={{ color: 'red'}} />
+                                        sx={{ color: isEdit ? 'red' : 'grey'}} />
                                 </IconButton>
-                                ) 
-                            }                           
+                                 
+                                                       
                         </div>
                         ))
                     }
