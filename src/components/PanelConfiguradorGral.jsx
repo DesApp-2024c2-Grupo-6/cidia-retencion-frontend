@@ -31,7 +31,7 @@ export default function PanelConfiguradorGral(
                     className='container-config-item-input'
                     onChange={handleInputChange_1}
                     disabled={!isEdit}
-                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
+                    inputProps={{style:{fontSize: '14px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
@@ -50,7 +50,7 @@ export default function PanelConfiguradorGral(
                     className='container-config-item-input' 
                     onChange={handleInputChange_2}
                     disabled={!isEdit}
-                    inputProps={{style:{fontSize: '12px', textAlign: 'center'}}}/>
+                    inputProps={{style:{fontSize: '14px', textAlign: 'center'}}}/>
             </Box>
 
             <Box
@@ -64,12 +64,12 @@ export default function PanelConfiguradorGral(
                     }
                 >Nombre especial:</FormLabel>
                 <TextField 
-                sx={{width: '280px'}}
+                sx={{width: '380px'}}
                     value={specialCarrerName}
                     variant='standard'
                     onChange={handleInputChange_3}
                     disabled={!isEdit}
-                    inputProps={{style:{fontSize: '12px', textAlign: 'right', paddingRight: '5px'}}}/>
+                    inputProps={{style:{fontSize: '14px', textAlign: 'right', paddingRight: '5px'}}}/>
             </Box>
 
         </Box>
