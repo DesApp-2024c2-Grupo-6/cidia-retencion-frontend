@@ -140,12 +140,10 @@ function ConfiguracionCarrera() {
                             variant='contained'
                             sx={
                                 {
-                                    //display: 'grid', 
-                                    //gridTemplateColumns: '1fr 1fr 1fr 1fr', 
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     gap: '20px', 
-                                    margin: '30px 0px 15px 15px', 
+                                    margin: '15px 15px 15px 15px', 
                                     boxShadow: 'none'
                                 }}>
                         <Button
