@@ -138,7 +138,16 @@ function ConfiguracionCarrera() {
                     </Box>
                         <ButtonGroup 
                             variant='contained'
-                            sx={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '20px', margin: '15px 0px 15px 15px', boxShadow: 'none'}}>
+                            sx={
+                                {
+                                    //display: 'grid', 
+                                    //gridTemplateColumns: '1fr 1fr 1fr 1fr', 
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    gap: '20px', 
+                                    margin: '30px 0px 15px 15px', 
+                                    boxShadow: 'none'
+                                }}>
                         <Button
                             onClick={ volver }
                                 startIcon={<ArrowCircleLeftIcon />}>
