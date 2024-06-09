@@ -1,11 +1,11 @@
 .card-materia{
     border: 1px solid grey;
-    max-width: 160px;
+    /* max-width: 160px; */
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 10px;
-    gap: 10px;
+    padding: 5px;
+    gap: 5px;
     margin: 0 15px 0 15px;
     border-radius: 5px;
 }
@@ -17,5 +17,5 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
