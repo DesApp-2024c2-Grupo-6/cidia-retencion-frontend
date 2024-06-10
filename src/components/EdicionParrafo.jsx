@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { TextField, Button, Box, Autocomplete } from '@mui/material';
 import TarjetaCondicion from './TarjetaCondicion';
 
-
+const handleGetOptionDisabled = (option) => {
+  return option === 'MATERIAS_PENDIENTES' || option === 'MATERIAS_NO_PENDIENTES';
+};
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
   const [clave, setClave] = useState(initialClave);
   const [texto, setTexto] = useState(initialTexto);
   const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState([]);
+  const [condicionesActualizadas, setCondicionesActualizadas] = useState([]);
 
   const handleClaveChange = (e) => setClave(e.target.value);
   const handleTextoChange = (e) => setTexto(e.target.value);
@@ -20,6 +23,11 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
     const nuevasCondiciones = [...condicionesSeleccionadas];
     nuevasCondiciones[index] = newCondicion;
     setCondicionesSeleccionadas(nuevasCondiciones);
+    setCondicionesActualizadas([...condicionesActualizadas.slice(0, index), false, ...condicionesActualizadas.slice(index + 1)]);
+  };
+
+  const handleGuardadoCondicion = (index) => {
+    setCondicionesActualizadas([...condicionesActualizadas.slice(0, index), true, ...condicionesActualizadas.slice(index + 1)]);
   };
 
   return (
@@ -45,10 +53,17 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         onChange={handleCondicionesChange}
         renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
         sx={{ mt: 2 }}
+        getOptionDisabled={handleGetOptionDisabled}
       />
       <Box sx={{ mt: 2, width: '100%' }}> {/* Ajusta el ancho del contenedor interno */}
         {condicionesSeleccionadas.map((condicion, index) => (
-          <TarjetaCondicion key={index} condicion={condicion} onChange={(newCondicion) => handleCondicionChange(index, newCondicion)} />
+          <TarjetaCondicion
+            key={index}
+            condicion={condicion}
+            onChange={(newCondicion) => handleCondicionChange(index, newCondicion)}
+            onGuardadoCondicion={() => handleGuardadoCondicion(index)}
+            deshabilitarCampoNumerico={condicionesActualizadas[index]}
+          />
         ))}
       </Box>
       <Box display="flex" justifyContent="space-between">
