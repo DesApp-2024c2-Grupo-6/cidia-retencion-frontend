@@ -28,19 +28,25 @@ function ConfiguracionCarrera() {
         navigate('/configuracion/condiciones')
     }
 
-    useEffect( () => {
-        //Aca iría llamado a BE
-        const fechData = async () => {
-            try{
-                const res = await fetch('../../public/carrerData.json');
-                const jsonData = await res.json();
-                const carr = jsonData.filter( e => e.careerId === IdCarrera)[0]
-                setCarrera(carr)
-            } catch(error){
-                console.log(error)
+    useEffect(() => {
+        if (IdCarrera !== undefined && IdCarrera != ""){
+            //Aca iría llamado a BE
+            const fechData = async () => {
+                try {
+                    const res = await fetch('../../public/carrerData.json');
+                    const jsonData = await res.json();
+                    const carr = jsonData.filter(e => e.careerId === IdCarrera)[0]
+                    setCarrera(carr)
+                } catch (error) {
+                    console.log(error)
+                }
             }
+            fechData(IdCarrera)
         }
-        fechData(IdCarrera)
+        else {
+            navigate('/configuracion')
+        }
+        
     }, [])
 
     const handleUpdateCarrerRegularSuggest = (newValue) => {
@@ -79,6 +85,10 @@ function ConfiguracionCarrera() {
         }
         console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
+    }
+
+    const volver = () => {
+        navigate('/configuracion');
     }
 
     return (
@@ -129,7 +139,8 @@ function ConfiguracionCarrera() {
                         <ButtonGroup 
                             variant='contained'
                             sx={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '20px', margin: '15px 0px 15px 15px', boxShadow: 'none'}}>
-                            <Button
+                        <Button
+                            onClick={ volver }
                                 startIcon={<ArrowCircleLeftIcon />}>
                             VOLVER</Button>  
                             <Button
