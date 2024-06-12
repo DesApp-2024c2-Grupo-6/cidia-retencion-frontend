@@ -17,6 +17,7 @@ function SeleccionCarrera() {
 
     const navigate = useNavigate();
     const [carreras, setCarrerasList] = useState([]);
+    const [desactivado, setDesactivado] = useState(true);
 
     useEffect(() => {
         const lista = listadoCarreras.map(c => ({
@@ -28,7 +29,13 @@ function SeleccionCarrera() {
 
 
     const handleSelect = (value) => {
-        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
+        if (value.v != "") {
+            setDesactivado(false);
+            dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
+        }
+        else {
+            setDesactivado(true);
+        }
     };
 
     const handleOnClickConfiguracionCarrera = () => {
@@ -71,7 +78,9 @@ function SeleccionCarrera() {
                             onClick={handleOnClickConfiguracionCarrera}
                             variant="contained"
                             name={'Configurar'}
+                            disabled={desactivado}
                             startIcon={<BuildIcon />}>Configurar
+                            
                         </Button>
                         <Button
                             onClick={handleOnClickConfiguracionParrafos}
