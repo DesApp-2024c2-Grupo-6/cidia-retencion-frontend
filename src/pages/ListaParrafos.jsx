@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import EdicionParrafo from '../components/EdicionParrafo';
-import { Button, Box, Typography, Fab, Paper, Grid } from '@mui/material';
+import { Button, Box, Typography, Paper, Grid, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 const listadoPrueba = [

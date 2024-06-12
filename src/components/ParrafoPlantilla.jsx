@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, IconButton, Box } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
-
 const ParrafoPlantilla = ({ text, clave, onEditClick, onDelete }) => {
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between" gap={2}>
