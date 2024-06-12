@@ -108,9 +108,9 @@ function ConfiguracionCarrera() {
                 </Typography>  
                 <Box sx={{}}>
                 <Box
-                    sx={{display: 'flex', flexDirection: 'row'}}>
+                    sx={{display: 'flex', flexDirection: 'column'}}>
                     <Box
-                        sx={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+                        sx={{display: 'flex'}}>
                         <MateriasEspeciales 
                             isEdit={isEdit}
                             title={"MATERIAS UNAHUR"} 
@@ -138,7 +138,14 @@ function ConfiguracionCarrera() {
                     </Box>
                         <ButtonGroup 
                             variant='contained'
-                            sx={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '20px', margin: '15px 0px 15px 15px', boxShadow: 'none'}}>
+                            sx={
+                                {
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    gap: '20px', 
+                                    margin: '15px 15px 15px 15px', 
+                                    boxShadow: 'none'
+                                }}>
                         <Button
                             onClick={ volver }
                                 startIcon={<ArrowCircleLeftIcon />}>
