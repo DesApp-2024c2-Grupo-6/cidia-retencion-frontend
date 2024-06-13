@@ -306,6 +306,8 @@ function ConfiguracionCondicionCarrera() {
                     flexDirection: { xs: 'column' },
                     alignItems: 'center',
                     bgcolor: 'background.default',
+                    marginTop: 3,
+                    marginBottom: 3
                 }}>
                 <Box
                     sx={{
@@ -532,7 +534,6 @@ function ConfiguracionCondicionCarrera() {
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                marginTop:'50px;'
                             }}>
                             <Typography variant="h4" >
                                 {nombreCarrera}

@@ -172,13 +172,17 @@ const ParagraphList = () => {
 
   return (
     <Box
-      sx={{
-        width: '100vw',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
+          sx={{
+
+              display: 'flex',
+              flexDirection: { xs: 'column' },
+              alignItems: 'center',
+              bgcolor: 'background.default',
+              marginTop: 3,
+              marginBottom: 3,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '20px',
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>

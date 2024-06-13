@@ -94,12 +94,15 @@ function ConfiguracionCarrera() {
     return (
         <>
             <Box sx={{
-                    width:'100vw',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 3,
+                display: 'flex',
+                flexDirection: { xs: 'column' },
+                alignItems: 'center',
+                bgcolor: 'background.default',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 3,
+                marginBottom:3
             }}>
                 <Typography 
                     variant="h4"

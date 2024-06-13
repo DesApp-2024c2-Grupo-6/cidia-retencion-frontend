@@ -46,11 +46,12 @@ function SeleccionCarrera() {
     return (
         <>
             <Box sx={{
-                height: '50vh',
-                width: '100vw',
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
+                flexDirection: { xs: 'column' },
+                alignItems: 'center',
+                bgcolor: 'background.default',
+                marginTop: 8,
+                marginBottom: 3
             }}>
                 <Box
                     sx={{
