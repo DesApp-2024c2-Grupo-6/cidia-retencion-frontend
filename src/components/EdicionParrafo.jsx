@@ -659,16 +659,17 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
 
   // Verificar si "EN_CARRERA" está seleccionado
         const isEnCarreraSelected = values.includes('EN_CARRERA');
+        // Habilitar o deshabilitar las opciones dependiendo de si "EN_CARRERA" está seleccionado
         //setAutoCompleteOptionsDisabled(!isEnCarreraSelected);
 
-      //const isSiempreSelected = values.includes('SIEMPRE');
-      //const isNuncaSelected = values.includes('NUNCA');
-      //if (isSiempreSelected || isNuncaSelected) {
-      //    setDesabilitarResto(true);
-      //}
-      //if (isSiempreSelected) { setDesabilitarNunca(true) }
-      //if (isNuncaSelected) { setDesabilitarSiempre(true) }
-      // Habilitar o deshabilitar las opciones dependiendo de si "EN_CARRERA" está seleccionado
+      const isSiempreSelected = values.includes('SIEMPRE');
+      const isNuncaSelected = values.includes('NUNCA');
+      if (isSiempreSelected || isNuncaSelected) {
+          setDesabilitarResto(true);
+      }
+      if (isSiempreSelected) { setDesabilitarNunca(true) }
+      if (isNuncaSelected) { setDesabilitarSiempre(true) }
+      
 
     };
 
@@ -692,16 +693,16 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         if (autoCompleteOptionsDisabled && (option === 'MATERIAS_PENDIENTES' || option === 'MATERIAS_NO_PENDIENTES')) {
             return true;
       }
-        //if (desabilitarResto && (option === 'MATERIAS_COMUNES' || option === 'EN_CARRERA' || option === 'CANT_APROBADAS' || option === 'FINALES_PENDIENTES'
-        //    || option === 'LIMITE_FINALES_PENDIENTES' || option === 'ORIENTACION')) {
-        //  return true;
-        //}
-        //if (desabilitarSiempre && option === 'SIEMPRE') {
-        //    return true;
-        //}
-        //if (desabilitarNunca && option === 'NUNCA') {
-        //    return true;
-        //}
+        if (desabilitarResto && (option === 'MATERIAS_COMUNES' || option === 'EN_CARRERA' || option === 'CANT_APROBADAS' || option === 'FINALES_PENDIENTES'
+            || option === 'LIMITE_FINALES_PENDIENTES' || option === 'ORIENTACION')) {
+          return true;
+        }
+        if (desabilitarSiempre && option === 'SIEMPRE') {
+            return true;
+        }
+        if (desabilitarNunca && option === 'NUNCA') {
+            return true;
+        }
         return false;
   };
 
@@ -720,29 +721,31 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
       >
           <TextField label="Clave" value={clave} onChange={handleClaveChange} variant="outlined" fullWidth />
           <TextField label="Texto" value={texto} onChange={handleTextoChange} variant="outlined" fullWidth multiline rows={4} />
-          <Autocomplete
-              multiple
-              id="condiciones-select"
-              options={["SIEMPRE", "NUNCA", "EN_CARRERA", "MATERIAS_PENDIENTES", "MATERIAS_NO_PENDIENTES", "MATERIAS_COMUNES", "CANT_APROBADAS", "FINALES_PENDIENTES", "LIMITE_FINALES_PENDIENTES", "ORIENTACION"]}
-              value={condicionesSeleccionadas}
-              onChange={handleCondicionesChange}
-              renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
-              sx={{ mt: 2 }}
-              getOptionDisabled={getOptionDisabled}
-          />
-          <Box sx={{ mt: 2, width: '100%' }}>
-              {condicionesSeleccionadas.map((condicion, index) => (
-                  <TarjetaCondicion
-                      key={index}
-                      condicion={condicion}
-                      devolucionCarreras={devolucionCarreras}
-                      listadoSubjectData={listadoSubjectData}
-                      onCheckboxChange={() => handleCheckboxChange(index)}
-                      checkboxValue={checkboxValues[index]}
-                      deshabilitarCampoNumerico={!checkboxValues[index]} // Deshabilitar campo numérico si el checkbox está marcado
-                  />
-              ))}
-          </Box>
+          <Stack id='smar' sx={{}}>
+              <Autocomplete
+                  multiple
+                  id="condiciones-select"
+                  options={["SIEMPRE", "NUNCA", "EN_CARRERA", "MATERIAS_PENDIENTES", "MATERIAS_NO_PENDIENTES", "MATERIAS_COMUNES", "CANT_APROBADAS", "FINALES_PENDIENTES", "LIMITE_FINALES_PENDIENTES", "ORIENTACION"]}
+                  value={condicionesSeleccionadas}
+                  onChange={handleCondicionesChange}
+                  renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
+                  sx={{ mt: 2 }}
+                  getOptionDisabled={getOptionDisabled}
+              />
+              <Box sx={{ mt: 2, width: '100%' }}>
+                  {condicionesSeleccionadas.map((condicion, index) => (
+                      <TarjetaCondicion
+                          key={index}
+                          condicion={condicion}
+                          devolucionCarreras={devolucionCarreras}
+                          listadoSubjectData={listadoSubjectData}
+                          onCheckboxChange={() => handleCheckboxChange(index)}
+                          checkboxValue={checkboxValues[index]}
+                          deshabilitarCampoNumerico={!checkboxValues[index]} // Deshabilitar campo numérico si el checkbox está marcado
+                      />
+                  ))}
+              </Box>
+          </Stack>
           <Box display="flex" justifyContent="space-between">
               <Button type="submit" variant="contained" color="primary">Guardar</Button>
               <Button variant="contained" color="secondary" onClick={onCancel}>Cancelar</Button>
