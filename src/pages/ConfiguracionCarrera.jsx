@@ -94,6 +94,7 @@ function ConfiguracionCarrera() {
     return (
         <>
             <Box sx={{
+
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',

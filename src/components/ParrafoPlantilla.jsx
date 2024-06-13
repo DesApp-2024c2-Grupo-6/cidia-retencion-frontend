@@ -10,10 +10,10 @@ const ParrafoPlantilla = ({ text, clave, onEditClick, onDelete }) => {
         <Typography variant="body1" gutterBottom>{text}</Typography>
       </Box>
       <Box display="flex" alignItems="center" gap={1}>
-        <IconButton onClick={onEditClick} aria-label="Editar">
+              <IconButton onClick={onEditClick} aria-label="Editar" color="primary" sx={{ width: '40px' }}>
           <Edit />
         </IconButton>
-        <IconButton onClick={onDelete} aria-label="Eliminar">
+              <IconButton onClick={onDelete} aria-label="Eliminar" sx={{ width: '40px', color:'red' }}>
           <Delete />
         </IconButton>
       </Box>

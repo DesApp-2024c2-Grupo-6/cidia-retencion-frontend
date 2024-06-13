@@ -600,7 +600,7 @@ function ConfiguracionCondicionCarrera() {
                                                     {/*    <EditIcon />*/}
                                                     {/*</IconButton>*/}
                                                     <Tooltip title="Eliminar condición.">
-                                                            <IconButton color="secondary" aria-label="eliminar" onClick={ () => eliminarCondicion(row) } sx={{ width: '40px' }}>
+                                                            <IconButton aria-label="eliminar" onClick={ () => eliminarCondicion(row) } sx={{ width: '40px', color:'red' }}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Tooltip>
