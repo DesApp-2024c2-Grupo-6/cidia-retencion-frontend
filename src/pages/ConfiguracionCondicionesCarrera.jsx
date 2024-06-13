@@ -17,6 +17,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 import Modal from '@mui/material/Modal';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
@@ -551,15 +552,15 @@ function ConfiguracionCondicionCarrera() {
                             bgcolor: 'background.default',
 
                              }}>
-                            <TableContainer component={Paper} sx={{  maxHeight: '350px' }} >
+                            <TableContainer component={Paper} sx={{  maxHeight: '350px', border:'1px #E4E4E4 solid' }} >
                                 <Table stickyHeader aria-label="simple table">
                                     <TableHead>
-                                        <TableRow sx={{ backgroundColor: '#609800' }}>
-                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Año</TableCell>
-                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Materia</TableCell>
-                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Tipo de restricción</TableCell>
-                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Condiciones</TableCell>
-                                            <TableCell sx={{ backgroundColor: '#609800', color: '#FFFFFF' }} align="center">Acciones</TableCell>
+                                        <TableRow sx={{ backgroundColor: '' }}>
+                                            <TableCell sx={{ backgroundColor: '', color: '#333333' }} align="center">Año</TableCell>
+                                            <TableCell sx={{ backgroundColor: '', color: '#333333' }} align="center">Materia</TableCell>
+                                            <TableCell sx={{ backgroundColor: '', color: '#333333' }} align="center">Tipo de restricción</TableCell>
+                                            <TableCell sx={{ backgroundColor: '', color: '#333333' }} align="center">Condiciones</TableCell>
+                                            <TableCell sx={{ backgroundColor: '', color: '#333333' }} align="center">Acciones</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -617,7 +618,7 @@ function ConfiguracionCondicionCarrera() {
                         sx={{
                             marginBottom: '20px'
                         }}>
-                        <Button variant="contained" onClick={ paginaAnterior }>
+                        <Button variant="contained" onClick={paginaAnterior} startIcon={<ArrowCircleLeftIcon />}>
                             Volver
                         </Button>
                     </Box>
