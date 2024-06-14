@@ -654,23 +654,25 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
   const handleTextoChange = (e) => setTexto(e.target.value);
   
     const handleCondicionesChange = (event, values) => {
-          setCondicionesSeleccionadas(values);
-          setCheckboxValues(Array(values.length).fill(false));
-
+        setCondicionesSeleccionadas(values);
+        setCheckboxValues(Array(values.length).fill(false));
   // Verificar si "EN_CARRERA" está seleccionado
         const isEnCarreraSelected = values.includes('EN_CARRERA');
         // Habilitar o deshabilitar las opciones dependiendo de si "EN_CARRERA" está seleccionado
         //setAutoCompleteOptionsDisabled(!isEnCarreraSelected);
 
-      const isSiempreSelected = values.includes('SIEMPRE');
-      const isNuncaSelected = values.includes('NUNCA');
-      if (isSiempreSelected || isNuncaSelected) {
-          setDesabilitarResto(true);
-      }
-      if (isSiempreSelected) { setDesabilitarNunca(true) }
-      if (isNuncaSelected) { setDesabilitarSiempre(true) }
-      
-
+        const isSiempreSelected = values.includes('SIEMPRE');
+        const isNuncaSelected = values.includes('NUNCA');
+          if (isSiempreSelected || isNuncaSelected) {
+              setDesabilitarResto(true);
+          }
+        if (isSiempreSelected) { setDesabilitarNunca(true) }
+        if (isNuncaSelected) { setDesabilitarSiempre(true) }
+        if (!isSiempreSelected && !isNuncaSelected) {
+            setDesabilitarNunca(false)
+            setDesabilitarSiempre(false)
+            setDesabilitarResto(false);
+        }
     };
 
 
@@ -733,7 +735,8 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
                   getOptionDisabled={getOptionDisabled}
               />
               <Box sx={{ mt: 2, width: '100%' }}>
-                  {condicionesSeleccionadas.map((condicion, index) => (
+                  {(!desabilitarNunca && !desabilitarSiempre) && condicionesSeleccionadas.map((condicion, index) => (
+                      (condicion !== "MATERIAS_COMUNES" && condicion !== "FINALES_PENDIENTES" && condicion !== "LIMITE_FINALES_PENDIENTES" && condicion !== "ORIENTACION") &&
                       <TarjetaCondicion
                           key={index}
                           condicion={condicion}
@@ -746,7 +749,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
                   ))}
               </Box>
           </Stack>
-          <Box display="flex" justifyContent="space-between">
+          <Box display="flex" justifyContent="space-around">
               <Button type="submit" variant="contained" color="primary">Guardar</Button>
               <Button variant="contained" color="secondary" onClick={onCancel}>Cancelar</Button>
           </Box>

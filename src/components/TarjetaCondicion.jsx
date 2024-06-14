@@ -4,7 +4,6 @@ import { Box, Typography, Select, MenuItem, TextField, Checkbox, Autocomplete } 
 
 const TarjetaCondicion = ({
   condicion,
-  onChange,
   devolucionCarreras,
   listadoSubjectData,
   onCheckboxChange,
@@ -50,33 +49,64 @@ const TarjetaCondicion = ({
     }
   };
 
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Condición</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Materia/Carrera</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Cantidad</Typography>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Va en carrera</Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Typography variant="body1" sx={{ width: '25ch', overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
-        {condicion !== "MATERIAS_NO_PENDIENTES" ? (
-          <Select value={condicion} onChange={(e) => onChange(e.target.value)} sx={{ width: 'calc(50% - 10px)' }}>
-            {renderOptions()}
-          </Select>
-        ) : (
-          renderOptions()
-        )}
-        <TextField type="number" variant="outlined" sx={{ width: 'calc(40% - 10px)' }} disabled={deshabilitarCampoNumerico} /> {/* Ajustamos el tamaño */}
-        <Checkbox checked={checkboxValue} onChange={onCheckboxChange} />
-      </Box>
-    </Box>
+    return ( 
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
+            {condicion === "CANT_APROBADAS" ? (
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Condición</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Cantidad</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                        </Box>
+                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', aligneItems:'center'}}>
+                            <TextField type="number" variant="outlined" />
+                        </Box>
+                    </Box>
+                </Box>
+            ) : (
+                <Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Condición</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Materia/Carrera</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Cantidad</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Va en carrera</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap:2 }}>
+                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                        </Box>
+                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {condicion !== "MATERIAS_NO_PENDIENTES" ? (
+                                    <Select value={condicion} onChange={(e) => onChange(e.target.value)} sx={{ width: '100%' }}>
+                                    {renderOptions()}
+                                </Select>
+                            ) : (
+                                renderOptions()
+                            )}
+                        </Box>
+                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} /> {/* Ajustamos el tamaño */}
+                        </Box>
+                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Checkbox checked={checkboxValue} onChange={onCheckboxChange} />
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+              
+              
+        </Box>
+    
   );
 };
 
 TarjetaCondicion.propTypes = {
   condicion: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  /*onChange: PropTypes.func.isRequired,*/
   devolucionCarreras: PropTypes.array.isRequired,
   listadoSubjectData: PropTypes.array.isRequired,
   onCheckboxChange: PropTypes.func.isRequired,
