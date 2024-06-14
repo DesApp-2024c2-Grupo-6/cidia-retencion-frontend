@@ -669,10 +669,17 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         if (isSiempreSelected) { setDesabilitarNunca(true) }
         if (isNuncaSelected) { setDesabilitarSiempre(true) }
         if (!isSiempreSelected && !isNuncaSelected) {
-            setDesabilitarNunca(false)
-            setDesabilitarSiempre(false)
+            setDesabilitarNunca(false);
+            setDesabilitarSiempre(false);
             setDesabilitarResto(false);
+            //setAutoCompleteOptionsDisabled(true);
         }
+        console.log(isEnCarreraSelected)
+        if (!isEnCarreraSelected) {
+            values = values.filter(cond => cond !== 'MATERIAS_PENDIENTES' && cond !== 'MATERIAS_NO_PENDIENTES');
+            setAutoCompleteOptionsDisabled(true);
+        }
+        setCondicionesSeleccionadas(values);
     };
 
 
