@@ -2,6 +2,7 @@ import React , { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box , Button, ButtonGroup, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,6 +11,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
+import { updateOneCarrer } from '../services/CarrerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
@@ -17,11 +19,27 @@ function ConfiguracionCarrera() {
 
     const [isEdit, setIsEdit] = useState(false);
     const [carrera, setCarrera] = useState({}); 
+    const [message, setMessage] = useState({codigo: 0, msg:""});
 
-    const toggleEdit = () => {
+    const toggleEdit = async() => {
         setIsEdit((prevState) => !prevState); // Cambia el estado de edición
         //llamada al BE
-        console.log("CARRERA ACTUALIZADA: ", carrera)
+        
+        if(isEdit){
+            const carreraActualizada = await updateOneCarrer(carrera);
+            console.log(carreraActualizada)
+            if(carreraActualizada.status === 200){
+                setMessage({
+                    code: 200,
+                    msg: `${carreraActualizada.data.actCarrera.careerId} actualizada correctamente`
+                })
+                
+            } else{
+                setMessage({
+                    code: 400,
+                    msg: carreraActualizada.response.data.error})
+            }
+        }
       }
     const navigate = useNavigate();
     const handleOnClickCondiciones = () => {
@@ -162,6 +180,14 @@ function ConfiguracionCarrera() {
                         </ButtonGroup>
                     
                 </Box>
+
+                <Alert
+                    severity={message.code === 200 ? 'success': (message.code === 400 ? 'error':'')}
+                    variant='outlined'
+                    sx={{m:1}}
+                    >
+                        {message.msg}
+                </Alert>
                 
 
             </Box>
