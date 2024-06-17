@@ -11,7 +11,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
-import { updateOneCarrer } from '../services/CarrerService';
+import { updateOneCareer, getCurrentConfigCareer } from '../services/CarrerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
@@ -24,9 +24,9 @@ function ConfiguracionCarrera() {
     const toggleEdit = async() => {
         setIsEdit((prevState) => !prevState); // Cambia el estado de edición
         //llamada al BE
-        
+        setMessage({})
         if(isEdit){
-            const carreraActualizada = await updateOneCarrer(carrera);
+            const carreraActualizada = await updateOneCareer(carrera);
             console.log(carreraActualizada)
             if(carreraActualizada.status === 200){
                 setMessage({
@@ -48,19 +48,26 @@ function ConfiguracionCarrera() {
 
     useEffect(() => {
         if (IdCarrera !== undefined && IdCarrera != ""){
-            //Aca iría llamado a BE
-            const fechData = async () => {
-                try {
-                    const res = await fetch('../../public/carrerData.json');
-                    const jsonData = await res.json();
-                    const carr = jsonData.filter(e => e.careerId === IdCarrera)[0]
-                    setCarrera(carr)
-                } catch (error) {
-                    console.log(error)
-                }
+            setMessage({})
+            const obtenerCarrera = async() => {
+                const carr = await getCurrentConfigCareer(IdCarrera);
+                console.log(carr)
+                
+                if(carr.status === 200){
+                    const career = carr.data.datosDeCarrera[0];
+                    setMessage({
+                        code: 200,
+                        msg: `Datos de carrera ${career.careerId} obtenidos`
+                    })
+                setCarrera(career);
+                }else{
+                    setMessage({
+                        code: 400,
+                        msg: carr.response.data.error})
+                } 
             }
-            fechData(IdCarrera)
-        }
+            obtenerCarrera();
+        }   
         else {
             navigate('/configuracion')
         }

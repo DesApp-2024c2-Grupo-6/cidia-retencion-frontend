@@ -1,24 +1,24 @@
 import axios from 'axios';
-//Tiene que estar en una carpeta Public sino no funciona. Luego esto sera un EndPoint
-const DATA_JS = '../public/carrerData.json'
+
 const baseURL = 'http://localhost:3001/api'
-export const getCurrentConfigCarrer = async(careerId)  => {
+
+/**
+ * Obtener la configuracion de una carrera
+ * @param {*} careerId es el ID de carrera
+ * @returns una lista que puede contener o no el dato.
+ */
+export const getCurrentConfigCareer = async(careerId)  => {
     try {
-        const response = await axios.get(DATA_JS);
-        if(response.status === 200){
-            const carreras = response.data;
-            const carrera = carreras.filter( carrera => carrera.careerId === careerId)[0]
-            return carrera;
-        }
+        const response = await axios.get(`${baseURL}/carreras`, {params:{careerId}});
+        return response;
     } catch (error) {
-        console.log(error)
         return error;
     }
 }
 
 //Actualizar una carrera
 
-export const updateOneCarrer = async(data) => {
+export const updateOneCareer = async(data) => {
     try{
         const response = await axios.put(`${baseURL}/carreras`,data);
         return response;
@@ -27,3 +27,9 @@ export const updateOneCarrer = async(data) => {
         return error;
     }
 }
+
+//obtener todas las carreras
+export const getAllCareer = async() => {
+    //TODO hacer este metodo.
+}
+
