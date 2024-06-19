@@ -26,21 +26,21 @@ function ConfiguracionCarrera() {
         //llamada al BE
         setMessage({})
         if(isEdit){
-            const carreraActualizada = await updateOneCareer(carrera);
-            console.log(carreraActualizada)
-            if(carreraActualizada.status === 200){
+            const upCareer = await updateOneCareer(carrera);
+            if(upCareer.status === 200){
                 setMessage({
-                    code: 200,
-                    msg: `${carreraActualizada.data.actCarrera.careerId} actualizada correctamente`
+                    code: upCareer.status,
+                    msg: `Carrera ID ${upCareer.data.updateCareer.careerId} actualizada correctamente`
                 })
                 
             } else{
                 setMessage({
                     code: 400,
-                    msg: carreraActualizada.response.data.error})
+                    msg: upCareer.response.data.error})
             }
         }
       }
+      console.log(message)
     const navigate = useNavigate();
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
@@ -54,9 +54,9 @@ function ConfiguracionCarrera() {
                 console.log(carr)
                 
                 if(carr.status === 200){
-                    const career = carr.data.datosDeCarrera[0];
+                    const career = carr.data.careerData;
                     setMessage({
-                        code: 200,
+                        code: carr.status,
                         msg: `Datos de carrera ${career.careerId} obtenidos`
                     })
                 setCarrera(career);
