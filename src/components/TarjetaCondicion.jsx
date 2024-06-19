@@ -1,22 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Select, MenuItem, TextField, Checkbox, Autocomplete } from '@mui/material';
+import SelectMultipleAR from './SelectMultipleAR';
 
-const TarjetaCondicion = ({
-  condicion,
-  devolucionCarreras,
-  listadoSubjectData,
-  onCheckboxChange,
-  checkboxValue,
-  deshabilitarCampoNumerico
-}) => {
-  const renderOptions = () => {
+const TarjetaCondicion = ({condicion,listaCarreras,listaMaterias,onCheckboxChange,checkboxValue,deshabilitarCampoNumerico}) => {
+
+    
+
+    const renderOptions = () => {
     if (condicion === "EN_CARRERA") {
-      return devolucionCarreras.map((carrera) => (
-        <MenuItem key={carrera.careerId} value={carrera.careerId}>
-          {carrera.specialCareerName || `Carrera ${carrera.careerId}`}
-        </MenuItem>
-      ));
+        return listaCarreras.map((carrera, index) => (
+            <MenuItem key={ index } value={carrera.value}>
+          {carrera.label}
+        </MenuItem>));
     } else if (condicion === "MATERIAS_PENDIENTES") {
       return listadoSubjectData.map((subject) => (
         <MenuItem key={subject.id_materia} value={subject.id_materia}>
@@ -47,7 +43,40 @@ const TarjetaCondicion = ({
         </>
       );
     }
-  };
+    };
+
+    const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
+    const [listaMateriasFiltradas, setListaMateriasFiltradas] = useState([]);
+
+    useEffect(() => {
+        setListaMateriasFiltradas(listaMaterias);
+    }, [listaMaterias]); // Dependencia: listaMaterias
+
+    // Función para filtrar las materias cuando se seleccionan carreras
+    useEffect(() => {
+        const filtrarMateriasPorCarreras = () => {
+            if (listaCarrerasElejidas.length > 0) {
+                const materiasFiltradas = listaMaterias.filter(materia =>
+                    listaCarrerasElejidas.includes(materia.id_carrera)
+                );
+                setListaMateriasFiltradas(materiasFiltradas);
+            } else {
+                setListaMateriasFiltradas([]);
+            }
+        };
+
+        filtrarMateriasPorCarreras();
+        
+    }, [listaCarrerasElejidas, listaMaterias]); 
+
+    const carrerasseleccionadas = (carreras) => {
+        const carrerasIds = carreras.map(carrera => parseInt(carrera.split(' ')[1]));
+        setListaCarrerasElejidas(carrerasIds);
+    };
+
+    const materiasseleccionadas = (event) => {
+        console.log(event);
+    };
 
     return ( 
 
@@ -69,29 +98,29 @@ const TarjetaCondicion = ({
                 </Box>
             ) : (
                 <Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 2 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Condición</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Materia/Carrera</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Cantidad</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '25ch', textAlign: 'center' }}>Va en carrera</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 2 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '15ch', textAlign: 'center' }}>Condición</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '60ch', textAlign: 'center' }}>{ condicion === "EN_CARRERA"?"Carreras":"Materias" }</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Cantidad</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '15ch', textAlign: 'center' }}>Va en carrera</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap:2 }}>
-                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
-                        </Box>
-                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {condicion !== "MATERIAS_NO_PENDIENTES" ? (
-                                    <Select value={condicion} onChange={(e) => onChange(e.target.value)} sx={{ width: '100%' }}>
-                                    {renderOptions()}
-                                </Select>
-                            ) : (
+                            <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                            </Box>
+                            <Box sx={{ width: '52%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                {condicion === "EN_CARRERA" ? (
+                                    <SelectMultipleAR options={listaCarreras} onSelect={carrerasseleccionadas}  placeholder='Seleccione Carreras'></SelectMultipleAR>
+                                ) : condicion === "MATERIAS_PENDIENTES" ? (
+                                        <SelectMultipleAR options={listaMateriasFiltradas} onSelect={materiasseleccionadas}  placeholder='Seleccione Materias'></SelectMultipleAR>
+                                ) : (
                                 renderOptions()
                             )}
                         </Box>
-                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} /> {/* Ajustamos el tamaño */}
                         </Box>
-                            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Checkbox checked={checkboxValue} onChange={onCheckboxChange} />
                         </Box>
                     </Box>
