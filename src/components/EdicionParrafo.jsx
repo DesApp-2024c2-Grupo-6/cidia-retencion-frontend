@@ -70,12 +70,8 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
     onSave(clave, texto);
   };
 
-  const handleCheckboxChange = (index) => {
-    const newCheckboxValues = [...checkboxValues];
-    newCheckboxValues[index] = !newCheckboxValues[index];
-    setCheckboxValues(newCheckboxValues);
-    // Habilitar las opciones de "MATERIAS_PENDIENTES" y "MATERIAS_NO_PENDIENTES" al marcar el checkbox
-    setAutoCompleteOptionsDisabled(!newCheckboxValues[index]);
+  const handleCheckboxChange = (value) => {
+      setAutoCompleteOptionsDisabled(!value);
   };
 
   // Función para obtener las opciones deshabilitadas
@@ -131,8 +127,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
                           condicion={condicion}
                           listaCarreras={listaCarreras}
                           listaMaterias={listaMaterias}
-                          onCheckboxChange={() => handleCheckboxChange(index)}
-                          checkboxValue={checkboxValues[index]}
+                          handleCheckbox={handleCheckboxChange}
                           deshabilitarCampoNumerico={!checkboxValues[index]} // Deshabilitar campo numérico si el checkbox está marcado
                       />
                   ))}

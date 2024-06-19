@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
@@ -10,18 +9,25 @@ function SelectMultipleAR({ options, onSelect, className, placeholder }) {
 
     const [selectedOptions, setSelectedOptions] = React.useState([]);
 
-    const handleChange = (event) => {
+    //console.log(options);
 
-        if (event.target.textContent == "") {
-            setSelectedOptions([]);
-            onSelect([]);
-        } else {
-            onSelect([...selectedOptions, event.target.textContent]);
-            setSelectedOptions([...selectedOptions, event.target.textContent]);
-        }
+    //const handleChange = (event) => {
+    //    console.log(selectedOptions);
+    //    console.log(event);
+    //    if (event.target.textContent == "") {
+    //        setSelectedOptions([]);
+    //        onSelect([]);
+    //    } else {
+    //        onSelect([...selectedOptions, event.target.value]);
+    //        setSelectedOptions([...selectedOptions, event.target.value]);
+    //    }
         
-    };
+    //};
 
+    const handleChange = (event, selectedValues) => {
+        setSelectedOptions(selectedValues.map(option => option.value));
+        onSelect(selectedValues.map(option => option.value));
+    };
 
     return (
         <Box sx={{

@@ -1,87 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Typography, Select, MenuItem, TextField, Checkbox, Autocomplete } from '@mui/material';
+import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
-const TarjetaCondicion = ({condicion,listaCarreras,listaMaterias,onCheckboxChange,checkboxValue,deshabilitarCampoNumerico}) => {
-
-    
-
-    const renderOptions = () => {
-    if (condicion === "EN_CARRERA") {
-        return listaCarreras.map((carrera, index) => (
-            <MenuItem key={ index } value={carrera.value}>
-          {carrera.label}
-        </MenuItem>));
-    } else if (condicion === "MATERIAS_PENDIENTES") {
-      return listadoSubjectData.map((subject) => (
-        <MenuItem key={subject.id_materia} value={subject.id_materia}>
-          Materia {subject.id_materia}
-        </MenuItem>
-      ));
-    } else if (condicion === "MATERIAS_NO_PENDIENTES") {
-      return (
-        <Autocomplete
-          options={listadoSubjectData.map((subject) => `Materia ${subject.id_materia}`)}
-          renderInput={(params) => <TextField {...params} label="Materias" variant="outlined" fullWidth />}
-          sx={{ width: '100%' }} // Ajustamos el ancho del Autocomplete
-        />
-      );
-    } else {
-      return (
-        <>
-          <MenuItem value="SIEMPRE">Siempre</MenuItem>
-          <MenuItem value="NUNCA">Nunca</MenuItem>
-          <MenuItem value="EN_CARRERA">En Carrera</MenuItem>
-          <MenuItem value="MATERIAS_PENDIENTES">Materias Pendientes</MenuItem>
-          <MenuItem value="MATERIAS_NO_PENDIENTES">Materias No Pendientes</MenuItem>
-          <MenuItem value="MATERIAS_COMUNES">Materias Comunes</MenuItem>
-          <MenuItem value="CANT_APROBADAS">Cantidad de Materias Aprobadas</MenuItem>
-          <MenuItem value="FINALES_PENDIENTES">Finales Pendientes</MenuItem>
-          <MenuItem value="LIMITE_FINALES_PENDIENTES">Límite de Finales Pendientes</MenuItem>
-          <MenuItem value="ORIENTACION">Orientación</MenuItem>
-        </>
-      );
-    }
-    };
+const TarjetaCondicion = ({ condicion, listaCarreras, listaMaterias, handleCheckbox, deshabilitarCampoNumerico, }) => {
 
     const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
-    const [listaMateriasFiltradas, setListaMateriasFiltradas] = useState([]);
+    const [listaMateriasParaSelect, setListaMateriasParaSelect] = useState([]);
 
     useEffect(() => {
-        setListaMateriasFiltradas(listaMaterias);
-    }, [listaMaterias]); // Dependencia: listaMaterias
-
-    // Función para filtrar las materias cuando se seleccionan carreras
-    useEffect(() => {
-        const filtrarMateriasPorCarreras = () => {
-            if (listaCarrerasElejidas.length > 0) {
+        if (listaCarrerasElejidas.length > 0) {
+            const filtrarMateriasPorCarreras = () => {
                 const materiasFiltradas = listaMaterias.filter(materia =>
                     listaCarrerasElejidas.includes(materia.id_carrera)
                 );
-                setListaMateriasFiltradas(materiasFiltradas);
-            } else {
-                setListaMateriasFiltradas([]);
-            }
-        };
+                const list = materiasFiltradas.map(m => ({ value: m.id_materia, label: `Materia ${m.id_materia}` }));
+                setListaMateriasParaSelect(list);
+            };
 
-        filtrarMateriasPorCarreras();
-        
-    }, [listaCarrerasElejidas, listaMaterias]); 
+            filtrarMateriasPorCarreras();
+        }
+    }, [listaCarrerasElejidas, listaMaterias]);
 
     const carrerasseleccionadas = (carreras) => {
-        const carrerasIds = carreras.map(carrera => parseInt(carrera.split(' ')[1]));
-        setListaCarrerasElejidas(carrerasIds);
+        setListaCarrerasElejidas(carreras);
     };
 
-    const materiasseleccionadas = (event) => {
-        console.log(event);
+    const handleMateriasPendientesChange = (materias) => {
+        setMateriasSeleccionadas(materias);
     };
 
-    return ( 
+    const handleMateriasNoPendientesChange = (materias) => {
+        setMateriasSeleccionadas(materias);
+    };
 
+    return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
-            {condicion === "CANT_APROBADAS" ? (
+            {condicion === "CANT_APROBADAS" && (
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
                         <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Condición</Typography>
@@ -91,56 +46,108 @@ const TarjetaCondicion = ({condicion,listaCarreras,listaMaterias,onCheckboxChang
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
-                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', aligneItems:'center'}}>
+                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <TextField type="number" variant="outlined" />
                         </Box>
                     </Box>
                 </Box>
-            ) : (
+            )}
+            {condicion === "EN_CARRERA" && (
                 <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 2 }}>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '15ch', textAlign: 'center' }}>Condición</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '60ch', textAlign: 'center' }}>{ condicion === "EN_CARRERA"?"Carreras":"Materias" }</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '10ch', textAlign: 'center' }}>Cantidad</Typography>
-                        <Typography variant="body2" sx={{ fontWeight: 'bold', width: '15ch', textAlign: 'center' }}>Va en carrera</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '15%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">{condicion === "EN_CARRERA" ? "Carreras" : "Materias"}</Typography>
+                        </Box>
+                        <Box sx={{ width: '10%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
+                        </Box>
+                        <Box sx={{ width: '10%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Va en carrera</Typography>
+                        </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap:2 }}>
-                            <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
-                            </Box>
-                            <Box sx={{ width: '52%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                {condicion === "EN_CARRERA" ? (
-                                    <SelectMultipleAR options={listaCarreras} onSelect={carrerasseleccionadas}  placeholder='Seleccione Carreras'></SelectMultipleAR>
-                                ) : condicion === "MATERIAS_PENDIENTES" ? (
-                                        <SelectMultipleAR options={listaMateriasFiltradas} onSelect={materiasseleccionadas}  placeholder='Seleccione Materias'></SelectMultipleAR>
-                                ) : (
-                                renderOptions()
-                            )}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
-                            <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} /> {/* Ajustamos el tamaño */}
+                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <SelectMultipleAR options={listaCarreras} onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
                         </Box>
-                            <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Checkbox checked={checkboxValue} onChange={onCheckboxChange} />
+                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
+                        </Box>
+                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Checkbox onChange={(event) => { handleCheckbox(event.target.checked) }} />
                         </Box>
                     </Box>
                 </Box>
             )}
-              
-              
+            { condicion === "MATERIAS_PENDIENTES"  && (
+                
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>
+                        </Box>
+                        <Box sx={{ width: '10%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <SelectMultipleAR options={listaMateriasParaSelect} onSelect={handleMateriasPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
+                        </Box>
+                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+            {condicion === "MATERIAS_NO_PENDIENTES" && (
+
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>
+                        </Box>
+                        <Box sx={{ width: '10%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <SelectMultipleAR options={listaMateriasNoParaSelect} onSelect={handleMateriasNoPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
+                        </Box>
+                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
+                        </Box>
+                    </Box>
+                </Box>
+            )}
         </Box>
-    
-  );
+    );
 };
 
-TarjetaCondicion.propTypes = {
-  condicion: PropTypes.string.isRequired,
-  /*onChange: PropTypes.func.isRequired,*/
-  devolucionCarreras: PropTypes.array.isRequired,
-  listadoSubjectData: PropTypes.array.isRequired,
-  onCheckboxChange: PropTypes.func.isRequired,
-  checkboxValue: PropTypes.bool.isRequired,
-  deshabilitarCampoNumerico: PropTypes.bool.isRequired
-};
+//TarjetaCondicion.propTypes = {
+//    condicion: PropTypes.string.isRequired,
+//    listaCarreras: PropTypes.array.isRequired,
+//    listaMaterias: PropTypes.array.isRequired,  
+//    onCheckboxChange: PropTypes.func.isRequired,
+//    deshabilitarCampoNumerico: PropTypes.bool.isRequired,
+//};
 
 export default TarjetaCondicion;
