@@ -35,8 +35,8 @@ function ConfiguracionCarrera() {
                 
             } else{
                 setMessage({
-                    code: 400,
-                    msg: upCareer.response.data.error})
+                    code: upCareer.status,
+                    msg: upCareer.statusText})
             }
         }
       }
@@ -62,8 +62,8 @@ function ConfiguracionCarrera() {
                 setCarrera(career);
                 }else{
                     setMessage({
-                        code: 400,
-                        msg: carr.response.data.error})
+                        code: carr.status,
+                        msg: carr.statusText})
                 } 
             }
             obtenerCarrera();
@@ -189,7 +189,7 @@ function ConfiguracionCarrera() {
                 </Box>
 
                 <Alert
-                    severity={message.code === 200 ? 'success': (message.code === 400 ? 'error':'')}
+                    severity={message.code === 200 ? 'success': (message.code === 204 ? 'error':'')}
                     variant='outlined'
                     sx={{m:1}}
                     >
