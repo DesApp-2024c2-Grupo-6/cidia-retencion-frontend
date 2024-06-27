@@ -38,3 +38,9 @@ export const getAllCareer = async () => {
         return error;
     }
 }
+
+//obtener todas las carreras
+export const getAllCareer = async() => {
+    //TODO hacer este metodo.
+}
+

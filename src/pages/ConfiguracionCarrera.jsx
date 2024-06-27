@@ -2,6 +2,7 @@ import React , { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box , Button, ButtonGroup, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,6 +11,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
+import { updateOneCareer, getCurrentConfigCareer } from '../services/CarrerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
@@ -17,12 +19,28 @@ function ConfiguracionCarrera() {
 
     const [isEdit, setIsEdit] = useState(false);
     const [carrera, setCarrera] = useState({}); 
+    const [message, setMessage] = useState({codigo: 0, msg:""});
 
-    const toggleEdit = () => {
+    const toggleEdit = async() => {
         setIsEdit((prevState) => !prevState); // Cambia el estado de edición
         //llamada al BE
-        console.log("CARRERA ACTUALIZADA: ", carrera)
+        setMessage({})
+        if(isEdit){
+            const upCareer = await updateOneCareer(carrera);
+            if(upCareer.status === 200){
+                setMessage({
+                    code: upCareer.status,
+                    msg: `Carrera ID ${upCareer.data.updateCareer.careerId} actualizada correctamente`
+                })
+                
+            } else{
+                setMessage({
+                    code: upCareer.status,
+                    msg: upCareer.statusText})
+            }
+        }
       }
+      console.log(message)
     const navigate = useNavigate();
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
@@ -30,19 +48,26 @@ function ConfiguracionCarrera() {
 
     useEffect(() => {
         if (IdCarrera !== undefined && IdCarrera != ""){
-            //Aca iría llamado a BE
-            const fechData = async () => {
-                try {
-                    const res = await fetch('../../public/carrerData.json');
-                    const jsonData = await res.json();
-                    const carr = jsonData.filter(e => e.careerId === IdCarrera)[0]
-                    setCarrera(carr)
-                } catch (error) {
-                    console.log(error)
-                }
+            setMessage({})
+            const obtenerCarrera = async() => {
+                const carr = await getCurrentConfigCareer(IdCarrera);
+                console.log(carr)
+                
+                if(carr.status === 200){
+                    const career = carr.data.careerData;
+                    setMessage({
+                        code: carr.status,
+                        msg: `Datos de carrera ${career.careerId} obtenidos`
+                    })
+                setCarrera(career);
+                }else{
+                    setMessage({
+                        code: carr.status,
+                        msg: carr.statusText})
+                } 
             }
-            fechData(IdCarrera)
-        }
+            obtenerCarrera();
+        }   
         else {
             navigate('/configuracion')
         }
@@ -166,6 +191,14 @@ function ConfiguracionCarrera() {
                         </ButtonGroup>
                     
                 </Box>
+
+                <Alert
+                    severity={message.code === 200 ? 'success': (message.code === 204 ? 'error':'')}
+                    variant='outlined'
+                    sx={{m:1}}
+                    >
+                        {message.msg}
+                </Alert>
                 
 
             </Box>
