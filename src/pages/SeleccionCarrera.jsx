@@ -18,6 +18,7 @@ function SeleccionCarrera() {
     const navigate = useNavigate();
     const [carreras, setCarrerasList] = useState([]);
     const [configButton, setConfigButton] = useState("");
+
     useEffect(() => {
         const lista = listadoCarreras.map(c => ({
           label: `Carrera ${c.careerId}`,
@@ -28,8 +29,10 @@ function SeleccionCarrera() {
 
 
     const handleSelect = (value) => {
+
         dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
         setConfigButton(value.v)
+
     };
 
     const handleOnClickConfiguracionCarrera = () => {
@@ -74,6 +77,7 @@ function SeleccionCarrera() {
                             name={'Configurar'}
                             disabled={configButton ? false : true}
                             startIcon={<BuildIcon />}>Configurar
+                            
                         </Button>
                         <Button
                             onClick={handleOnClickConfiguracionParrafos}
