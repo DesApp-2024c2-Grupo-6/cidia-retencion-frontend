@@ -6,32 +6,62 @@ import SelectMultipleAR from './SelectMultipleAR';
 const TarjetaCondicion = ({ condicion, listaCarreras, listaMaterias, handleCheckbox, deshabilitarCampoNumerico, }) => {
 
     const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
+
+    //LA LISTA PARA LAS MATERIAS
     const [listaMateriasParaSelect, setListaMateriasParaSelect] = useState([]);
 
+    const [renderMaterias, setRenderMaterias] = useState(listaMaterias);
+
+    // PARA CARGAR INICIALMENTE LA LISTA DE MATERIAS
     useEffect(() => {
-        if (listaCarrerasElejidas.length > 0) {
-            const filtrarMateriasPorCarreras = () => {
-                const materiasFiltradas = listaMaterias.filter(materia =>
+        const materiasFiltradas = renderMaterias.filter(materia =>
+            listaCarrerasElejidas.length > 0 ? listaCarrerasElejidas.includes(materia.id_carrera) : renderMaterias
+        );
+        const listaFiltrada = materiasFiltradas.map(m => ({
+            value: m.id_materia,
+            label: `Materia ${m.id_materia}`
+        }));
+        const eliminarDuplicados = (arr) => {
+            const map = new Map();
+            return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
+        };
+        const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
+
+        setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+    }, []);
+
+    //PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS 
+    useEffect(() => {
+        if (condicion !== "MATERIAS_PENDIENTES" && condicion !== "MATERIAS_NO_PENDIENTES")
+        {
+            if (listaCarrerasElejidas.length > 0) {
+                const materiasFiltradas = renderMaterias.filter(materia =>
                     listaCarrerasElejidas.includes(materia.id_carrera)
                 );
-                const list = materiasFiltradas.map(m => ({ value: m.id_materia, label: `Materia ${m.id_materia}` }));
-                setListaMateriasParaSelect(list);
-            };
-
-            filtrarMateriasPorCarreras();
+                const listaFiltrada = materiasFiltradas.map(m => ({
+                    value: m.id_materia,
+                    label: `Materia ${m.id_materia}`
+                }));
+                console.log("cantidad de materias: ",listaFiltrada.length)
+                setListaMateriasParaSelect(listaFiltrada);
+            } else {
+                setListaMateriasParaSelect([]);
+            }
         }
+        
     }, [listaCarrerasElejidas, listaMaterias]);
 
+    //PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
     const carrerasseleccionadas = (carreras) => {
         setListaCarrerasElejidas(carreras);
     };
 
     const handleMateriasPendientesChange = (materias) => {
-        setMateriasSeleccionadas(materias);
+        //setMateriasSeleccionadas(materias);
     };
 
     const handleMateriasNoPendientesChange = (materias) => {
-        setMateriasSeleccionadas(materias);
+        //setMateriasSeleccionadas(materias);
     };
 
     return (
@@ -84,8 +114,8 @@ const TarjetaCondicion = ({ condicion, listaCarreras, listaMaterias, handleCheck
                     </Box>
                 </Box>
             )}
-            { condicion === "MATERIAS_PENDIENTES"  && (
-                
+            {(condicion === "MATERIAS_PENDIENTES" || condicion === "MATERIAS_NO_PENDIENTES") && (
+
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
                         <Box sx={{ width: '25%', textAlign: 'center' }}>
@@ -111,33 +141,33 @@ const TarjetaCondicion = ({ condicion, listaCarreras, listaMaterias, handleCheck
                     </Box>
                 </Box>
             )}
-            {condicion === "MATERIAS_NO_PENDIENTES" && (
+            {/*condicion === "MATERIAS_NO_PENDIENTES" && (*/}
 
-                <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
-                        <Box sx={{ width: '25%', textAlign: 'center' }}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
-                        </Box>
-                        <Box sx={{ width: '60%', textAlign: 'center' }}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>
-                        </Box>
-                        <Box sx={{ width: '10%', textAlign: 'center' }}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
-                        </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
-                        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
-                        </Box>
-                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listaMateriasNoParaSelect} onSelect={handleMateriasNoPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
-                        </Box>
-                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
-                        </Box>
-                    </Box>
-                </Box>
-            )}
+            {/*    <Box>*/}
+            {/*        <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>*/}
+            {/*            <Box sx={{ width: '25%', textAlign: 'center' }}>*/}
+            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>*/}
+            {/*            </Box>*/}
+            {/*            <Box sx={{ width: '60%', textAlign: 'center' }}>*/}
+            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>*/}
+            {/*            </Box>*/}
+            {/*            <Box sx={{ width: '10%', textAlign: 'center' }}>*/}
+            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>*/}
+            {/*            </Box>*/}
+            {/*        </Box>*/}
+            {/*        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>*/}
+            {/*            <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
+            {/*                <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>*/}
+            {/*            </Box>*/}
+            {/*                    <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
+            {/*                        <SelectMultipleAR options={listaMateriasParaSelect} onSelect={handleMateriasNoPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>*/}
+            {/*            </Box>*/}
+            {/*            <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
+            {/*                <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />*/}
+            {/*            </Box>*/}
+            {/*        </Box>*/}
+            {/*    </Box>*/}
+            {/*)}*/}
         </Box>
     );
 };

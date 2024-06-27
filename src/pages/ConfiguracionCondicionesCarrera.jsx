@@ -129,13 +129,6 @@ function ConfiguracionCondicionCarrera() {
     //};
     const [selectCarreraDisabled, setselectCarreraDisabled] = useState(false);
     const [inputAnio, setinputAnio] = useState(false);
-    const [mostrarCamposCompletos, setMostrarCamposCompletos] = useState(false);
-    const [mostrarMateriasEspecificas, setMostrarMateriasEspecificas] = useState(false);
-    const [mostrarCantidadMaterias, setMostrarCantidadMaterias] = useState(false);
-    const [mostrarAniosCompletos, setMostrarAniosCompletos] = useState(false);
-    const [mostrarCantidadMateriasAnio, setMostrarCantidadMateriasAnio] = useState(false);
-
-
     const [camposList, setCamposList] = useState([]);
 
     useEffect(() => {
@@ -187,17 +180,7 @@ function ConfiguracionCondicionCarrera() {
     }
     const setearCondicion = (valor) => {
         setCondicion(valor);
-        //setMostrarN-1(valor == "N-1");
-        //setMostrarN-2(valor == "N-2");
-        //setMostrarN-1R-2A(valor == "N-1R-2A");
-        setMostrarCantidadMaterias(valor == "CANT-MATERIAS");
-        setMostrarAniosCompletos(valor == "ANIOS-COMPLETOS");
-        setMostrarCamposCompletos(valor == "CAMPOS-COMPLETOS");
-        setMostrarCantidadMateriasAnio(valor == "CANT-MATERIAS-ANIO");
-        setMostrarMateriasEspecificas(valor == "MATERIAS-ESPECIFICAS");
     }
-
-
 
     const [camposSeleccionados, setCamposSeleccionados] = useState([]);
     const setearcamposSeleccionados = (value) => {
@@ -370,7 +353,7 @@ function ConfiguracionCondicionCarrera() {
                                         <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Condiciones' />
                                     </Box>
                                     {
-                                        mostrarCamposCompletos && (
+                                        condicion == "CAMPOS-COMPLETOS" && (
 
                                             <Box sx={{
                                                 width:'100%',
@@ -383,7 +366,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        mostrarMateriasEspecificas && (
+                                        condicion == "MATERIAS-ESPECIFICAS" && (
 
                                             <Box sx={{
                                                 width:'100%',
@@ -395,7 +378,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        mostrarCantidadMaterias && (
+                                        condicion == "CANTIDAD-MATERIAS" && (
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -428,7 +411,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        mostrarAniosCompletos && (
+                                        condicion == "ANIOS-COMPLETOS" && (
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -469,7 +452,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        mostrarCantidadMateriasAnio && (
+                                        condicion == "CANTIDAD-MATERIAS-ANIOS" && (
                                             <Box>
                                                 <Box
                                                     sx={{
