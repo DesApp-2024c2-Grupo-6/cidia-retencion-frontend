@@ -17,13 +17,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-
 import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import SelectComponent from '../components/SelectR';
 import { getAllSuggestionCondition } from '../services/RegistrationSuggestionConditionService';
-import { getAllSuggestionConditionUse } from '../services/RegistrationSuggestionConditionUseService';
+import { getAllSuggestionConditionUse, createConditionUse } from '../services/RegistrationSuggestionConditionUseService';
 import { getAllSubjectData } from '../services/SubjectDataService';
 
 
@@ -61,34 +60,8 @@ function ConfiguracionCondicionCarrera() {
 
     const [message, setMessage] = useState({ codigo: 0, msg: "" });
 
-
-    //PARA CUANDO ESTE EL BACKEND
-    //useEffect(() => {
-    //    fetchCondicionesList();
-    //}, []);
-
-    //const fetchCondicionesList = async () => {
-    //    try {
-    //        const response = await fetch('url_para_obtener_lista_actualizada');
-    //        const data = await response.json();
-    //        setCondicionesList(data);
-    //    } catch (error) {
-    //        console.error('Error al obtener la lista de condiciones:', error);
-    //    }
-    //};
-
-    //const eliminarCondicion = async (id) => {
-    //    try {
-    //        await fetch(`url_para_eliminar_condicion/${id}`, {
-    //            method: 'DELETE',
-    //        });
-    //        fetchCondicionesList();
-    //    } catch (error) {
-    //        console.error('Error al eliminar la condición:', error);
-    //    }
-    //};
-
     const [condicionesList, setCondicionesList] = useState([]);
+    const [nuevaCondicion, setNuevaCondicion] = useState(false); 
 
     useEffect(() => {
         setMessage({});
@@ -100,7 +73,6 @@ function ConfiguracionCondicionCarrera() {
                     code: carreras.status,
                     msg: `Se han traido todas las condiciones.`
                 });
-                console.log(career);
                 const lista = career.conditionsCareerData
                     .filter(c => c.id_carrera == IdCarrera)
                     .map((c, index) => {
@@ -108,7 +80,7 @@ function ConfiguracionCondicionCarrera() {
                         if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
                             configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
-                            configCondicion = "Año: " + c.config_condicion.anio;
+                            configCondicion = `Año: ${c.config_condicion.anio} ${c.config_condicion.salvo_cantidad != null ? "- Cantidad: " + c.config_condicion.salvo_cantidad : ""} `;
                         } else if (c.codigo_condicion === "CANT-MATERIAS-ANIO") {
                             configCondicion = `Año: ${c.config_condicion.anio} - Cantidad: ${c.config_condicion.cantidad} - Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
                         } else if (c.codigo_condicion === "CANT-MATERIAS") {
@@ -128,7 +100,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         obtenerCondicionesSugestionUse();
-    }, [])
+    }, [nuevaCondicion])
 
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
 
@@ -184,8 +156,6 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         obtenerMaterias();
-
-        
     }, [])
 
     //const handleSelect = (selectedValue, nomSelected) => {
@@ -276,14 +246,13 @@ function ConfiguracionCondicionCarrera() {
 
     const [exceptuadosSeleccionados, setExceptuadosSeleccionados] = useState([]);
     const setearExceptuadosSeleccionados = (value) => {
-        console.log(value)
         setExceptuadosSeleccionados(value);
     }
 
-    const guardarCondicion = () => {
+    const guardarCondicion = async () => {
 
         let nuevaCondicion = {
-            key: condicionesList.length,
+            //key: condicionesList.length,
             id_carrera: IdCarrera,
             anio: anio,
             materia: materia,
@@ -319,14 +288,32 @@ function ConfiguracionCondicionCarrera() {
         else if (condicion === "CANT-MATERIAS-ANIO") {
             nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
-        
-        console.log(nuevaCondicion);
+
+        const postcondicion = await createConditionUse(nuevaCondicion);
 
         setearcamposSeleccionados([]);
         setearMateriasSeleccionadas([]);
         setearExceptuadosSeleccionados([]);
 
         handleClose();
+
+        if (postcondicion.status === 200) {
+            console.log("entro")
+            setNuevaCondicion(!nuevaCondicion); /// POR QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 
+            setMessage({
+                code: postcondicion.status,
+                msg: `Condicion ID ${postcondicion.data.id_carrera} creada correctamente.`
+            })
+
+        } else {
+            setMessage({
+                code: postcondicion.status,
+                msg: postcondicion.statusText
+            })
+        }
+        //console.log(nuevaCondicion);
+
+        
     }
 
 
@@ -460,7 +447,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        condicion == "CANTIDAD-MATERIAS" && (
+                                        condicion == "CANT-MATERIAS" && (
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -534,7 +521,7 @@ function ConfiguracionCondicionCarrera() {
                                         )
                                     }
                                     {
-                                        condicion == "CANTIDAD-MATERIAS-ANIOS" && (
+                                        condicion == "CANT-MATERIAS-ANIO" && (
                                             <Box>
                                                 <Box
                                                     sx={{

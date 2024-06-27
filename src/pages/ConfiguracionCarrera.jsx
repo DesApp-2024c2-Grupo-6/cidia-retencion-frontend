@@ -39,9 +39,10 @@ function ConfiguracionCarrera() {
                     msg: upCareer.statusText})
             }
         }
-      }
-      console.log(message)
+    }
+
     const navigate = useNavigate();
+
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
     }
@@ -51,7 +52,6 @@ function ConfiguracionCarrera() {
             setMessage({})
             const obtenerCarrera = async() => {
                 const carr = await getCurrentConfigCareer(IdCarrera);
-                console.log(carr)
                 
                 if(carr.status === 200){
                     const career = carr.data.careerData;
@@ -124,9 +124,7 @@ function ConfiguracionCarrera() {
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
                 bgcolor: 'background.default',
-                flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center',
                 marginTop: 3,
                 marginBottom:3
             }}>

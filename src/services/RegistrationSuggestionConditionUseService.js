@@ -15,3 +15,13 @@ export const getAllSuggestionConditionUse = async () => {
         return error;
     }
 }
+
+export const createConditionUse = async (data) => {
+    try {
+        const response = await axios.post(`${baseURL}/registrationsuggestionconditionuse/`, data);
+        return response;
+    }
+    catch (error) {
+        return error;
+    }
+}
