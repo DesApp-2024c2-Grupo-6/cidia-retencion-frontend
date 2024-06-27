@@ -2,10 +2,9 @@
 import { useSelector } from 'react-redux';
 import { Box, IconButton, Tooltip, Table } from '@mui/material';
 import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
+//import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import listadoCondicionesCarrera from '../services/listadoCondicionesCarrera';
 import { useNavigate } from 'react-router-dom';
 import SelectMultipleAR from '../components/SelectMultipleAR';
 
@@ -20,12 +19,12 @@ import Typography from '@mui/material/Typography';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 import Modal from '@mui/material/Modal';
-import FormControl, { useFormControl } from '@mui/material/FormControl';
+import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import SelectComponent from '../components/SelectR';
-import listadoRegistracionCondiciones from '../services/listadoRegistracionCondiciones';
-import listadoSubjectData from '../services/listadoSubjectData';
-import SelectMultipleR from '../components/SelectMultipleR';
+import { getAllSuggestionCondition } from '../services/RegistrationSuggestionConditionService';
+import { getAllSuggestionConditionUse } from '../services/RegistrationSuggestionConditionUseService';
+import { getAllSubjectData } from '../services/SubjectDataService';
 
 
 function createData(key, id, anio, materia, codigo_condicion, config_condicion) {
@@ -52,6 +51,15 @@ function ConfiguracionCondicionCarrera() {
 
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+
+
+    useEffect(() => {
+        if (IdCarrera == null || IdCarrera == "") {
+            navigate('/configuracion/');
+        }
+    },[IdCarrera, navigate]);
+
+    const [message, setMessage] = useState({ codigo: 0, msg: "" });
 
 
     //PARA CUANDO ESTE EL BACKEND
@@ -83,45 +91,101 @@ function ConfiguracionCondicionCarrera() {
     const [condicionesList, setCondicionesList] = useState([]);
 
     useEffect(() => {
-        const lista = listadoCondicionesCarrera
-            .filter(c => c.id_carrera == IdCarrera)
-            .map((c, index) => {
-                let configCondicion;
-                if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
-                    configCondicion = "Materias:- "+ c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
-                } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
-                    configCondicion = "Año: " + c.config_condicion.anio;
-                } else if (c.codigo_condicion === "CANT-MATERIAS-ANIO") {
-                    configCondicion = `Año: ${c.config_condicion.anio} - Cantidad: ${c.config_condicion.cantidad} - Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
-                } else if (c.codigo_condicion === "CANT-MATERIAS") {
-                    configCondicion = `Cantidad: ${c.config_condicion.cantidad} - ${c.config_condicion.campos_excepto == null ? "" : "Campos exceptuados: -" +c.config_condicion.campos_excepto.map((ce, idx) => idx === c.config_condicion.campos_excepto.length - 1 ? ce : ce+" ").join("")}`
-                } else {
-                    configCondicion = "-";
-                }
-                return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion);
-            });
+        setMessage({});
+        const obtenerCondicionesSugestionUse = async () => {
+            const carreras = await getAllSuggestionConditionUse();
+            if (carreras.status === 200) {
+                const career = carreras.data;
+                setMessage({
+                    code: carreras.status,
+                    msg: `Se han traido todas las condiciones.`
+                });
+                console.log(career);
+                const lista = career.conditionsCareerData
+                    .filter(c => c.id_carrera == IdCarrera)
+                    .map((c, index) => {
+                        let configCondicion;
+                        if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
+                            configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
+                        } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
+                            configCondicion = "Año: " + c.config_condicion.anio;
+                        } else if (c.codigo_condicion === "CANT-MATERIAS-ANIO") {
+                            configCondicion = `Año: ${c.config_condicion.anio} - Cantidad: ${c.config_condicion.cantidad} - Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
+                        } else if (c.codigo_condicion === "CANT-MATERIAS") {
+                            configCondicion = `Cantidad: ${c.config_condicion.cantidad} - ${c.config_condicion.campos_excepto == null ? "" : "Campos exceptuados: -" + c.config_condicion.campos_excepto.map((ce, idx) => idx === c.config_condicion.campos_excepto.length - 1 ? ce : ce + " ").join("")}`
+                        } else {
+                            configCondicion = "-";
+                        }
+                        return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion);
+                    });
 
-        setCondicionesList(lista);
+                setCondicionesList(lista);
+            } else {
+                setMessage({
+                    code: carreras.status,
+                    msg: carreras.statusText
+                })
+            }
+        }
+        obtenerCondicionesSugestionUse();
     }, [])
 
-    
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
+
     useEffect(() => {
-        const lista = listadoRegistracionCondiciones.map(c => ({
-            label: c.codigo,
-            value: c.codigo
-        }));
-        setTiposCondicionList(lista);
+
+        setMessage({});
+        const obtenerCondicionesSugestion = async () => {
+            const carreras = await getAllSuggestionCondition();
+            if (carreras.status === 200) {
+                const career = carreras.data;
+                setMessage({
+                    code: carreras.status,
+                    msg: `Se han traido todas las sugerencias de condiciones.`
+                });
+                const lista = career.allSuggestionConditions.map(c => ({
+                    label: c.codigo,
+                    value: c.codigo
+                }));
+                setTiposCondicionList(lista);
+            } else {
+                setMessage({
+                    code: carreras.status,
+                    msg: carreras.statusText
+                })
+            }
+        }
+        obtenerCondicionesSugestion();
+
     }, [])
 
     const [materiasList, setMateriasList] = useState([]);
     const [materiasCondicionList, setMateriasCondicionList] = useState([]);
     useEffect(() => {
-        const lista = listadoSubjectData.filter(c => c.id_carrera == IdCarrera).map(c => ({
-            label: `Materia ${c.id_materia}`,
-            value: c.id_materia
-        }));
-        setMateriasList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+        setMessage({});
+        const obtenerMaterias = async () => {
+            const materias = await getAllSubjectData();
+            if (materias.status === 200) {
+                const mats = materias.data;
+                setMessage({
+                    code: materias.status,
+                    msg: `Se han traido todas las materias.`
+                });
+                const lista = mats.allSubjects.filter(c => c.id_carrera == IdCarrera).map(c => ({
+                    label: `Materia ${c.id_materia}`,
+                    value: c.id_materia
+                }));
+                setMateriasList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+            } else {
+                setMessage({
+                    code: materias.status,
+                    msg: materias.statusText
+                })
+            }
+        }
+        obtenerMaterias();
+
+        
     }, [])
 
     //const handleSelect = (selectedValue, nomSelected) => {
@@ -132,20 +196,38 @@ function ConfiguracionCondicionCarrera() {
     const [camposList, setCamposList] = useState([]);
 
     useEffect(() => {
-        const lista = listadoSubjectData
-            .filter(c => c.id_carrera === IdCarrera && c.campo != "" && c.campo !== undefined)
-            .map(c => ({
-                label: c.campo,
-                value: c.campo
-            }));
-        const eliminarDuplicados = (arr) => {
-            const map = new Map();
-            return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
-        };
 
-        const listaSinDuplicados = eliminarDuplicados(lista);
+        setMessage({});
+        const obtenerMaterias = async () => {
+            const materias = await getAllSubjectData();
+            if (materias.status === 200) {
+                const mats = materias.data;
+                setMessage({
+                    code: materias.status,
+                    msg: `Se han traido todos los campos.`
+                });
+                const lista = mats.allSubjects.filter(c => c.id_carrera === IdCarrera && c.campo != "" && c.campo !== undefined)
+                    .map(c => ({
+                        label: c.campo,
+                        value: c.campo
+                    }));
+                const eliminarDuplicados = (arr) => {
+                    const map = new Map();
+                    return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
+                };
 
-        setCamposList(listaSinDuplicados);
+                const listaSinDuplicados = eliminarDuplicados(lista);
+
+                setCamposList(listaSinDuplicados);
+            } else {
+                setMessage({
+                    code: materias.status,
+                    msg: materias.statusText
+                })
+            }
+        }
+        obtenerMaterias();
+
     }, [IdCarrera]);
 
     //VARIABLES PARA EL OBJETO A GUARDAR

@@ -31,5 +31,10 @@ export const updateOneCareer = async (data) => {
 
 //obtener todas las carreras
 export const getAllCareer = async () => {
-    //TODO hacer este metodo.
+    try {
+        const response = await axios.get(`${baseURL}/carreras/all`);
+        return response;
+    } catch (error) {
+        return error;
+    }
 }
