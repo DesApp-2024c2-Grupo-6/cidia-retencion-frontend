@@ -42,8 +42,13 @@ function ConfiguracionCarrera() {
       }
       console.log(message)
     const navigate = useNavigate();
+    
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
+    }
+
+    const handleOnClickConfiguracionMaterias = () =>{
+        navigate('/configuracion/materias');
     }
 
     useEffect(() => {
@@ -184,6 +189,7 @@ function ConfiguracionCarrera() {
                                 >CONDICIONES</Button>  
                             <Button
                                 startIcon={<ListIcon />}>MATERIAS</Button>  
+                                onClick={handleOnClickConfiguracionMaterias}
                         </ButtonGroup>
                     
                 </Box>
