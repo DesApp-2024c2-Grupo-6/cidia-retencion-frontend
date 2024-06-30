@@ -1,32 +1,52 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography,Button } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Materia from '../components/Materia';
+import { getSubjectsByCareer , updateSubject } from '../services/SubjectDataService';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 function ConfiguracionMaterias() {
 
     const navigate = useNavigate()
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+    const [subjects, setSubjects] = useState([]);
+    
+    useEffect( () => {
 
-    const data = [
-        { id_materia: '10', anio: '', campo: 'Gral', nombreEspecial: 'Introducción a la tecnología' },
-        { id_materia: '1', anio: '2', campo: 'AyLi', nombreEspecial: '' },
-      ];
+      const getSubjects = async(id_carrera) => {
+        const subj = await getSubjectsByCareer(id_carrera);
+        if(subj.status === 200){
+          setSubjects(subj.data.subjectsByCareer);
+        }
+        
+      }
+
+      getSubjects(IdCarrera)
+    }, [subjects])
+
+    const handleSaveEdit = async (editedData) => {
+      //TODO message.
+      const upSubject = await updateSubject(editedData);
+      console.log(upSubject)
+    };
+    const handleClicBack = () => {
+      navigate('/configuracion/carrera');
+    }
     return(
-<Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        maxWidth: '800px',
-        margin: 'auto',
-        marginTop: 3,
-        borderRadius: '4px',
-        overflow: 'hidden',
-      }}
-    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          maxWidth: '800px',
+          margin: 'auto',
+          marginTop: 3,
+          borderRadius: '4px',
+          overflow: 'hidden',
+        }}
+      >
         <Typography 
             variant="h4"
             marginBottom={3} >
@@ -47,10 +67,16 @@ function ConfiguracionMaterias() {
         <Typography sx={{ flex: 1.5, textAlign: 'center', fontWeight: 'bold' }}>Acciones</Typography>
       </Box>
 
-      {/* Rows */}
-      {data.map((item) => (
-        <Materia data={item} />
+      {subjects?.map((item) => (
+        <Materia key={item.id_materia} data={item} handleSaveEdit={handleSaveEdit}/>
       ))}
+
+        <Button
+          onClick={ handleClicBack }
+          sx={{margin: 2}}
+          variant='contained'
+          startIcon={<ArrowCircleLeftIcon />}>
+        VOLVER</Button>  
     </Box>
     )
 }
