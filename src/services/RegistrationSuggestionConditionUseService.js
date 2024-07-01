@@ -25,3 +25,13 @@ export const createConditionUse = async (data) => {
         return error;
     }
 }
+
+export const deleteConditionUse = async (filtro) => {
+    try {
+        const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/`, { data: filtro });
+        return response;
+    }
+    catch (error) {
+        return error;
+    }
+}

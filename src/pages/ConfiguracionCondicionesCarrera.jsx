@@ -22,12 +22,12 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import SelectComponent from '../components/SelectR';
 import { getAllSuggestionCondition } from '../services/RegistrationSuggestionConditionService';
-import { getAllSuggestionConditionUse, createConditionUse } from '../services/RegistrationSuggestionConditionUseService';
+import { getAllSuggestionConditionUse, createConditionUse, deleteConditionUse } from '../services/RegistrationSuggestionConditionUseService';
 import { getAllSubjectData } from '../services/SubjectDataService';
 
 
-function createData(key, id, anio, materia, codigo_condicion, config_condicion) {
-    return {key, id, anio, materia, codigo_condicion, config_condicion };
+function createData(key, id, anio, materia, codigo_condicion, config_condicion, obj) {
+    return {key, id, anio, materia, codigo_condicion, config_condicion, obj };
 }
 
 const style = {
@@ -61,7 +61,8 @@ function ConfiguracionCondicionCarrera() {
     const [message, setMessage] = useState({ codigo: 0, msg: "" });
 
     const [condicionesList, setCondicionesList] = useState([]);
-    const [nuevaCondicion, setNuevaCondicion] = useState(false); 
+    const [actualizarTablaCondiciones, setActualizarTablaCondiciones] = useState(false); 
+    const [sePuedeGuardar, setSePuedeGuardar] = useState(true);
 
     useEffect(() => {
         setMessage({});
@@ -77,6 +78,7 @@ function ConfiguracionCondicionCarrera() {
                     .filter(c => c.id_carrera == IdCarrera)
                     .map((c, index) => {
                         let configCondicion;
+                        let nobj = c;
                         if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
                             configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
@@ -84,11 +86,11 @@ function ConfiguracionCondicionCarrera() {
                         } else if (c.codigo_condicion === "CANT-MATERIAS-ANIO") {
                             configCondicion = `Año: ${c.config_condicion.anio} - Cantidad: ${c.config_condicion.cantidad} - Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
                         } else if (c.codigo_condicion === "CANT-MATERIAS") {
-                            configCondicion = `Cantidad: ${c.config_condicion.cantidad} - ${c.config_condicion.campos_excepto == null ? "" : "Campos exceptuados: -" + c.config_condicion.campos_excepto.map((ce, idx) => idx === c.config_condicion.campos_excepto.length - 1 ? ce : ce + " ").join("")}`
+                            configCondicion = `Cantidad: ${c.config_condicion.cantidad} ${c.config_condicion.campos_excepto == null ? "" : "- Campos exceptuados: -" + c.config_condicion.campos_excepto.map((ce, idx) => idx === c.config_condicion.campos_excepto.length - 1 ? ce : ce + " ").join("")}`
                         } else {
                             configCondicion = "-";
                         }
-                        return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion);
+                        return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion, nobj);
                     });
 
                 setCondicionesList(lista);
@@ -100,7 +102,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         obtenerCondicionesSugestionUse();
-    }, [nuevaCondicion])
+    }, [actualizarTablaCondiciones]);
 
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
 
@@ -119,6 +121,10 @@ function ConfiguracionCondicionCarrera() {
                     label: c.codigo,
                     value: c.codigo
                 }));
+
+                lista.sort((a, b) => {
+                    return a.label.localeCompare(b.label);
+                });
                 setTiposCondicionList(lista);
             } else {
                 setMessage({
@@ -232,7 +238,24 @@ function ConfiguracionCondicionCarrera() {
     }
     const setearCondicion = (valor) => {
         setCondicion(valor);
+        if (valor !== "") {
+            setSePuedeGuardar(false);
+        }
+        else {
+            setSePuedeGuardar(true);
+        }
     }
+
+    useEffect(()=>{
+        if (condicion === "N-1" || condicion === "N-2" || condicion === "N-1R-2A") {
+            setinputAnio(true);
+            setselectCarreraDisabled(true);
+        }
+        else {
+            setinputAnio(false);
+            setselectCarreraDisabled(false);
+        }
+    }, [condicion])
 
     const [camposSeleccionados, setCamposSeleccionados] = useState([]);
     const setearcamposSeleccionados = (value) => {
@@ -254,52 +277,60 @@ function ConfiguracionCondicionCarrera() {
         let nuevaCondicion = {
             //key: condicionesList.length,
             id_carrera: IdCarrera,
-            anio: anio,
-            materia: materia,
+            //anio: anio,
+            //id_materia: materia,
             codigo_condicion: condicion
         }
 
-        if (condicion === "N-1" || condicion === "N-2" || condicion === "N-1R-2A") {
-            nuevaCondicion.anio = "";
-            nuevaCondicion.materia = "";
-        }
-        else if (condicion === "CAMPOS-COMPLETOS") {
-            nuevaCondicion.config_condicion = { campos: camposSeleccionados }
-        }
-        else if (condicion === "MATERIAS-ESPECIFICAS") {
-            nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
-        }
-        else if (condicion === "CANT-MATERIAS") {
-            if (exceptuadosSeleccionados.length > 0) {
-                nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
+        if (condicion !== "N-1" && condicion !== "N-2" && condicion !== "N-1R-2A") {
+            
+            if (anio != "") {
+                nuevaCondicion.anio = anio;
             }
-            else {
-                nuevaCondicion.config_condicion = { cantidad: cantidad };
+            else if(materia !== ""){
+                nuevaCondicion.id_materia = materia;
+            }
+            if (condicion === "CAMPOS-COMPLETOS") {
+                nuevaCondicion.config_condicion = { campos: camposSeleccionados }
+            }
+            else if (condicion === "MATERIAS-ESPECIFICAS") {
+                nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
+            }
+            else if (condicion === "CANT-MATERIAS") {
+                if (exceptuadosSeleccionados.length > 0) {
+                    nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
+                }
+                else {
+                    nuevaCondicion.config_condicion = { cantidad: cantidad };
+                }
+            }
+            else if (condicion === "ANIOS-COMPLETOS") {
+                if (cantidad > 0) {
+                    nuevaCondicion.config_condicion = { anio: anioCompleto, salvo_cantidad: cantidad };
+                }
+                else {
+                    nuevaCondicion.config_condicion = { anio: anioCompleto };
+                }
+            }
+            else if (condicion === "CANT-MATERIAS-ANIO") {
+                nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
             }
         }
-        else if (condicion === "ANIOS-COMPLETOS") {
-            if (cantidad > 0) {
-                nuevaCondicion.config_condicion = { anio: anioCompleto, salvo_cantidad: cantidad };
-            }
-            else {
-                nuevaCondicion.config_condicion = { anio: anioCompleto };
-            }
-        }
-        else if (condicion === "CANT-MATERIAS-ANIO") {
-            nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
-        }
-
+        
         const postcondicion = await createConditionUse(nuevaCondicion);
 
         setearcamposSeleccionados([]);
         setearMateriasSeleccionadas([]);
         setearExceptuadosSeleccionados([]);
-
+        setAnio("");
+        setmateria("");
+        setCantidad("");
+        setAnioCompleto("");
+        setSePuedeGuardar(true);
         handleClose();
 
         if (postcondicion.status === 200) {
-            console.log("entro")
-            setNuevaCondicion(!nuevaCondicion); /// POR QUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE 
+            setActualizarTablaCondiciones(!actualizarTablaCondiciones); 
             setMessage({
                 code: postcondicion.status,
                 msg: `Condicion ID ${postcondicion.data.id_carrera} creada correctamente.`
@@ -311,28 +342,36 @@ function ConfiguracionCondicionCarrera() {
                 msg: postcondicion.statusText
             })
         }
-        //console.log(nuevaCondicion);
-
-        
     }
 
 
-    const eliminarCondicion = (cond) => {
+    const eliminarCondicion = async (cond) => {
 
-        let nuevaCondicion = {
-            id_carrera: IdCarrera,
-            anio: cond.anio,
-            materia: cond.materia,
-            codigo_condicion: cond.codigo_condicion,
-            config_condicion: cond.config_condicion
+        let condicionEliminar = {
+            id_carrera: cond.obj.id_carrera,
+            codigo_condicion: cond.obj.codigo_condicion,
         }
 
-        console.log("Se elimina: " + JSON.stringify(nuevaCondicion));
+        if (cond.obj.anio) { condicionEliminar.anio = cond.obj.anio }
+        if (cond.obj.id_materia) { condicionEliminar.id_materia = cond.obj.id_materia }
+        if (cond.obj.config_condicion) { condicionEliminar.config_condicion = cond.obj.config_condicion }
 
+        const deletecondicion = await deleteConditionUse(condicionEliminar);
+
+        if (deletecondicion.status === 200) {
+            setActualizarTablaCondiciones(!actualizarTablaCondiciones);
+            setMessage({
+                code: deletecondicion.status,
+                msg: `Se ha eliminado la condición correctamente.`
+            })
+
+        } else {
+            setMessage({
+                code: deletecondicion.status,
+                msg: deletecondicion.statusText
+            })
+        }
     }
-
-
-
 
     const paginaAnterior = () => {
         navigate('/configuracion/carrera');
@@ -343,9 +382,11 @@ function ConfiguracionCondicionCarrera() {
         setAnio("");
         setmateria("");
         setCantidad("");
+        setAnioCompleto("");
         setinputAnio(false);
         setselectCarreraDisabled(false);
         setOpen(true);
+        setSePuedeGuardar(true);
     }
         
     const handleClose = () => setOpen(false);
@@ -575,7 +616,7 @@ function ConfiguracionCondicionCarrera() {
                                             marginTop: '25px'
                                         }}>
 
-                                        <Button variant="contained" onClick={guardarCondicion}>
+                                        <Button variant="contained" disabled={ sePuedeGuardar } onClick={guardarCondicion}>
                                             Guardar
                                         </Button>
                                     </Box>
