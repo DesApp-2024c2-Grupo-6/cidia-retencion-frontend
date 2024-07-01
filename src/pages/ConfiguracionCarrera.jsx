@@ -22,8 +22,7 @@ function ConfiguracionCarrera() {
     const [message, setMessage] = useState({codigo: 0, msg:""});
 
     const toggleEdit = async() => {
-        setIsEdit((prevState) => !prevState); // Cambia el estado de edición
-        //llamada al BE
+        setIsEdit((prevState) => !prevState); 
         setMessage({})
         if(isEdit){
             const upCareer = await updateOneCareer(carrera);
@@ -40,7 +39,7 @@ function ConfiguracionCarrera() {
             }
         }
       }
-      console.log(message)
+
     const navigate = useNavigate();
     
     const handleOnClickCondiciones = () => {
