@@ -16,7 +16,15 @@ const ParagraphList = () => {
       try {
         const response = await getAllParrafos();
         if (response.status === 200) {
-          setParrafos(response.data);
+          const parrafos = response.data;
+          if (Array.isArray(parrafos)) {
+            setParrafos(parrafos);
+          } else if (parrafos.allParrafos && Array.isArray(parrafos.allParrafos)) {
+            setParrafos(parrafos.allParrafos);
+          } else {
+            console.error('Error: Invalid data format for paragraphs');
+          }
+          
         } else {
           console.error('Error fetching paragraphs:', response.statusText);
         }
