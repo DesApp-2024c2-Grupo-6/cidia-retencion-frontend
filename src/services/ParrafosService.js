@@ -35,7 +35,7 @@ export const updateOneParrafo = async (data) => {
  */
 export const getAllParrafos = async () => {
     try {
-        const response = await axios.get(`${baseURL}/parrafos/all`);
+        const response = await axios.get(`${baseURL}/parrafos`);
         return response.data; // Retornar solo los datos
     } catch (error) {
         console.error('Error fetching all paragraphs:', error);
