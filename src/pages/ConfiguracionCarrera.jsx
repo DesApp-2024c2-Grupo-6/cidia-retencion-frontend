@@ -11,7 +11,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
-import { updateOneCareer, getCurrentConfigCareer } from '../services/CarrerService';
+import { updateOneCareer, getCurrentConfigCareer } from '../services/CareerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
@@ -45,6 +45,10 @@ function ConfiguracionCarrera() {
 
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
+    }
+
+    const handleOnClickConfiguracionMaterias = () =>{
+        navigate('/configuracion/materias');
     }
 
     useEffect(() => {
@@ -185,7 +189,9 @@ function ConfiguracionCarrera() {
                                 onClick={ handleOnClickCondiciones }
                                 >CONDICIONES</Button>  
                             <Button
-                                startIcon={<ListIcon />}>MATERIAS</Button>  
+                                startIcon={<ListIcon />}
+                                onClick={handleOnClickConfiguracionMaterias}
+                                >MATERIAS</Button>  
                         </ButtonGroup>
                     
                 </Box>

@@ -15,3 +15,20 @@ export const getAllSubjectData = async () => {
     }
 }
 
+export const getSubjectsByCareer = async (id_carrera) => {
+    try {
+        const response = await axios.get(`${baseURL}/materias/porcarrera/`, {params: {id_carrera}});
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const updateSubject = async(data) => {
+    try {
+        const response = await axios.put(`${baseURL}/materias/`, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
