@@ -7,7 +7,7 @@ import ListIcon from '@mui/icons-material/List';
 import '../styles/ConfiguracionCarreras.css';
 import { useDispatch } from 'react-redux';
 import { addCarrera } from '../redux/carreraSlice';
-import { getAllCareer } from '../services/CarrerService';
+import { getAllCareer } from '../services/CareerService';
 
 import { useNavigate } from 'react-router-dom';
 
