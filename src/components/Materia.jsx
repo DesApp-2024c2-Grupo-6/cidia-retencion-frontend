@@ -28,7 +28,6 @@ function Materia({data, handleSaveEdit}) {
     
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(e.target.value)
         setFormData((prev) => ({ ...prev, [name]: value }));
         console.log(formData)
       };
@@ -46,29 +45,29 @@ function Materia({data, handleSaveEdit}) {
     return(
         <Box
             sx={{
-            display: 'flex',
-            '&:nth-of-type(odd)': {
-                backgroundColor: '#f9f9f9',
-            },
-            '&:nth-of-type(even)': {
-                backgroundColor: '#ffffff',
-            },
+              display: 'flex',
+              '&:nth-of-type(odd)': {
+                  backgroundColor: '#f9f9f9',
+              },
+              '&:nth-of-type(even)': {
+                  backgroundColor: '#ffffff'
+              },
             }}
       >
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px' }}>{data.id_materia}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px' }}>{data.anio}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px' }}>{data.campo}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px' }}>{data.nombreMateria}</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.id_materia}</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.anio}</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px',fontSize: '12px', alignContent: 'center' }}>{data.campo}</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.specialSubjectName}</Typography>
         <Box sx={{ flex: 1.5, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
             <IconButton
                 sx={{ width: '25px' }}
                 onClick={handleOnClickDelete}> 
-                <DeleteIcon sx={{ color: 'red'}} />
+                <DeleteIcon sx={{ color: 'red', fontSize: '18px'}} />
             </IconButton>
             <IconButton
              sx={{ width: '25px' }}
                 onClick={() => handleOpen(data)}> 
-                <EditIcon sx={{color: 'blue'}} />
+                <EditIcon sx={{color: 'blue', fontSize: '18px'}} />
             </IconButton>
         </Box>
 
@@ -110,8 +109,8 @@ function Materia({data, handleSaveEdit}) {
             />
             <TextField
               label="Nombre Especial"
-              name="nombreMateria"
-              value={formData.nombreMateria}
+              name="specialSubjectName"
+              value={formData.specialSubjectName}
               onChange={handleChange}
             />
             <Button variant="contained" color="primary" onClick={handleSave}>

@@ -12,6 +12,7 @@ function ConfiguracionMaterias() {
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
     const [subjects, setSubjects] = useState([]);
+    const [save, setSave] = useState(false);
     
     useEffect( () => {
 
@@ -24,12 +25,12 @@ function ConfiguracionMaterias() {
       }
 
       getSubjects(IdCarrera)
-    }, [subjects])
+    }, [save])
 
     const handleSaveEdit = async (editedData) => {
       //TODO message.
       const upSubject = await updateSubject(editedData);
-      console.log(upSubject)
+      setSave(!save);
     };
     const handleClicBack = () => {
       navigate('/configuracion/carrera');
@@ -55,16 +56,15 @@ function ConfiguracionMaterias() {
       <Box
         sx={{
           display: 'flex',
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#609800',
           padding: '8px',
-          borderBottom: '1px solid #ddd',
         }}
       >
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>Código Materia</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>Año</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>Campo</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>Nombre Especial</Typography>
-        <Typography sx={{ flex: 1.5, textAlign: 'center', fontWeight: 'bold' }}>Acciones</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Código Materia</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Año</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Campo</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold',backgroundColor: '#609800', color: '#FFFFFF' }}>Nombre Especial</Typography>
+        <Typography sx={{ flex: 1.5, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
       </Box>
 
       {subjects?.map((item) => (
