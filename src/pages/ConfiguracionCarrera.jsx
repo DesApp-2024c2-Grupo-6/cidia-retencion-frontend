@@ -55,8 +55,7 @@ function ConfiguracionCarrera() {
             setMessage({})
             const obtenerCarrera = async() => {
                 const carr = await getCurrentConfigCareer(IdCarrera);
-                console.log(carr)
-                
+               
                 if(carr.status === 200){
                     const career = carr.data.careerData;
                     setMessage({
@@ -101,7 +100,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
@@ -112,7 +110,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
