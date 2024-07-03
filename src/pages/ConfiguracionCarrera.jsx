@@ -22,8 +22,7 @@ function ConfiguracionCarrera() {
     const [message, setMessage] = useState({codigo: 0, msg:""});
 
     const toggleEdit = async() => {
-        setIsEdit((prevState) => !prevState); // Cambia el estado de edición
-        //llamada al BE
+        setIsEdit((prevState) => !prevState); 
         setMessage({})
         if(isEdit){
             const upCareer = await updateOneCareer(carrera);
@@ -39,7 +38,7 @@ function ConfiguracionCarrera() {
                     msg: upCareer.statusText})
             }
         }
-    }
+      }
 
     const navigate = useNavigate();
 
@@ -101,7 +100,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
@@ -112,7 +110,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
