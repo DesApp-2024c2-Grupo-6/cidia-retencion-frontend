@@ -16,15 +16,9 @@ const ParagraphList = () => {
       try {
         const response = await getAllParrafos();
         if (response.status === 200) {
-          const parrafos = response.data;
-          if (Array.isArray(parrafos)) {
-            setParrafos(parrafos);
-          } else if (parrafos.allParrafos && Array.isArray(parrafos.allParrafos)) {
-            setParrafos(parrafos.allParrafos);
-          } else {
-            console.error('Error: Invalid data format for paragraphs');
-          }
           
+          
+          setParrafos(response.data.allParrafos[0]._rawData);
         } else {
           console.error('Error fetching paragraphs:', response.statusText);
         }
@@ -35,6 +29,8 @@ const ParagraphList = () => {
   
     fetchParrafos();
   }, []);
+
+
   const agregarParrafo = (clave, texto) => {
     const nuevoParrafo = { texto, clave };
     setParrafos([...parrafos, nuevoParrafo]);
@@ -93,7 +89,7 @@ const ParagraphList = () => {
       {editIndex === null ? (
         <>
           <Grid container spacing={2} sx={{ maxWidth: '1200px', width: '100%' }}>
-            {parrafos.map((paragraph, index) => (
+            {parrafos?.map((paragraph, index) => (
               <Grid item xs={12} key={index}>
                 <Paper
                   draggable
@@ -109,8 +105,8 @@ const ParagraphList = () => {
                   }}
                 >
                   <ParrafoPlantilla
-                    text={paragraph.texto}
-                    clave={paragraph.clave}
+                    text={paragraph.text}
+                    clave={paragraph.key}
                     onEditClick={() => setEditIndex(index)}
                     onDelete={() => eliminarParrafo(index)}
                   />
