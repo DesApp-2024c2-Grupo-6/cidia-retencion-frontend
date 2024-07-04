@@ -11,7 +11,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
-import { updateOneCareer, getCurrentConfigCareer } from '../services/CarrerService';
+import { updateOneCareer, getCurrentConfigCareer } from '../services/CareerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
@@ -22,8 +22,7 @@ function ConfiguracionCarrera() {
     const [message, setMessage] = useState({codigo: 0, msg:""});
 
     const toggleEdit = async() => {
-        setIsEdit((prevState) => !prevState); // Cambia el estado de edición
-        //llamada al BE
+        setIsEdit((prevState) => !prevState); 
         setMessage({})
         if(isEdit){
             const upCareer = await updateOneCareer(carrera);
@@ -39,12 +38,16 @@ function ConfiguracionCarrera() {
                     msg: upCareer.statusText})
             }
         }
-    }
+      }
 
     const navigate = useNavigate();
 
     const handleOnClickCondiciones = () => {
         navigate('/configuracion/condiciones')
+    }
+
+    const handleOnClickConfiguracionMaterias = () =>{
+        navigate('/configuracion/materias');
     }
 
     useEffect(() => {
@@ -97,7 +100,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
@@ -108,7 +110,6 @@ function ConfiguracionCarrera() {
         }else if(index === 1){
             updateCarrer.englishLevels = newValue
         }
-        console.log("Carrera Actualizada:", updateCarrer)
         setCarrera(updateCarrer)
     }
 
@@ -185,7 +186,9 @@ function ConfiguracionCarrera() {
                                 onClick={ handleOnClickCondiciones }
                                 >CONDICIONES</Button>  
                             <Button
-                                startIcon={<ListIcon />}>MATERIAS</Button>  
+                                startIcon={<ListIcon />}
+                                onClick={handleOnClickConfiguracionMaterias}
+                                >MATERIAS</Button>  
                         </ButtonGroup>
                     
                 </Box>
