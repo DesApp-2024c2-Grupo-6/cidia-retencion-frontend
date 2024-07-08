@@ -49,7 +49,7 @@ export const getAllParrafos = async () => {
  */
 export const deleteOneParrafo = async (parrafoId) => {
     try {
-        const response = await axios.delete(`${baseURL}/parrafos`, { params: { parrafoId } });
+        const response = await axios.delete(`${baseURL}/parrafos`,{data:parrafoId});
         return response.data; // Asumiendo que quieres devolver solo los datos, no el objeto completo de respuesta.
     } catch (error) {
         return error;

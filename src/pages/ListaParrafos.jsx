@@ -5,7 +5,7 @@ import { Button, Box, Typography, Paper, Grid, Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { getAllParrafos, updateOneParrafo, deleteOneParrafo,createParrafo } from '../services/ParrafosService.js';
 
-const listadoPrueba = [];
+
 
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
@@ -36,17 +36,36 @@ const ParagraphList = () => {
     setParrafos([...parrafos, nuevoParrafo]);
   };
 
-  const editarParrafo = (index, newClave, newText) => {
-    const updatedParrafos = [...parrafos];
-    updatedParrafos[index] = { texto: newText, clave: newClave };
-    setParrafos(updatedParrafos);
-    setEditIndex(null);
+  const editarParrafo = async (index, newClave, newText) => {
+    try {
+      const updatedParrafo = { ...parrafos[index], key: newClave, text: newText };
+      const response = await updateOneParrafo(updatedParrafo); // Llamar al backend para actualizar el párrafo
+      
+      if (response.status === 200) {
+        const updatedParrafos = [...parrafos];
+        updatedParrafos[index] = response.data; // Actualizar el párrafo en el estado local
+        setParrafos(updatedParrafos);
+        setEditIndex(null);
+      } else {
+        console.error('Error updating paragraph:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating paragraph:', error);
+    }
   };
 
-  const eliminarParrafo = (index) => {
-    const updatedParrafos = [...parrafos];
-    updatedParrafos.splice(index, 1);
-    setParrafos(updatedParrafos);
+  const eliminarParrafo = async (id) => {
+    try {
+      const eliminado = await deleteOneParrafo(id);
+      console.log('Parrafo eliminado:', eliminado);
+      
+      // Actualiza el estado de los párrafos después de eliminar
+      const updatedParrafos = parrafos.filter(parrafo => parrafo._id !== id);
+      setParrafos(updatedParrafos);
+  
+    } catch (error) {
+      console.error('Error al eliminar el párrafo:', error);
+    }
   };
 
   const handleDragStart = (e, index) => {
@@ -105,10 +124,11 @@ const ParagraphList = () => {
                   }}
                 >
                   <ParrafoPlantilla
+                    _id={paragraph._id}
                     text={paragraph.text}
                     clave={paragraph.key}
                     onEditClick={() => setEditIndex(index)}
-                    onDelete={() => eliminarParrafo(index)}
+                    onDelete={() => eliminarParrafo(paragraph._id)}
                   />
                 </Paper>
               </Grid>
