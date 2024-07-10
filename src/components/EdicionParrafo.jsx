@@ -64,6 +64,62 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         setCondicionesSeleccionadas(values);
     };
 
+    //---------------------------------- METO FUNCIONES DE TARJETA CONDICION --------------------------------------------------------------------------------------------
+
+    const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
+
+    //LA LISTA PARA LAS MATERIAS
+    const [listaMateriasParaSelect, setListaMateriasParaSelect] = useState([]);
+
+
+    // PARA CARGAR INICIALMENTE LA LISTA DE MATERIAS
+    useEffect(() => {
+        const materiasFiltradas = listaMaterias.filter(materia =>
+            listaCarrerasElejidas.length > 0 ? listaCarrerasElejidas.includes(materia.id_carrera) : renderMaterias
+        );
+        const listaFiltrada = materiasFiltradas.map(m => ({
+            value: m.id_materia,
+            label: `Materia ${m.id_materia}`
+        }));
+        const eliminarDuplicados = (arr) => {
+            const map = new Map();
+            return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
+        };
+        const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
+
+        setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+    }, []);
+
+    //PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS 
+    useEffect(() => {
+        //if (condicion !== "MATERIAS_PENDIENTES" && condicion !== "MATERIAS_NO_PENDIENTES") {
+            if (listaCarrerasElejidas.length > 0) {
+                const materiasFiltradas = listaMaterias.filter(materia =>
+                    listaCarrerasElejidas.includes(materia.id_carrera)
+                );
+                const listaFiltrada = materiasFiltradas.map(m => ({
+                    value: m.id_materia,
+                    label: `Materia ${m.id_materia}`
+                }));
+                console.log("cantidad de materias: ", listaFiltrada.length)
+                setListaMateriasParaSelect(listaFiltrada);
+            } else {
+                setListaMateriasParaSelect([]);
+            }
+        //}
+
+    }, [listaCarrerasElejidas, listaMaterias]);
+
+    //PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
+    const carrerasseleccionadas = (carreras) => {
+        setListaCarrerasElejidas(carreras);
+    };
+
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -127,7 +183,9 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
                           condicion={condicion}
                           listaCarreras={listaCarreras}
                           listaMaterias={listaMaterias}
+                          listaMateriasParaSelect={listaMateriasParaSelect}
                           handleCheckbox={handleCheckboxChange}
+                          handeSelectionCareer={carrerasseleccionadas}
                           deshabilitarCampoNumerico={!checkboxValues[index]} // Deshabilitar campo numérico si el checkbox está marcado
                       />
                   ))}
