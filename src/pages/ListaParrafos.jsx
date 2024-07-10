@@ -31,9 +31,19 @@ const ParagraphList = () => {
     fetchParrafos();
   }, []);
 
-  const agregarParrafo = (clave, texto) => {
-    const nuevoParrafo = { texto, clave };
-    setParrafos([...parrafos, nuevoParrafo]);
+  const agregarParrafo = async (clave = "ejemplo_de_clave", texto = "Este es un ejemplo de texto para el párrafo.") => {
+    console.log('Agregando párrafo:', { clave, texto });
+    try {
+      const response = await createParrafo({
+        parrafoId: '668f059dca8aefbbf6275e73',
+        nuevaClave: clave,
+        nuevoTexto: texto
+      });
+      console.log('Response from createParrafo:', response);
+      setParrafos([...parrafos, { key: clave, text: texto }]);
+    } catch (error) {
+      console.error('Error creating paragraph:', error);
+    }
   };
 
   const editarParrafo = async (index, newClave, newText) => {
@@ -141,7 +151,7 @@ const ParagraphList = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => agregarParrafo("", "")}
+            onClick={() => agregarParrafo("ejemplo de parrafo","ejemplo de parrafo")}
             sx={{ marginTop: '16px' }}
           >
             Añadir Párrafo
