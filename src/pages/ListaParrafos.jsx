@@ -40,10 +40,10 @@ const ParagraphList = () => {
     try {
       const updatedParrafo = { ...parrafos[index], key: newClave, text: newText };
       const response = await updateOneParrafo(updatedParrafo); // Llamar al backend para actualizar el párrafo
-      
+
       if (response.status === 200) {
         const updatedParrafos = [...parrafos];
-        updatedParrafos[index] = response.data; // Actualizar el párrafo en el estado local
+        updatedParrafos[index] = updatedParrafo; // Actualizar el párrafo en el estado local
         setParrafos(updatedParrafos);
         setEditIndex(null);
       } else {
@@ -58,7 +58,7 @@ const ParagraphList = () => {
     try {
       const response = await deleteOneParrafo(key);
       console.log('Parrafo eliminado:', response);
-      
+
       if (response.status === 200) {
         setParrafos(parrafos.filter(parrafo => parrafo.key !== key));
       } else {
@@ -142,8 +142,8 @@ const ParagraphList = () => {
         </>
       ) : (
         <EdicionParrafo
-          initialClave={parrafos[editIndex].clave}
-          initialTexto={parrafos[editIndex].texto}
+          initialClave={parrafos[editIndex].key}
+          initialTexto={parrafos[editIndex].text}
           onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
           onCancel={() => setEditIndex(null)}
         />
