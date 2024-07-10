@@ -151,7 +151,7 @@ const ParagraphList = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => agregarParrafo("ejemplo de parrafo","ejemplo de parrafo")}
+            onClick={() => agregarParrafo("ejemplo de Clave","ejemplo de texto")}
             sx={{ marginTop: '16px' }}
           >
             Añadir Párrafo
