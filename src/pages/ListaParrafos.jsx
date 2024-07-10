@@ -38,16 +38,25 @@ const ParagraphList = () => {
 
   const editarParrafo = async (index, newClave, newText) => {
     try {
-      const updatedParrafo = { ...parrafos[index], key: newClave, text: newText };
-      const response = await updateOneParrafo(updatedParrafo); // Llamar al backend para actualizar el párrafo
-
-      if (response.status === 200) {
+      const updatedParrafo = {
+        key: parrafos[index].key,
+        updateFields: {
+          key: newClave,
+          text: newText
+        }
+      };
+  
+      const response = await updateOneParrafo(updatedParrafo);
+      console.log('Response from backend:', response);
+  
+      if (response && response.message === 'Párrafo actualizado correctamente') {
         const updatedParrafos = [...parrafos];
-        updatedParrafos[index] = updatedParrafo; // Actualizar el párrafo en el estado local
+        updatedParrafos[index].key = newClave;
+        updatedParrafos[index].text = newText;
         setParrafos(updatedParrafos);
         setEditIndex(null);
       } else {
-        console.error('Error updating paragraph:', response.statusText);
+        console.error('Error updating paragraph:', response && response.message);
       }
     } catch (error) {
       console.error('Error updating paragraph:', error);
@@ -92,13 +101,11 @@ const ParagraphList = () => {
     <Box
       sx={{
         display: 'flex',
-        flexDirection: { xs: 'column' },
+        flexDirection: 'column',
         alignItems: 'center',
         bgcolor: 'background.default',
         marginTop: 3,
         marginBottom: 3,
-        justifyContent: 'center',
-        alignItems: 'center',
         padding: '20px',
       }}
     >
@@ -108,7 +115,7 @@ const ParagraphList = () => {
       {editIndex === null ? (
         <>
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
-            <Grid item xs={12} key={index}>
+            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
               <Paper
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}
