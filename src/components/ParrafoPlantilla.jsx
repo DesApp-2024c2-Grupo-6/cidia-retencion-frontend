@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, IconButton, Box } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
-const ParrafoPlantilla = ({_id,text, clave, onEditClick, onDelete }) => {
+const ParrafoPlantilla = ({text, clave, onEditClick, onDelete }) => {
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between" gap={2}>
       <Box flexGrow={1}>
@@ -10,10 +10,10 @@ const ParrafoPlantilla = ({_id,text, clave, onEditClick, onDelete }) => {
         <Typography variant="body1" gutterBottom>{text}</Typography>
       </Box>
       <Box display="flex" alignItems="center" gap={1}>
-              <IconButton onClick={onEditClick} aria-label="Editar" color="primary" sx={{ width: '40px' }}>
+              <IconButton onClick={()=>onEditClick(clave)} aria-label="Editar" color="primary" sx={{ width: '40px' }}>
           <Edit />
         </IconButton>
-              <IconButton onClick={()=>onDelete(_id)} aria-label="Eliminar" sx={{ width: '40px', color:'red' }}>
+              <IconButton onClick={()=>onDelete(clave)} aria-label="Eliminar" sx={{ width: '40px', color:'red' }}>
           <Delete />
         </IconButton>
       </Box>
