@@ -35,7 +35,7 @@ const ParagraphList = () => {
     console.log('Agregando párrafo:', { clave, texto });
     try {
       const response = await createParrafo({
-        parrafoId: '668f059dca8aefbbf6275e73',
+        parrafoId: '668f20a4fb3e34d777eb3e1a', //Aca tocar por el id 
         nuevaClave: clave,
         nuevoTexto: texto
       });
