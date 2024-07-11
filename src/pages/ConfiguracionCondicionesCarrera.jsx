@@ -210,8 +210,8 @@ function ConfiguracionCondicionCarrera() {
 
     const [materia, setmateria] = useState("");
     const [condicion, setCondicion] = useState("");
-    const [anio, setAnio] = useState("");
-    const [anioCompleto, setAnioCompleto] = useState("");
+    const [anio, setAnio] = useState(""); // anio de la cabecera
+    const [anioCompleto, setAnioCompleto] = useState(""); // anio de las opciones
     const [cantidad, setCantidad] = useState("");
 
 
@@ -313,10 +313,10 @@ function ConfiguracionCondicionCarrera() {
                 }
             }
             else if (condicion === "CANT-MATERIAS-ANIO") {
-                nuevaCondicion.config_condicion = { anio: anio, cantidad: cantidad, campos: exceptuadosSeleccionados }
+                nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
             }
         }
-        
+        console.log(nuevaCondicion);
         const postcondicion = await createConditionUse(nuevaCondicion);
 
         setearcamposSeleccionados([]);
@@ -355,7 +355,7 @@ function ConfiguracionCondicionCarrera() {
         if (cond.obj.anio) { condicionEliminar.anio = cond.obj.anio }
         if (cond.obj.id_materia) { condicionEliminar.id_materia = cond.obj.id_materia }
         if (cond.obj.config_condicion) { condicionEliminar.config_condicion = cond.obj.config_condicion }
-
+        console.log(condicionEliminar);
         const deletecondicion = await deleteConditionUse(condicionEliminar);
 
         if (deletecondicion.status === 200) {
@@ -582,7 +582,7 @@ function ConfiguracionCondicionCarrera() {
                                                                     padding: '16.5px 0px 16.5px 0px'
                                                                 }
                                                             }}
-                                                            placeholder="Año" onInput={setearAnio} />
+                                                            placeholder="Año" onInput={setAnioCompleto} />
                                                     </FormControl>
                                                     <FormControl sx={{
                                                         width: '100%'
