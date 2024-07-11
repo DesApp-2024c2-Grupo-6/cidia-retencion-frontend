@@ -79,10 +79,13 @@ function ConfiguracionCondicionCarrera() {
                     .map((c, index) => {
                         let configCondicion;
                         let nobj = c;
+                        //console.log(nobj);
                         if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
                             configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
                             configCondicion = `Año: ${c.config_condicion.anio} ${c.config_condicion.salvo_cantidad != null ? "- Cantidad: " + c.config_condicion.salvo_cantidad : ""} `;
+                        } else if (c.codigo_condicion === "CAMPOS-COMPLETOS") {
+                            configCondicion = `Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
                         } else if (c.codigo_condicion === "CANT-MATERIAS-ANIO") {
                             configCondicion = `Año: ${c.config_condicion.anio} - Cantidad: ${c.config_condicion.cantidad} - Campos: ${c.config_condicion.campos.map((cam, idx) => idx === c.config_condicion.campos.length - 1 ? cam : cam + " - ").join("")}`;
                         } else if (c.codigo_condicion === "CANT-MATERIAS") {
@@ -316,7 +319,7 @@ function ConfiguracionCondicionCarrera() {
                 nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
             }
         }
-        console.log(nuevaCondicion);
+        //console.log(nuevaCondicion);
         const postcondicion = await createConditionUse(nuevaCondicion);
 
         setearcamposSeleccionados([]);
@@ -354,8 +357,28 @@ function ConfiguracionCondicionCarrera() {
 
         if (cond.obj.anio) { condicionEliminar.anio = cond.obj.anio }
         if (cond.obj.id_materia) { condicionEliminar.id_materia = cond.obj.id_materia }
-        if (cond.obj.config_condicion) { condicionEliminar.config_condicion = cond.obj.config_condicion }
-        console.log(condicionEliminar);
+        if (cond.obj.config_condicion) {
+            condicionEliminar.config_condicion = cond.obj.config_condicion
+            if (condicionEliminar.codigo_condicion === "CANT-MATERIAS") {
+                if (cond.obj.config_condicion.campos_excepto) {
+                    condicionEliminar.config_condicion = { cantidad: cond.obj.config_condicion.cantidad, campos_excepto: cond.obj.config_condicion.campos_excepto };
+                }
+                else {
+                    condicionEliminar.config_condicion = { cantidad: cond.obj.config_condicion.cantidad };
+                }
+            }
+            else if (condicionEliminar.codigo_condicion === "ANIOS-COMPLETOS") {
+                if (cond.obj.config_condicion.salvo_cantidad) {
+                    condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio, salvo_cantidad: cond.obj.config_condicion.salvo_cantidad };
+                }
+                else {
+                    condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio };
+                }
+            }
+            else if (condicionEliminar.codigo_condicion === "CANT-MATERIAS-ANIO") {
+                condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio, cantidad: cond.obj.config_condicion.cantidad, campos: cond.obj.config_condicion.campos }
+            }
+        }
         const deletecondicion = await deleteConditionUse(condicionEliminar);
 
         if (deletecondicion.status === 200) {
@@ -582,7 +605,7 @@ function ConfiguracionCondicionCarrera() {
                                                                     padding: '16.5px 0px 16.5px 0px'
                                                                 }
                                                             }}
-                                                            placeholder="Año" onInput={setAnioCompleto} />
+                                                            placeholder="Año" onInput={setearAnioCompleto} />
                                                     </FormControl>
                                                     <FormControl sx={{
                                                         width: '100%'

@@ -28,7 +28,15 @@ export const createConditionUse = async (data) => {
 
 export const deleteConditionUse = async (filtro) => {
     try {
-        const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/`, { data: filtro });
+        const flattenedFiltro =  {
+            ...filtro,
+            config_condicion: JSON.stringify(filtro.config_condicion)
+        };
+        //console.log(flattenedFiltro)
+        const queryParams = new URLSearchParams(flattenedFiltro).toString();
+        //console.log(queryParams);
+        const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/?${queryParams}`);
+        //const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/`, { data: filtro });
         return response;
     }
     catch (error) {
