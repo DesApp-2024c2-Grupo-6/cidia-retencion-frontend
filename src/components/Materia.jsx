@@ -2,6 +2,7 @@ import { React, useState } from 'react';
 import { Box, Typography, IconButton, Modal, TextField, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { deleteSubject } from '../services/SubjectDataService';
 
 function Materia({data, handleSaveEdit}) {
 
@@ -37,10 +38,15 @@ function Materia({data, handleSaveEdit}) {
         handleClose();
       };
 
-    const handleOnClickDelete = () => {
+    const handleOnClickDelete = async (data) => {
         console.log("Estoy aca");
-
-    }
+        const resSubject = await deleteSubject(data);
+        if(resSubject.status === 200){
+          console.log("OK")
+        } else {
+          console.log("No OK")
+        } 
+      }
 
     return(
         <Box
@@ -61,7 +67,7 @@ function Materia({data, handleSaveEdit}) {
         <Box sx={{ flex: 1.5, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
             <IconButton
                 sx={{ width: '25px' }}
-                onClick={handleOnClickDelete}> 
+                onClick={() => handleOnClickDelete(data)}> 
                 <DeleteIcon sx={{ color: 'red', fontSize: '18px'}} />
             </IconButton>
             <IconButton
@@ -113,10 +119,14 @@ function Materia({data, handleSaveEdit}) {
               value={formData.specialSubjectName}
               onChange={handleChange}
             />
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Guardar
-            </Button>
-            <Button onClick={handleClose}>Cerrar</Button>
+            <Box
+            sx={{display: 'flex'}}>
+              <Button variant="contained" color="primary" onClick={handleSave}>
+               Guardar
+              </Button>
+              <Button onClick={handleClose}>Cerrar</Button>
+            </Box>
+
           </Box>
             </Box>
         </Modal>

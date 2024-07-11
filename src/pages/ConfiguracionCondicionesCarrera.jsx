@@ -379,7 +379,8 @@ function ConfiguracionCondicionCarrera() {
                 condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio, cantidad: cond.obj.config_condicion.cantidad, campos: cond.obj.config_condicion.campos }
             }
         }
-        const deletecondicion = await deleteConditionUse(condicionEliminar);
+        
+       const deletecondicion = await deleteConditionUse(condicionEliminar);
 
         if (deletecondicion.status === 200) {
             setActualizarTablaCondiciones(!actualizarTablaCondiciones);

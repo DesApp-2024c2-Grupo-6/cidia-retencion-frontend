@@ -32,3 +32,13 @@ export const updateSubject = async(data) => {
         return error;
     }
 }
+
+export const deleteSubject = async(data) => {
+    try {
+        console.log(data)
+        const response = await axios.delete(`${baseURL}/materias/`, {data});
+        return response;
+    } catch (error) {
+        return error;
+    }
+}

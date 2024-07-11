@@ -25,10 +25,10 @@ function ConfiguracionMaterias() {
       }
 
       getSubjects(IdCarrera)
-    }, [save])
+    }, [save, subjects])
+
 
     const handleSaveEdit = async (editedData) => {
-      //TODO message.
       const upSubject = await updateSubject(editedData);
       setSave(!save);
     };
