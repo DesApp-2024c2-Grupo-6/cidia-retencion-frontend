@@ -8,7 +8,7 @@ import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } fro
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-
+  const [cond, setCond] = useState([]); //Cris
   useEffect(() => {
     const fetchParrafos = async () => {
       try {
@@ -46,16 +46,17 @@ const ParagraphList = () => {
     }
   };
 
-  const editarParrafo = async (index, newClave, newText) => {
+  const editarParrafo = async (index, newClave, newText, condi) => { //Cris
     try {
       const updatedParrafo = {
         key: parrafos[index].key,
         updateFields: {
           key: newClave,
-          text: newText
+          text: newText,
+          condition: condi //Cris
         }
       };
-  
+      console.log(updatedParrafo)
       const response = await updateOneParrafo(updatedParrafo);
       console.log('Response from backend:', response);
   
@@ -161,8 +162,9 @@ const ParagraphList = () => {
         <EdicionParrafo
           initialClave={parrafos[editIndex].key}
           initialTexto={parrafos[editIndex].text}
-          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto)}
+          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto, cond)} //Cris
           onCancel={() => setEditIndex(null)}
+          condiciones = {parrafos[editIndex].conditions} //Cris
         />
       )}
     </Box>

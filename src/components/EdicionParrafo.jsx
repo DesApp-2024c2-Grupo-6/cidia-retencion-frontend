@@ -7,10 +7,10 @@ import devolucionCarrera from '../services/listadoCarreras';
 import listadoSubjectData from '../services/listadoSubjectData';
 
 
-const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
+const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones  }) => { //Cris
     const [clave, setClave] = useState(initialClave);
     const [texto, setTexto] = useState(initialTexto);
-    const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState([]);
+    const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones.map( (cond)=> cond.codigo_condicion )); //Cris parametro
     const [checkboxValues, setCheckboxValues] = useState([]);
     const [listaCarreras, setListaCarreras] = useState([]);
     const [listaMaterias, setListaMaterias] = useState([]);
@@ -131,7 +131,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    onSave(clave, texto);
+    onSave(clave, texto, condicionesSeleccionadas); //Cris condiciones
   };
 
   const handleCheckboxChange = (value) => {
@@ -156,7 +156,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel }) => {
         }
         return false;
   };
-
+ console.log(condiciones);
   return (
       <Box
           component="form"
