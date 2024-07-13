@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
-const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, }) => {
+const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
 
     //const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
 
@@ -30,7 +30,7 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
     //    setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
     //}, []);
 
-    ////PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS 
+    ////PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS
     //useEffect(() => {
     //    if (condicion !== "MATERIAS_PENDIENTES" && condicion !== "MATERIAS_NO_PENDIENTES")
     //    {
@@ -48,8 +48,12 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
     //            setListaMateriasParaSelect([]);
     //        }
     //    }
-        
+
     //}, [listaCarrerasElejidas, listaMaterias]);
+
+    const setear_cant_aprob = (val) => {
+        set_setearcant_aprobadas(val)
+    }
 
     ////PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
     const carrerasseleccionadas = (carreras) => {
@@ -77,7 +81,7 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
                             <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" variant="outlined" />
+                            <TextField type="number" variant="outlined" onChange={(event) => setear_cant_aprob(event.target.value)} />
                         </Box>
                     </Box>
                 </Box>

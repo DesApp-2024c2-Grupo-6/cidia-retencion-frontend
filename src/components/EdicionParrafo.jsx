@@ -7,7 +7,7 @@ import devolucionCarrera from '../services/listadoCarreras';
 import listadoSubjectData from '../services/listadoSubjectData';
 
 
-const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones  }) => { //Cris
+const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas }) => { //Cris
     const [clave, setClave] = useState(initialClave);
     const [texto, setTexto] = useState(initialTexto);
     const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones.map( (cond)=> cond.codigo_condicion )); //Cris parametro
@@ -130,9 +130,13 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
 
 
   const handleSave = (e) => {
-    e.preventDefault();
+      e.preventDefault();
     onSave(clave, texto, condicionesSeleccionadas); //Cris condiciones
-  };
+    };
+
+    const set_setearcant_aprobadas = (val) => {
+        setearcant_aprobadas(val);
+    } 
 
   const handleCheckboxChange = (value) => {
       setAutoCompleteOptionsDisabled(!value);
@@ -156,7 +160,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
         }
         return false;
   };
- console.log(condiciones);
+ //console.log(condiciones);
   return (
       <Box
           component="form"
@@ -194,7 +198,9 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
                           listaMateriasParaSelect={listaMateriasParaSelect}
                           handleCheckbox={handleCheckboxChange}
                           handeSelectionCareer={carrerasseleccionadas}
-                          deshabilitarCampoNumerico={!checkboxValues[index]} // Deshabilitar campo numérico si el checkbox está marcado
+                          deshabilitarCampoNumerico={!checkboxValues[index]}
+                          set_setearcant_aprobadas={ set_setearcant_aprobadas }
+                          // Deshabilitar campo numérico si el checkbox está marcado
                       />
                   ))}
               </Box>

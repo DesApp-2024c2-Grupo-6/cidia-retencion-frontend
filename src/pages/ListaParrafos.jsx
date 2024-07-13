@@ -46,16 +46,54 @@ const ParagraphList = () => {
     }
   };
 
-  const editarParrafo = async (index, newClave, newText, condi) => { //Cris
+
+   const [cant_aprobadas, setCant_Aprobadas] = useState(0);
+
+    const setearcant_aprobadas = (val) => {
+        console.log(val);
+        setCant_Aprobadas(val);
+    }
+
+
+    const editarParrafo = async (index, newClave, newText, condi) => { //Cris
+      console.log(condi)
     try {
-      const updatedParrafo = {
-        key: parrafos[index].key,
-        updateFields: {
-          key: newClave,
-          text: newText,
-          condition: condi //Cris
+        const updatedParrafo = {
+            key: parrafos[index].key,
+            text: newText,
+            conditions:[]
         }
-      };
+
+        condi.forEach((c) =>
+        {
+            if (c == "CANT_APROBADAS") {
+                updatedParrafo.conditions.push(
+                    {
+                        codigo_condicion: c,
+                        config_condicion: { cant: cant_aprobadas }
+                    })
+            }
+            else {
+                updatedParrafo.conditions.push({ codigo_condicion: c })
+            }
+            
+        });
+
+        //conditions: [{ "codigo_condicion" : condi[0] }]
+        //updateFields: {
+        //  key: newClave,
+        //  text: newText,
+        //  conditions: condi //Cris
+        //}
+
+        //{
+        //    "key": "test de parrafo",
+        //        "text": ["Estimado", "", "Test"],
+        //            "conditions": [{
+        //                "codigo_condicion": "SIEMPRE"
+        //            }
+        //            ]
+        //}
       console.log(updatedParrafo)
       const response = await updateOneParrafo(updatedParrafo);
       console.log('Response from backend:', response);
@@ -160,11 +198,12 @@ const ParagraphList = () => {
         </>
       ) : (
         <EdicionParrafo
-          initialClave={parrafos[editIndex].key}
-          initialTexto={parrafos[editIndex].text}
-          onSave={(clave, texto) => editarParrafo(editIndex, clave, texto, cond)} //Cris
-          onCancel={() => setEditIndex(null)}
-          condiciones = {parrafos[editIndex].conditions} //Cris
+            initialClave={parrafos[editIndex].key}
+            initialTexto={parrafos[editIndex].text}
+            onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
+            onCancel={() => setEditIndex(null)}
+            condiciones={parrafos[editIndex].conditions} //Cris
+            setearcant_aprobadas={setearcant_aprobadas}
         />
       )}
     </Box>
