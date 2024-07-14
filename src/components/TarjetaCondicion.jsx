@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
-const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
+const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
 
     //const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
 
@@ -55,6 +55,10 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
         set_setearcant_aprobadas(val)
     }
 
+    //const [lascarreras, setlascarreas] = useState(objeto.config_condicion.id_carreras)
+
+    
+
     ////PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
     const carrerasseleccionadas = (carreras) => {
         handeSelectionCareer(carreras);
@@ -81,7 +85,7 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
                             <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" variant="outlined" onChange={(event) => setear_cant_aprob(event.target.value)} />
+                            <TextField type="number" value={ objeto.config_condicion.cant} variant="outlined" onChange={(event) => setear_cant_aprob(event.target.value)} />
                         </Box>
                     </Box>
                 </Box>
@@ -95,9 +99,9 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
                         <Box sx={{ width: '60%', textAlign: 'center' }}>
                             <Typography sx={{ fontWeight: 'bold' }} variant="body2">{condicion === "EN_CARRERA" ? "Carreras" : "Materias"}</Typography>
                         </Box>
-                        <Box sx={{ width: '10%', textAlign: 'center' }}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
-                        </Box>
+                        {/*<Box sx={{ width: '10%', textAlign: 'center' }}>*/}
+                        {/*    <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>*/}
+                        {/*</Box>*/}
                         <Box sx={{ width: '10%', textAlign: 'center' }}>
                             <Typography sx={{ fontWeight: 'bold' }} variant="body2">Va en carrera</Typography>
                         </Box>
@@ -107,11 +111,11 @@ const TarjetaCondicion = ({ condicion, listaCarreras, handeSelectionCareer, list
                             <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listaCarreras} onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
+                            <SelectMultipleAR options={listaCarreras} seleccionadas={objeto.config_condicion.id_carreras}  onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
                         </Box>
-                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
-                        </Box>
+                        {/*<Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
+                        {/*    <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />*/}
+                        {/*</Box>*/}
                         <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Checkbox onChange={(event) => { handleCheckbox(event.target.checked) }} />
                         </Box>

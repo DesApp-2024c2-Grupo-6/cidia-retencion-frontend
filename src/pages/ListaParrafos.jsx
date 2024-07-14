@@ -14,9 +14,9 @@ const ParagraphList = () => {
       try {
         const response = await getAllParrafos();
         if (response.status === 200) {
-          const data = response.data.allParrafos[0]._rawData;
-          if (Array.isArray(data)) {
-            setParrafos(data);
+            const data = response.data.allParrafos[0]._rawData;
+            if (Array.isArray(data)) {
+                setParrafos(data);
           } else {
             console.error('Data fetched is not an array:', data);
           }
@@ -46,15 +46,23 @@ const ParagraphList = () => {
     }
   };
 
-
+  // CANTIDAD APROBADAS
    const [cant_aprobadas, setCant_Aprobadas] = useState(0);
 
     const setearcant_aprobadas = (val) => {
-        console.log(val);
         setCant_Aprobadas(val);
     }
-
-
+    //---------------------------------------------------
+    // EN CARRERA
+    const [ids_carreras, setIds_Carreras] = useState([]);
+    const [incluye, setIncluye] = useState(false);
+    const setearIds_Carreras = (val) => {
+        setIds_Carreras(val);
+    }
+    const setearIncluye= (val) => {
+        setIncluye(val);
+    }
+    //---------------------------------------------------
     const editarParrafo = async (index, newClave, newText, condi) => { //Cris
       console.log(condi)
     try {
@@ -73,9 +81,17 @@ const ParagraphList = () => {
                         config_condicion: { cant: cant_aprobadas }
                     })
             }
-            else {
-                updatedParrafo.conditions.push({ codigo_condicion: c })
+            if (c == "EN_CARRERA" && ids_carreras.length > 0) {
+                updatedParrafo.conditions.push(
+                    {
+                        codigo_condicion: c,
+                        config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
+                    })
             }
+
+            //else {
+            //    updatedParrafo.conditions.push({ codigo_condicion: c })
+            //}
             
         });
 
@@ -198,12 +214,14 @@ const ParagraphList = () => {
         </>
       ) : (
         <EdicionParrafo
-            initialClave={parrafos[editIndex].key}
-            initialTexto={parrafos[editIndex].text}
-            onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
-            onCancel={() => setEditIndex(null)}
-            condiciones={parrafos[editIndex].conditions} //Cris
-            setearcant_aprobadas={setearcant_aprobadas}
+                      initialClave={parrafos[editIndex].key}
+                      initialTexto={parrafos[editIndex].text}
+                      onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
+                      onCancel={() => setEditIndex(null)}
+                      condiciones={parrafos[editIndex].conditions} //Cris
+                      setearcant_aprobadas={setearcant_aprobadas}
+                      setearIds_Carreras={setearIds_Carreras}
+                      setearIncluye={setearIncluye}
         />
       )}
     </Box>

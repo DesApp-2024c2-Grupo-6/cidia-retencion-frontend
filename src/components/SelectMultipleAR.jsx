@@ -1,11 +1,12 @@
 import * as React from 'react';
+import  { useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material'
 import '../styles/SelectMultipleAR.css';
 
-function SelectMultipleAR({ options, onSelect, className, placeholder }) {
+function SelectMultipleAR({ options, seleccionadas, onSelect, className, placeholder }) {
 
     const [selectedOptions, setSelectedOptions] = React.useState([]);
 
@@ -21,11 +22,19 @@ function SelectMultipleAR({ options, onSelect, className, placeholder }) {
     //        onSelect([...selectedOptions, event.target.value]);
     //        setSelectedOptions([...selectedOptions, event.target.value]);
     //    }
-        
+
     //};
 
+    useEffect(() => {
+        if (seleccionadas && options.length) {
+            const valores = options.filter(o => seleccionadas.includes(o.value));
+            setSelectedOptions(valores);
+        }
+    }, [seleccionadas, options]);
+
     const handleChange = (event, selectedValues) => {
-        setSelectedOptions(selectedValues.map(option => option.value));
+        console.log(selectedValues);
+        setSelectedOptions(selectedValues);
         onSelect(selectedValues.map(option => option.value));
     };
 
@@ -42,6 +51,8 @@ function SelectMultipleAR({ options, onSelect, className, placeholder }) {
                     options={options}
                     onChange={handleChange}
                     getOptionLabel={(option) => option.label || ''}
+                    value={selectedOptions}
+                    isOptionEqualToValue={(option, value) => option.value === value}
                     //defaultValue={[""]}
                     //filterSelectedOptions
                     renderInput={(params) => (

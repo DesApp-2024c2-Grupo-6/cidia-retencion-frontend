@@ -7,7 +7,7 @@ import devolucionCarrera from '../services/listadoCarreras';
 import listadoSubjectData from '../services/listadoSubjectData';
 
 
-const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas }) => { //Cris
+const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas, setearIds_Carreras, setearIncluye }) => { //Cris
     const [clave, setClave] = useState(initialClave);
     const [texto, setTexto] = useState(initialTexto);
     const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones.map( (cond)=> cond.codigo_condicion )); //Cris parametro
@@ -18,7 +18,6 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     const [desabilitarResto, setDesabilitarResto] = useState(false);
     const [desabilitarNunca, setDesabilitarNunca] = useState(false);
     const [desabilitarSiempre, setDesabilitarSiempre] = useState(false);
-
 
 
     useEffect(() => {
@@ -121,6 +120,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     //PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
     const carrerasseleccionadas = (carreras) => {
         setListaCarrerasElejidas(carreras);
+        setearIds_Carreras(carreras);
     };
 
 
@@ -140,10 +140,11 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
 
   const handleCheckboxChange = (value) => {
       setAutoCompleteOptionsDisabled(!value);
+      setearIncluye(value);
   };
 
   // Función para obtener las opciones deshabilitadas
-    const getOptionDisabled = (option, index) => {
+    const getOptionDisabled = (option) => {
 
         if (autoCompleteOptionsDisabled && (option === 'MATERIAS_PENDIENTES' || option === 'MATERIAS_NO_PENDIENTES')) {
             return true;
@@ -188,11 +189,12 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
                   getOptionDisabled={getOptionDisabled}
               />
               <Box sx={{ mt: 2, width: '100%' }}>
-                  {(!desabilitarNunca && !desabilitarSiempre) && condicionesSeleccionadas.map((condicion, index) => (
+                  {(!desabilitarNunca && !desabilitarSiempre) && condicionesSeleccionadas.map((condicion, index) => ( 
                       (condicion !== "MATERIAS_COMUNES" && condicion !== "FINALES_PENDIENTES" && condicion !== "LIMITE_FINALES_PENDIENTES" && condicion !== "ORIENTACION") &&
                       <TarjetaCondicion
                           key={index}
                           condicion={condicion}
+                          objeto={ condiciones.find(co => co.codigo_condicion == condicion)}
                           listaCarreras={listaCarreras}
                           listaMaterias={listaMaterias}
                           listaMateriasParaSelect={listaMateriasParaSelect}
