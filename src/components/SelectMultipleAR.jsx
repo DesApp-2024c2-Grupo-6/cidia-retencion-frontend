@@ -10,7 +10,7 @@ function SelectMultipleAR({ options, seleccionadas, onSelect, className, placeho
 
     const [selectedOptions, setSelectedOptions] = React.useState([]);
 
-    //console.log(options);
+    //console.log(options)
 
     //const handleChange = (event) => {
     //    console.log(selectedOptions);
@@ -29,11 +29,12 @@ function SelectMultipleAR({ options, seleccionadas, onSelect, className, placeho
         if (seleccionadas && options.length) {
             const valores = options.filter(o => seleccionadas.includes(o.value));
             setSelectedOptions(valores);
+            onSelect(valores);
         }
     }, [seleccionadas, options]);
 
     const handleChange = (event, selectedValues) => {
-        console.log(selectedValues);
+        //console.log(selectedValues);
         setSelectedOptions(selectedValues);
         onSelect(selectedValues.map(option => option.value));
     };
@@ -52,7 +53,7 @@ function SelectMultipleAR({ options, seleccionadas, onSelect, className, placeho
                     onChange={handleChange}
                     getOptionLabel={(option) => option.label || ''}
                     value={selectedOptions}
-                    isOptionEqualToValue={(option, value) => option.value === value}
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
                     //defaultValue={[""]}
                     //filterSelectedOptions
                     renderInput={(params) => (

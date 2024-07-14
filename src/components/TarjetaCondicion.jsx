@@ -4,9 +4,27 @@ import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
 const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
+    console.log("a");
+
+    const [listamateriasseleccionadas, setListamateirasseleccionadas] = useState([])
+
+    useEffect(() => {
+
+        const lista = listaMaterias.map(m => ({
+            value: m.id_materia,
+            label: `Materia ${m.id_materia}`
+        }));
+
+        const eliminarDuplicados = (arr) => {
+            const map = new Map();
+            return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
+        };
+        const listaSinDuplicados = eliminarDuplicados(lista);
+
+        setListamateirasseleccionadas(listaMateriasParaSelect.length > 0 ? listaMateriasParaSelect : listaSinDuplicados);
+    }, [listaMaterias])
 
     //const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
-
     ////LA LISTA PARA LAS MATERIAS
     //const [listaMateriasParaSelect, setListaMateriasParaSelect] = useState([]);
 
@@ -51,9 +69,18 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
 
     //}, [listaCarrerasElejidas, listaMaterias]);
 
-    const setear_cant_aprob = (val) => {
-        set_setearcant_aprobadas(val)
-    }
+    const [cantidad, setCantidad] = useState(objeto != undefined ? objeto.config_condicion.cant : '');
+    //const [cantidadAprobadas, setCantidadAprobadas] = useState(objeto != undefined ? objeto.config_condicion.cant : '');
+    //const [cantidadmaterias, setcantidadMaterias] = useState(objeto != undefined ?  objeto.config_condicion.cant  : '');
+    //useEffect(() => {
+    //    setCantidadAprobadas(objeto.config_condicion.cant || '');
+    //}, [objeto.config_condicion.cant]);
+
+
+    const setear_cantidad = (val) => {
+        setCantidad(val);
+        //set_setearcant_aprobadas(val); 
+    };
 
     //const [lascarreras, setlascarreas] = useState(objeto.config_condicion.id_carreras)
 
@@ -63,6 +90,16 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
     const carrerasseleccionadas = (carreras) => {
         handeSelectionCareer(carreras);
     };
+    const [isChecked, setIsChecked] = useState(objeto?.config_condicion.checked || false);
+    useEffect(() => {
+        setIsChecked(objeto?.config_condicion.condicion_en_carrera == "incluye");
+    }, [objeto]);
+
+    const handleCheckboxChange = (event) => {
+        const checked = event.target.checked;
+        setIsChecked(checked);
+        handleCheckbox(checked);
+    };
 
     const handleMateriasPendientesChange = (materias) => {
         //setMateriasSeleccionadas(materias);
@@ -71,7 +108,6 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
     const handleMateriasNoPendientesChange = (materias) => {
         //setMateriasSeleccionadas(materias);
     };
-
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
             {condicion === "CANT_APROBADAS" && (
@@ -85,7 +121,7 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" value={ objeto.config_condicion.cant} variant="outlined" onChange={(event) => setear_cant_aprob(event.target.value)} />
+                            <TextField type="number" value={cantidad}  variant="outlined" onChange={(event) => setear_cantidad(event.target.value)} />
                         </Box>
                     </Box>
                 </Box>
@@ -111,13 +147,13 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listaCarreras} seleccionadas={objeto.config_condicion.id_carreras}  onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
+                            <SelectMultipleAR options={listaCarreras} seleccionadas={objeto?.config_condicion.id_carreras}  onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
                         </Box>
                         {/*<Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
                         {/*    <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />*/}
                         {/*</Box>*/}
                         <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Checkbox onChange={(event) => { handleCheckbox(event.target.checked) }} />
+                            <Checkbox checked={isChecked } onChange={(event) => { handleCheckbox(event.target.checked) }} />
                         </Box>
                     </Box>
                 </Box>
@@ -141,10 +177,11 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listaMateriasParaSelect} onSelect={handleMateriasPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
+                            <SelectMultipleAR options={listamateriasseleccionadas} seleccionadas={objeto?.config_condicion.id_materias} onSelect={handleMateriasPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
                         </Box>
                         <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />
+                            <TextField type="number" value={cantidad} variant="outlined" onChange={(event) => setear_cantidad(event.target.value)} sx={{ width: '100%' }} />
+                            {/*<TextField type="number" value={cantidadmaterias} variant="outlined" sx={{ width: '100%' }}  />*/}
                         </Box>
                     </Box>
                 </Box>

@@ -76,17 +76,17 @@ const ParagraphList = () => {
         {
             if (c == "CANT_APROBADAS") {
                 updatedParrafo.conditions.push(
-                    {
-                        codigo_condicion: c,
-                        config_condicion: { cant: cant_aprobadas }
-                    })
+                {
+                    codigo_condicion: c,
+                    config_condicion: { cant: cant_aprobadas }
+                })
             }
             if (c == "EN_CARRERA" && ids_carreras.length > 0) {
                 updatedParrafo.conditions.push(
-                    {
-                        codigo_condicion: c,
-                        config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
-                    })
+                {
+                    codigo_condicion: c,
+                    config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
+                })
             }
 
             //else {

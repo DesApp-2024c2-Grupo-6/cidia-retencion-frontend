@@ -91,10 +91,28 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     //    setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
     //}, []);
 
-    //PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS 
+    //PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS
+
+    //useEffect(() => {
+
+    //    const lista = listaMaterias.map(m => ({
+    //        value: m.id_materia,
+    //        label: `Materia ${m.id_materia}`
+    //    }));
+
+    //    const eliminarDuplicados = (arr) => {
+    //        const map = new Map();
+    //        return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
+    //    };
+    //    const listaSinDuplicados = eliminarDuplicados(lista);
+
+    //    setListaMateriasParaSelect(listaSinDuplicados);
+    //},[])
+
     useEffect(() => {
 
         if (listaCarrerasElejidas.length > 0) {
+            //console.log(listaCarrerasElejidas)
             const materiasFiltradas = listaMaterias.filter(materia =>
                 listaCarrerasElejidas.includes(materia.id_carrera)
             );
@@ -110,10 +128,13 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
             const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
 
             setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+            //console.log(listaMateriasParaSelect)
 
         } else {
             setListaMateriasParaSelect([]);
+            //console.log("asd")
         }
+        
 
     }, [listaCarrerasElejidas, listaMaterias]);
 
