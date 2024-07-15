@@ -211,7 +211,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
               />
               <Box sx={{ mt: 2, width: '100%' }}>
                   {(!desabilitarNunca && !desabilitarSiempre) && condicionesSeleccionadas.map((condicion, index) => ( 
-                      (condicion !== "MATERIAS_COMUNES" && condicion !== "FINALES_PENDIENTES" && condicion !== "LIMITE_FINALES_PENDIENTES" && condicion !== "ORIENTACION") &&
+                      (condicion !== "MATERIAS_COMUNES" && condicion !== "FINALES_PENDIENTES" && condicion !== "LIMITE_FINALES_PENDIENTES" && condicion !== "ORIENTACION" && condicion !== "SIEMPRE") &&
                       <TarjetaCondicion
                           key={index}
                           condicion={condicion}
