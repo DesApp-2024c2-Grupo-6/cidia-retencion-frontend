@@ -249,16 +249,16 @@ function ConfiguracionCondicionCarrera() {
         }
     }
 
-    useEffect(()=>{
-        if (condicion === "N-1" || condicion === "N-2" || condicion === "N-1R-2A") {
-            setinputAnio(true);
-            setselectCarreraDisabled(true);
-        }
-        else {
-            setinputAnio(false);
-            setselectCarreraDisabled(false);
-        }
-    }, [condicion])
+    //useEffect(()=>{
+    //    if (condicion === "N-1" || condicion === "N-2" || condicion === "N-1R-2A") {
+    //        setinputAnio(true);
+    //        setselectCarreraDisabled(true);
+    //    }
+    //    else {
+    //        setinputAnio(false);
+    //        setselectCarreraDisabled(false);
+    //    }
+    //}, [condicion])
 
     const [camposSeleccionados, setCamposSeleccionados] = useState([]);
     const setearcamposSeleccionados = (value) => {
@@ -285,40 +285,42 @@ function ConfiguracionCondicionCarrera() {
             codigo_condicion: condicion
         }
 
-        if (condicion !== "N-1" && condicion !== "N-2" && condicion !== "N-1R-2A") {
-            
-            if (anio != "") {
-                nuevaCondicion.anio = anio;
+        if (anio != "") {
+            nuevaCondicion.anio = anio;
+        }
+        else if (materia !== "") {
+            nuevaCondicion.id_materia = materia;
+        }
+
+
+        if (condicion === "CAMPOS-COMPLETOS") {
+            nuevaCondicion.config_condicion = { campos: camposSeleccionados }
+        }
+        else if (condicion === "MATERIAS-ESPECIFICAS") {
+            nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
+        }
+        else if (condicion === "CANT-MATERIAS") {
+            if (exceptuadosSeleccionados.length > 0) {
+                nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
             }
-            else if(materia !== ""){
-                nuevaCondicion.id_materia = materia;
-            }
-            if (condicion === "CAMPOS-COMPLETOS") {
-                nuevaCondicion.config_condicion = { campos: camposSeleccionados }
-            }
-            else if (condicion === "MATERIAS-ESPECIFICAS") {
-                nuevaCondicion.config_condicion = { materias: materiasSeleccionadas }
-            }
-            else if (condicion === "CANT-MATERIAS") {
-                if (exceptuadosSeleccionados.length > 0) {
-                    nuevaCondicion.config_condicion = { cantidad: cantidad, campos_excepto: exceptuadosSeleccionados };
-                }
-                else {
-                    nuevaCondicion.config_condicion = { cantidad: cantidad };
-                }
-            }
-            else if (condicion === "ANIOS-COMPLETOS") {
-                if (cantidad > 0) {
-                    nuevaCondicion.config_condicion = { anio: anioCompleto, salvo_cantidad: cantidad };
-                }
-                else {
-                    nuevaCondicion.config_condicion = { anio: anioCompleto };
-                }
-            }
-            else if (condicion === "CANT-MATERIAS-ANIO") {
-                nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
+            else {
+                nuevaCondicion.config_condicion = { cantidad: cantidad };
             }
         }
+        else if (condicion === "ANIOS-COMPLETOS") {
+            if (cantidad > 0) {
+                nuevaCondicion.config_condicion = { anio: anioCompleto, salvo_cantidad: cantidad };
+            }
+            else {
+                nuevaCondicion.config_condicion = { anio: anioCompleto };
+            }
+        }
+        else if (condicion === "CANT-MATERIAS-ANIO") {
+            nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
+        }
+        
+            
+        
         //console.log(nuevaCondicion);
         const postcondicion = await createConditionUse(nuevaCondicion);
 

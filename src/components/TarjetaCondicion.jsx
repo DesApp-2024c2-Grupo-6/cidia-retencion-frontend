@@ -4,7 +4,6 @@ import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
 const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
-    console.log("a");
 
     const [listamateriasseleccionadas, setListamateirasseleccionadas] = useState([])
 
@@ -108,6 +107,8 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
     const handleMateriasNoPendientesChange = (materias) => {
         //setMateriasSeleccionadas(materias);
     };
+
+    console.log(objeto);
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
             {condicion === "CANT_APROBADAS" && (
