@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import '../styles/SelectMultipleAR.css';
 import devolucionCarrera from '../services/listadoCarreras';
 import listadoSubjectData from '../services/listadoSubjectData';
+import { useNavigate } from 'react-router-dom';
 
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas, setearIds_Carreras, setearIncluye }) => { //Cris
@@ -19,6 +20,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     const [desabilitarNunca, setDesabilitarNunca] = useState(false);
     const [desabilitarSiempre, setDesabilitarSiempre] = useState(false);
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const lista = devolucionCarrera.map(c => ({
@@ -162,7 +164,12 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
   const handleCheckboxChange = (value) => {
       setAutoCompleteOptionsDisabled(!value);
       setearIncluye(value);
-  };
+    };
+
+    //const handleOnClickConfiguracionParrafos = () => {
+    //    console.log("hola")
+    //    navigate('/configuracion/parrafos')
+    //};
 
   // Función para obtener las opciones deshabilitadas
     const getOptionDisabled = (option) => {
@@ -229,8 +236,8 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
               </Box>
           </Stack>
           <Box display="flex" justifyContent="space-around">
-              <Button type="submit" variant="contained" color="primary">Guardar</Button>
-              <Button variant="contained" color="secondary" onClick={onCancel}>Cancelar</Button>
+              <Button variant="contained" color="primary" onClick={onCancel}>Volver</Button>
+              <Button type="submit" variant="contained" color="secondary">Guardar</Button>
           </Box>
       </Box>
   );

@@ -8,7 +8,8 @@ import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } fro
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [cond, setCond] = useState([]); //Cris
+    const [cond, setCond] = useState([]); //Cris
+
   useEffect(() => {
     const fetchParrafos = async () => {
       try {
@@ -64,36 +65,36 @@ const ParagraphList = () => {
     }
     //---------------------------------------------------
     const editarParrafo = async (index, newClave, newText, condi) => { //Cris
-      console.log(condi)
+      //console.log(condi)
     try {
         const updatedParrafo = {
             key: parrafos[index].key,
-            text: newText,
+            text: newText ? newText.split('\n') : "" ,
             conditions:[]
         }
 
-        condi.forEach((c) =>
-        {
-            if (c == "CANT_APROBADAS") {
-                updatedParrafo.conditions.push(
-                {
-                    codigo_condicion: c,
-                    config_condicion: { cant: cant_aprobadas }
-                })
-            }
-            if (c == "EN_CARRERA" && ids_carreras.length > 0) {
-                updatedParrafo.conditions.push(
-                {
-                    codigo_condicion: c,
-                    config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
-                })
-            }
+        //condi.forEach((c) =>
+        //{
+        //    if (c == "CANT_APROBADAS") {
+        //        updatedParrafo.conditions.push(
+        //        {
+        //            codigo_condicion: c,
+        //            config_condicion: { cant: cant_aprobadas }
+        //        })
+        //    }
+        //    if (c == "EN_CARRERA" && ids_carreras.length > 0) {
+        //        updatedParrafo.conditions.push(
+        //        {
+        //            codigo_condicion: c,
+        //            config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
+        //        })
+        //    }
 
-            //else {
-            //    updatedParrafo.conditions.push({ codigo_condicion: c })
-            //}
+        //    //else {
+        //    //    updatedParrafo.conditions.push({ codigo_condicion: c })
+        //    //}
             
-        });
+        //});
 
         //conditions: [{ "codigo_condicion" : condi[0] }]
         //updateFields: {
@@ -112,17 +113,16 @@ const ParagraphList = () => {
         //}
       console.log(updatedParrafo)
       const response = await updateOneParrafo(updatedParrafo);
-      console.log('Response from backend:', response);
-  
-      if (response && response.message === 'Párrafo actualizado correctamente') {
+        console.log(response)
+      //if (response) {
         const updatedParrafos = [...parrafos];
         updatedParrafos[index].key = newClave;
         updatedParrafos[index].text = newText;
         setParrafos(updatedParrafos);
         setEditIndex(null);
-      } else {
-        console.error('Error updating paragraph:', response && response.message);
-      }
+      //} else {
+       // console.error('Error updating paragraph:');
+      //}
     } catch (error) {
       console.error('Error updating paragraph:', error);
     }

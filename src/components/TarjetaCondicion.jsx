@@ -108,7 +108,6 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
         //setMateriasSeleccionadas(materias);
     };
 
-    console.log(objeto);
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
             {condicion === "CANT_APROBADAS" && (
