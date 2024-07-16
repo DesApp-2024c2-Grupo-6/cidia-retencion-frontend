@@ -9,10 +9,10 @@ import { useNavigate } from 'react-router-dom';
 
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas, setearIds_Carreras, setearIncluye }) => { //Cris
-    console.log(condiciones)
+
     const [clave, setClave] = useState(initialClave);
     const [texto, setTexto] = useState(Array.isArray(initialTexto) ? initialTexto : [initialTexto]);
-    const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones.length > 0 ? condiciones.map( (cond)=> cond.codigo_condicion ):[]); //Cris parametro
+    const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones == undefined ? [] : condiciones.length > 0 ? condiciones.map((cond) => cond.codigo_condicion) : []); //Cris parametro
     const [checkboxValues, setCheckboxValues] = useState([]);
     const [listaCarreras, setListaCarreras] = useState([]);
     const [listaMaterias, setListaMaterias] = useState([]);

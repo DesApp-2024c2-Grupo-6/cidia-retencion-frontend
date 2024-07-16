@@ -70,7 +70,8 @@ const ParagraphList = () => {
 
     try {
         const updatedParrafo = {
-            key: parrafos[index].key,
+            keyanterior: parrafos[index].key,
+            key: newClave,
             text: newText,
             conditions:[]
         }
