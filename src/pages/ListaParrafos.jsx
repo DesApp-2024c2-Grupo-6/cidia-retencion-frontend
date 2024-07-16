@@ -32,7 +32,7 @@ const ParagraphList = () => {
     fetchParrafos();
   }, []);
 
-  const agregarParrafo = async (clave = "ejemplo_de_clave", texto = "Este es un ejemplo de texto para el párrafo.") => {
+  const agregarParrafo = async (clave , texto) => {
     console.log('Agregando párrafo:', { clave, texto });
     try {
       const response = await createParrafo({
@@ -40,8 +40,10 @@ const ParagraphList = () => {
         nuevaClave: clave,
         nuevoTexto: texto
       });
-      console.log('Response from createParrafo:', response);
-      setParrafos([...parrafos, { key: clave, text: texto }]);
+        console.log('Response from createParrafo:', response);
+        const dato = response.parrafo._rawData[response.parrafo._rawData.length - 1];
+        console.log(dato)
+        setParrafos([...parrafos, { key: dato.key, text: dato.text }]);
     } catch (error) {
       console.error('Error creating paragraph:', error);
     }

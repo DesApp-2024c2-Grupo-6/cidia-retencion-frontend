@@ -49,6 +49,7 @@ export const getAllParrafos = async () => {
  * @returns {Promise<object>} - La respuesta del servidor
  */
 export const deleteOneParrafo = async (parrafoKey) => {
+    console.log(parrafoKey)
     try {
         const response = await axios.delete(`${baseURL}/parrafos`, { data: { key: parrafoKey } });
         return response;
