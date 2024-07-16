@@ -65,11 +65,11 @@ const ParagraphList = () => {
     }
     //---------------------------------------------------
     const editarParrafo = async (index, newClave, newText, condi) => { //Cris
-      //console.log(condi)
+
     try {
         const updatedParrafo = {
             key: parrafos[index].key,
-            text: newText ? newText.split('\n') : "" ,
+            text: newText,
             conditions:[]
         }
 
@@ -111,7 +111,7 @@ const ParagraphList = () => {
         //            }
         //            ]
         //}
-      console.log(updatedParrafo)
+
       const response = await updateOneParrafo(updatedParrafo);
         console.log(response)
       //if (response) {
@@ -195,6 +195,7 @@ const ParagraphList = () => {
                 }}
               >
                 <ParrafoPlantilla
+                          key={index}//agregado
                   text={paragraph.text}
                   clave={paragraph.key}
                   onEditClick={() => setEditIndex(index)}

@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas, setearIds_Carreras, setearIncluye }) => { //Cris
     const [clave, setClave] = useState(initialClave);
-    const [texto, setTexto] = useState(initialTexto);
+    const [texto, setTexto] = useState(Array.isArray(initialTexto) ? initialTexto : [initialTexto]);
     const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState(condiciones.map( (cond)=> cond.codigo_condicion )); //Cris parametro
     const [checkboxValues, setCheckboxValues] = useState([]);
     const [listaCarreras, setListaCarreras] = useState([]);
@@ -35,7 +35,10 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     }, [])
 
     const handleClaveChange = (e) => setClave(e.target.value);
-    const handleTextoChange = (e) => setTexto(e.target.value);
+    const handleTextoChange = (e) => {
+        const lines = e.target.value.split('\n'); // Actualiza el texto como un array
+        setTexto(lines);
+    };
   
     const handleCondicionesChange = (event, values) => {
         setCondicionesSeleccionadas(values);
@@ -204,7 +207,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
           }}
       >
           <TextField label="Clave" value={clave} onChange={handleClaveChange} variant="outlined" fullWidth />
-          <TextField label="Texto" value={texto} onChange={handleTextoChange} variant="outlined" fullWidth multiline rows={4} />
+          <TextField label="Texto" value={texto.join('\n')} onChange={handleTextoChange} variant="outlined" fullWidth multiline rows={4} />
           <Stack id='smar' sx={{}}>
               <Autocomplete
                   multiple

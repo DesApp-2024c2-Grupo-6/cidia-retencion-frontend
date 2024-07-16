@@ -4,11 +4,11 @@ import { Edit, Delete } from '@mui/icons-material';
 
 const ParrafoPlantilla = ({text, clave, onEditClick, onDelete }) => {
   return (
-    <Box display="flex" alignItems="center" justifyContent="space-between" gap={2}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" gap={2}>
       <Box flexGrow={1}>
         <Typography variant="h6" gutterBottom>{clave}</Typography>
-        { text.map( t => 
-            <Typography variant="body1" gutterBottom>{t}</Typography>
+        { text.map( (t,k) => 
+            <Typography key={k} variant="body1" gutterBottom>{t}</Typography>
           )}
         {/* <Typography variant="body1" gutterBottom>{text}</Typography> */}
       </Box>
