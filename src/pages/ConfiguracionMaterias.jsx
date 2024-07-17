@@ -13,6 +13,7 @@ function ConfiguracionMaterias() {
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
     const [subjects, setSubjects] = useState([]);
     const [save, setSave] = useState(false);
+    const [deleted, setDeleted] = useState(false);
     
     useEffect( () => {
 
@@ -25,7 +26,7 @@ function ConfiguracionMaterias() {
       }
 
       getSubjects(IdCarrera)
-    }, [save, subjects])
+    }, [save, deleted])
 
 
     const handleSaveEdit = async (editedData) => {
