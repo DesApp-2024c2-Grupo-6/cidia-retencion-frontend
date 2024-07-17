@@ -2,9 +2,11 @@ import { React, useState } from 'react';
 import { Box, Typography, IconButton, Modal, TextField, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { deleteSubject } from '../services/SubjectDataService';
 
-function Materia({data, handleSaveEdit}) {
+function Materia({data, setDeleted, handleSaveEdit}) {
 
     const style = {
         position: 'absolute',
@@ -41,7 +43,8 @@ function Materia({data, handleSaveEdit}) {
     const handleOnClickDelete = async (data) => {
         console.log("Estoy aca");
         const resSubject = await deleteSubject(data);
-        if(resSubject.status === 200){
+        if (resSubject.status === 200) {
+            setDeleted();
           console.log("OK")
         } else {
           console.log("No OK")
@@ -120,11 +123,12 @@ function Materia({data, handleSaveEdit}) {
               onChange={handleChange}
             />
             <Box
-            sx={{display: 'flex'}}>
-              <Button variant="contained" color="primary" onClick={handleSave}>
+                            sx={{ display: 'flex' }}>
+                            <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleClose}>Volver</Button>
+                            <Button variant="contained" color="secondary" startIcon={<SaveIcon /> } onClick={handleSave}>
                Guardar
               </Button>
-              <Button onClick={handleClose}>Cerrar</Button>
+              
             </Box>
 
           </Box>

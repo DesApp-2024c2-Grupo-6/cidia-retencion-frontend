@@ -69,7 +69,7 @@ function ConfiguracionMaterias() {
       </Box>
 
       {subjects?.map((item) => (
-        <Materia key={item.id_materia} data={item} handleSaveEdit={handleSaveEdit}/>
+          <Materia key={item.id_materia} setDeleted={()=> setDeleted(!deleted) } data={item} handleSaveEdit={handleSaveEdit}/>
       ))}
 
         <Button
