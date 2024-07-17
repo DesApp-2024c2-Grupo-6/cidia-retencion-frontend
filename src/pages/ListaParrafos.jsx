@@ -33,7 +33,7 @@ const ParagraphList = () => {
   }, []);
 
   const agregarParrafo = async (clave , texto) => {
-    console.log('Agregando párrafo:', { clave, texto });
+
     try {
       const response = await createParrafo({
         parrafoId: '668f20a4fb3e34d777eb3e1a', //Aca tocar por el id 

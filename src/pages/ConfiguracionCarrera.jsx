@@ -164,7 +164,7 @@ function ConfiguracionCarrera() {
                         handleUpdateCarrerName={handleUpdateCarrerName}
                     />
                     </Box>
-                        <ButtonGroup 
+                        <Box 
                             variant='contained'
                             sx={
                                 {
@@ -175,21 +175,27 @@ function ConfiguracionCarrera() {
                                     boxShadow: 'none'
                                 }}>
                         <Button
+                            variant="contained"
                             onClick={ volver }
                                 startIcon={<ArrowCircleLeftIcon />}>
                             VOLVER</Button>  
-                            <Button
+                        <Button
+                            variant="contained"
                                 startIcon={isEdit ? <SaveIcon /> : <EditIcon />}
+                                color={isEdit ? "secondary" : "primary"}
                                 onClick={toggleEdit}>{isEdit ? 'GUARDAR':'EDITAR'}</Button>  
-                            <Button
+                        <Button
+                            variant="contained"
+                            color={"primary"}
                                 startIcon={<BuildIcon />}
                                 onClick={ handleOnClickCondiciones }
                                 >CONDICIONES</Button>  
-                            <Button
+                        <Button
+                            variant="contained"
                                 startIcon={<ListIcon />}
                                 onClick={handleOnClickConfiguracionMaterias}
                                 >MATERIAS</Button>  
-                        </ButtonGroup>
+                        </Box>
                     
                 </Box>
 

@@ -109,7 +109,10 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 1, padding: 1, border: '1px solid grey', borderRadius: 2 }}>
+        <Box sx={{
+            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+                borderColor: 'black',
+            }, }}>
             {condicion === "CANT_APROBADAS" && (
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>

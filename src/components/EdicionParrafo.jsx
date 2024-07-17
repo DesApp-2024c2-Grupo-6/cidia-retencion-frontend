@@ -6,6 +6,8 @@ import '../styles/SelectMultipleAR.css';
 import devolucionCarrera from '../services/listadoCarreras';
 import listadoSubjectData from '../services/listadoSubjectData';
 import { useNavigate } from 'react-router-dom';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import SaveIcon from '@mui/icons-material/Save';
 
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setearcant_aprobadas, setearIds_Carreras, setearIncluye }) => { //Cris
@@ -226,22 +228,22 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
                       <TarjetaCondicion
                           key={index}
                           condicion={condicion}
-                          objeto={ condiciones.find(co => co.codigo_condicion == condicion)}
+                          objeto={condiciones.find(co => co.codigo_condicion == condicion)}
                           listaCarreras={listaCarreras}
                           listaMaterias={listaMaterias}
                           listaMateriasParaSelect={listaMateriasParaSelect}
                           handleCheckbox={handleCheckboxChange}
                           handeSelectionCareer={carrerasseleccionadas}
                           deshabilitarCampoNumerico={!checkboxValues[index]}
-                          set_setearcant_aprobadas={ set_setearcant_aprobadas }
+                          set_setearcant_aprobadas={set_setearcant_aprobadas}
                           // Deshabilitar campo numérico si el checkbox está marcado
                       />
                   ))}
               </Box>
           </Stack>
-          <Box display="flex" justifyContent="space-around">
-              <Button variant="contained" color="primary" onClick={onCancel}>Volver</Button>
-              <Button type="submit" variant="contained" color="secondary">Guardar</Button>
+          <Box display="flex" justifyContent="space-evenly">
+              <Button variant="contained" color="primary" onClick={onCancel} startIcon={<ArrowCircleLeftIcon />}>Volver</Button>
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />} color="secondary">Guardar</Button>
           </Box>
       </Box>
   );

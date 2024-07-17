@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 //import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from 'react-router-dom';
 import SelectMultipleAR from '../components/SelectMultipleAR';
 
@@ -642,7 +643,7 @@ function ConfiguracionCondicionCarrera() {
                                             marginTop: '25px'
                                         }}>
 
-                                        <Button variant="contained" disabled={ sePuedeGuardar } onClick={guardarCondicion}>
+                                        <Button variant="contained" color="secondary" startIcon={ <SaveIcon />} disabled={ sePuedeGuardar } onClick={guardarCondicion}>
                                             Guardar
                                         </Button>
                                     </Box>
