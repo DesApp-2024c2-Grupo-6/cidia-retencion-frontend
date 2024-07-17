@@ -123,7 +123,7 @@ function Materia({data, setDeleted, handleSaveEdit}) {
               onChange={handleChange}
             />
             <Box
-                            sx={{ display: 'flex' }}>
+                            sx={{ display: 'flex' , gap: '10px'}}>
                             <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleClose}>Volver</Button>
                             <Button variant="contained" color="secondary" startIcon={<SaveIcon /> } onClick={handleSave}>
                Guardar
