@@ -17,7 +17,7 @@ export const getAllSubjectData = async () => {
 
 export const getSubjectsByCareer = async (id_carrera) => {
     try {
-        const response = await axios.get(`${baseURL}/materias/porcarrera/`, {params: {id_carrera}});
+        const response = await axios.get(`${baseURL}/materias/:id?id_carrera=`, {params: {id_carrera}});
         return response;
     } catch (error) {
         return error;
@@ -26,7 +26,7 @@ export const getSubjectsByCareer = async (id_carrera) => {
 
 export const updateSubject = async(data) => {
     try {
-        const response = await axios.put(`${baseURL}/materias/`, data);
+        const response = await axios.put(`${baseURL}/materias/:id?id_materia=`, data);
         return response;
     } catch (error) {
         return error;
@@ -36,7 +36,7 @@ export const updateSubject = async(data) => {
 export const deleteSubject = async(data) => {
     try {
         console.log(data)
-        const response = await axios.delete(`${baseURL}/materias/`, {data});
+        const response = await axios.delete(`${baseURL}/materias/:id?id_materia=`, {data});
         return response;
     } catch (error) {
         return error;
