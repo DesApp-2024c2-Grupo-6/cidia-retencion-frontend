@@ -24,7 +24,7 @@ export const createParrafo = async (data) => {
 export const updateOneParrafo = async (data) => {
     try {
         console.log(data);
-        const response = await axios.put(`${baseURL}/parrafos`, data);
+        const response = await axios.put(`${baseURL}/parrafos/:id`, data);
         return response.data; // Asumiendo que quieres devolver solo los datos, no el objeto completo de respuesta.
     } catch (error) {
         return error;
@@ -51,7 +51,7 @@ export const getAllParrafos = async () => {
 export const deleteOneParrafo = async (parrafoKey) => {
     console.log(parrafoKey)
     try {
-        const response = await axios.delete(`${baseURL}/parrafos`, { data: { key: parrafoKey } });
+        const response = await axios.delete(`${baseURL}/parrafos/:id`, { data: { key: parrafoKey } });
         return response;
     } catch (error) {
         console.error('Error deleting paragraph:', error);
