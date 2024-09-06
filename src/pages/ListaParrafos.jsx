@@ -36,7 +36,7 @@ const ParagraphList = () => {
 
     try {
       const response = await createParrafo({
-        parrafoId: '668f20a4fb3e34d777eb3e1a', //Aca tocar por el id 
+        parrafoId: '668f20a4fb3e34d777eb3e1', //Aca tocar por el id 
         nuevaClave: clave,
         nuevoTexto: texto
       });
@@ -158,7 +158,6 @@ const ParagraphList = () => {
     const oldIndex = e.dataTransfer.getData('index');
     const updatedParrafos = [...parrafos];
     const draggedParagraph = updatedParrafos[oldIndex];
-
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
 
