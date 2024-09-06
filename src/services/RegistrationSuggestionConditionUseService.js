@@ -36,7 +36,7 @@ export const deleteConditionUse = async (filtro) => {
         console.log(filtro)
         const queryParams = new URLSearchParams(filtro).toString();
         //console.log(queryParams);
-        const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/?${queryParams}`);
+        const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/:id?${queryParams}`);
         //const response = await axios.delete(`${baseURL}/registrationsuggestionconditionuse/`, { data: filtro });
         return response;
     }

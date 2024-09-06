@@ -10,7 +10,7 @@ const baseURL = 'http://localhost:3001/api'
  */
 export const getCurrentConfigCareer = async (careerId) => {
     try {
-        const response = await axios.get(`${baseURL}/carreras`, { params: { careerId } });
+        const response = await axios.get(`${baseURL}/carreras/:id?careerId=`, { params: { careerId } });
         return response;
     } catch (error) {
         return error;
@@ -18,10 +18,9 @@ export const getCurrentConfigCareer = async (careerId) => {
 }
 
 //Actualizar una carrera
-
 export const updateOneCareer = async (data) => {
     try {
-        const response = await axios.put(`${baseURL}/carreras`, data);
+        const response = await axios.put(`${baseURL}/carreras/:id?careerId=`, data);
         return response;
     }
     catch (error) {
@@ -32,7 +31,7 @@ export const updateOneCareer = async (data) => {
 //obtener todas las carreras
 export const getAllCareer = async () => {
     try {
-        const response = await axios.get(`${baseURL}/carreras/all`);
+        const response = await axios.get(`${baseURL}/carreras/`);
         return response;
     } catch (error) {
         return error;
