@@ -9,6 +9,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from 'react-router-dom';
 import SelectMultipleAR from '../components/SelectMultipleAR';
 
+
 //import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -21,6 +22,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import {Autocomplete, TextField} from '@mui/material';
 import SelectComponent from '../components/SelectR';
 import { getAllSuggestionCondition } from '../services/RegistrationSuggestionConditionService';
 import { getAllSuggestionConditionUse, createConditionUse, deleteConditionUse } from '../services/RegistrationSuggestionConditionUseService';
@@ -28,7 +30,7 @@ import { getAllSubjectData } from '../services/SubjectDataService';
 
 
 function createData(key, id, anio, materia, codigo_condicion, config_condicion, obj) {
-    return {key, id, anio, materia, codigo_condicion, config_condicion, obj };
+    return { key, id, anio, materia, codigo_condicion, config_condicion, obj };
 }
 
 const style = {
@@ -42,13 +44,14 @@ const style = {
     boxShadow: 24,
     p: 4,
     display: 'block',
-    borderRadius:3
+    borderRadius: 3
 };
 
 function ConfiguracionCondicionCarrera() {
 
     const navigate = useNavigate();
 
+    //Datos de la carrera seleccionada
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
 
@@ -57,14 +60,15 @@ function ConfiguracionCondicionCarrera() {
         if (IdCarrera == null || IdCarrera == "") {
             navigate('/configuracion/');
         }
-    },[IdCarrera, navigate]);
+    }, [IdCarrera, navigate]);
 
     const [message, setMessage] = useState({ codigo: 0, msg: "" });
 
     const [condicionesList, setCondicionesList] = useState([]);
-    const [actualizarTablaCondiciones, setActualizarTablaCondiciones] = useState(false); 
+    const [actualizarTablaCondiciones, setActualizarTablaCondiciones] = useState(false);
     const [sePuedeGuardar, setSePuedeGuardar] = useState(true);
 
+    //Traer todas las condiciones que ya estan asociada a una materia ? de la API
     useEffect(() => {
         setMessage({});
         const obtenerCondicionesSugestionUse = async () => {
@@ -110,6 +114,7 @@ function ConfiguracionCondicionCarrera() {
 
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
 
+    //Traer una lista de todos los tipos de condiciones posibles desde la API
     useEffect(() => {
 
         setMessage({});
@@ -143,6 +148,8 @@ function ConfiguracionCondicionCarrera() {
 
     const [materiasList, setMateriasList] = useState([]);
     const [materiasCondicionList, setMateriasCondicionList] = useState([]);
+
+    //Traer todas las materias desde la API
     useEffect(() => {
         setMessage({});
         const obtenerMaterias = async () => {
@@ -238,7 +245,7 @@ function ConfiguracionCondicionCarrera() {
         }
     }
     const setearAnioCompleto = (event) => {
-            setAnioCompleto(event.target.value);
+        setAnioCompleto(event.target.value);
     }
     const setearCondicion = (valor) => {
         setCondicion(valor);
@@ -319,9 +326,9 @@ function ConfiguracionCondicionCarrera() {
         else if (condicion === "CANT-MATERIAS-ANIO") {
             nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
-        
-            
-        
+
+
+
         //console.log(nuevaCondicion);
         const postcondicion = await createConditionUse(nuevaCondicion);
 
@@ -336,7 +343,7 @@ function ConfiguracionCondicionCarrera() {
         handleClose();
 
         if (postcondicion.status === 200) {
-            setActualizarTablaCondiciones(!actualizarTablaCondiciones); 
+            setActualizarTablaCondiciones(!actualizarTablaCondiciones);
             setMessage({
                 code: postcondicion.status,
                 msg: `Condicion ID ${postcondicion.data.id_carrera} creada correctamente.`
@@ -382,8 +389,8 @@ function ConfiguracionCondicionCarrera() {
                 condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio, cantidad: cond.obj.config_condicion.cantidad, campos: cond.obj.config_condicion.campos }
             }
         }
-        
-       const deletecondicion = await deleteConditionUse(condicionEliminar);
+
+        const deletecondicion = await deleteConditionUse(condicionEliminar);
 
         if (deletecondicion.status === 200) {
             setActualizarTablaCondiciones(!actualizarTablaCondiciones);
@@ -410,16 +417,18 @@ function ConfiguracionCondicionCarrera() {
         setmateria("");
         setCantidad("");
         setAnioCompleto("");
+        setCondicion("");
         setinputAnio(false);
         setselectCarreraDisabled(false);
         setOpen(true);
         setSePuedeGuardar(true);
     }
-        
+
     const handleClose = () => setOpen(false);
+    
 
     return (
-    
+
         <>
             <Box
                 sx={{
@@ -449,7 +458,7 @@ function ConfiguracionCondicionCarrera() {
                                     <Box
                                         sx={{
                                             textAlign: "center",
-                                            marginBottom:'10px'
+                                            marginBottom: '10px'
                                         }}>
                                         <Typography variant="h6" >
                                             Nueva condición
@@ -458,10 +467,13 @@ function ConfiguracionCondicionCarrera() {
                                     <Box sx={{
                                         display: 'flex',
                                         gap: '5px',
-                                        marginBottom: '10px'
+                                        marginBottom: '10px',
+                                        marginTop: '5px'
                                     }}>
                                         <FormControl sx={{
-                                            width: '100px'
+                                            width: '100px',
+                                            height: '50px',
+                                        
                                         }}>
                                             <OutlinedInput
                                                 disabled={inputAnio}
@@ -470,18 +482,27 @@ function ConfiguracionCondicionCarrera() {
                                                 sx={{
                                                     '& input': {
                                                         textAlign: 'center',
-                                                        height: '7px'
+                                                        height: '22px'
                                                     }
                                                 }}
-                                                placeholder="Año" onInput={ setearAnio } />
+                                                placeholder="Año" onInput={setearAnio} />
                                         </FormControl>
                                         <Box sx={{
                                             width: '100%',
-                                            overflow: 'hidden'
+                                            
                                         }}>
-                                            <SelectComponent options={materiasList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />
+                                            {/*<SelectComponent options={materiasList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />*/}
+                                            <Autocomplete
+                                                disablePortal
+                                                options={materiasList}
+                                                className={'autocompletecarreras'}
+                                                freeSolo
+                                                disabled = {selectCarreraDisabled}
+                                                onChange={(event, newValue) => (newValue) ? setearMateria(newValue) : setearMateria("")}
+                                                renderInput={(params) => <TextField {...params} label="Seleccione materia" />}
+                                            />
                                         </Box>
-                                        
+
                                     </Box>
                                     <Box
                                         sx={{
@@ -493,24 +514,34 @@ function ConfiguracionCondicionCarrera() {
                                         condicion == "CAMPOS-COMPLETOS" && (
 
                                             <Box sx={{
-                                                width:'100%',
+                                                width: '100%',
                                                 overflow: 'hidden'
                                             }}>
                                                 {/*<SelectMultipleR options={camposList} onSelect={setearcamposSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos' style={{ whiteSpace: 'nowrap' }} />*/}
-                                                <SelectMultipleAR options={camposList} onSelect={setearcamposSeleccionados}  placeholder='Seleccione Campos'></SelectMultipleAR>
+                                                <SelectMultipleAR options={camposList} onSelect={setearcamposSeleccionados} placeholder='Seleccione Campos'></SelectMultipleAR>
                                             </Box>
-                                                
+
                                         )
                                     }
                                     {
                                         condicion == "MATERIAS-ESPECIFICAS" && (
 
                                             <Box sx={{
-                                                width:'100%',
-                                                overflow: 'hidden'
+                                                width: '100%',
+                                                display:"inline"
+                                               
                                             }}>
                                                 {/*<SelectMultipleR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} className={'selectcarreras'} placeholder='Seleccione Materias' style={{ whiteSpace: 'nowrap' }} />*/}
-                                                <SelectMultipleAR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} placeholder='Seleccione Materias'></SelectMultipleAR>
+                                                {/*<SelectMultipleAR options={materiasCondicionList} onSelect={setearMateriasSeleccionadas} placeholder='Seleccione Materias'></SelectMultipleAR>*/}
+                                                <Autocomplete
+                                                multiple
+                                                disablePortal
+                                                options={materiasCondicionList}
+                                                className={'autocompletecarreras'}
+                                                freeSolo
+                                                onChange={(event, newValue) => (newValue) ? setearMateriasSeleccionadas(newValue) : setearMateriasSeleccionadas("")}
+                                                renderInput={(params) => <TextField {...params} variant="standard" label="Seleccione materias" />}
+                                            />
                                             </Box>
                                         )
                                     }
@@ -533,17 +564,17 @@ function ConfiguracionCondicionCarrera() {
                                                                 textAlign: 'center',
                                                             }
                                                         }}
-                                                        placeholder="Cant" onInput={ setearCantidad } />
+                                                        placeholder="Cant" onInput={setearCantidad} />
                                                 </FormControl>
                                                 <Box sx={{
                                                     width: '100%',
                                                     overflow: 'hidden'
-                                                    
+
                                                 }}>
                                                     {/*<SelectMultipleR options={camposList} onSelect={setearExceptuadosSeleccionados} className={'selectcarreras'} placeholder='Seleccione Campos Exceptuados' style={{ whiteSpace: 'nowrap' }} />*/}
                                                     <SelectMultipleAR options={camposList} onSelect={setearExceptuadosSeleccionados} placeholder='Seleccione Campos Exceptuados'></SelectMultipleAR>
                                                 </Box>
-                                                
+
                                             </Box>
                                         )
                                     }
@@ -595,7 +626,7 @@ function ConfiguracionCondicionCarrera() {
                                                     sx={{
                                                         display: 'flex',
                                                         gap: '10px',
-                                                        marginBottom:'10px'
+                                                        marginBottom: '10px'
                                                     }}>
                                                     <FormControl sx={{
                                                         width: '100%'
@@ -625,7 +656,7 @@ function ConfiguracionCondicionCarrera() {
                                                             }}
                                                             placeholder="Cantidad" onInput={setearCantidad} />
                                                     </FormControl>
-                                                    
+
                                                 </Box>
 
                                                 <Box>
@@ -643,11 +674,11 @@ function ConfiguracionCondicionCarrera() {
                                             marginTop: '25px'
                                         }}>
 
-                                        <Button variant="contained" color="secondary" startIcon={ <SaveIcon />} disabled={ sePuedeGuardar } onClick={guardarCondicion}>
+                                        <Button variant="contained" color="secondary" startIcon={<SaveIcon />} disabled={sePuedeGuardar} onClick={guardarCondicion}>
                                             Guardar
                                         </Button>
                                     </Box>
-                                    
+
                                 </Box>
                             </Modal>
                         </Box>
@@ -671,8 +702,8 @@ function ConfiguracionCondicionCarrera() {
                             alignItems: 'center',
                             bgcolor: 'background.default',
 
-                             }}>
-                            <TableContainer component={Paper} sx={{  maxHeight: '350px', border:'1px #E4E4E4 solid' }} >
+                        }}>
+                            <TableContainer component={Paper} sx={{ maxHeight: '350px', border: '1px #E4E4E4 solid' }} >
                                 <Table stickyHeader aria-label="simple table">
                                     <TableHead>
                                         <TableRow sx={{ backgroundColor: '' }}>
@@ -698,36 +729,36 @@ function ConfiguracionCondicionCarrera() {
                                                 </TableRow>
                                             ) : (
 
-                                            condicionesList.map((row) => (
-                                            <TableRow
-                                                key={row.key}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                                <TableCell component="th" scope="row" align="center">
-                                                    {row.anio}
-                                                </TableCell>
-                                                    <TableCell align="center">{row.materia}</TableCell>
-                                                    <TableCell align="center">{row.codigo_condicion}</TableCell>
-                                                    <TableCell align="center">
-                                                        {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
-                                                    <React.Fragment key={idx}>
-                                                        {c}
-                                                                {idx < row.config_condicion.split('-').length - 1 && <br />}
-                                                    </React.Fragment>
-                                                        )) : row.config_condicion}
-                                                </TableCell>
-                                                <TableCell align="center">
-                                                    {/*<IconButton color="primary" aria-label="editar" sx={{ width: '40px' }}*/}
-                                                    {/*    <EditIcon />*/}
-                                                    {/*</IconButton>*/}
-                                                    <Tooltip title="Eliminar condición.">
-                                                            <IconButton aria-label="eliminar" onClick={ () => eliminarCondicion(row) } sx={{ width: '40px', color:'red' }}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </TableCell>
-                                            </TableRow>)
-                                        ))}
+                                                condicionesList.map((row) => (
+                                                    <TableRow
+                                                        key={row.key}
+                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                    >
+                                                        <TableCell component="th" scope="row" align="center">
+                                                            {row.anio}
+                                                        </TableCell>
+                                                        <TableCell align="center">{row.materia}</TableCell>
+                                                        <TableCell align="center">{row.codigo_condicion}</TableCell>
+                                                        <TableCell align="center">
+                                                            {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
+                                                                <React.Fragment key={idx}>
+                                                                    {c}
+                                                                    {idx < row.config_condicion.split('-').length - 1 && <br />}
+                                                                </React.Fragment>
+                                                            )) : row.config_condicion}
+                                                        </TableCell>
+                                                        <TableCell align="center">
+                                                            {/*<IconButton color="primary" aria-label="editar" sx={{ width: '40px' }}*/}
+                                                            {/*    <EditIcon />*/}
+                                                            {/*</IconButton>*/}
+                                                            <Tooltip title="Eliminar condición.">
+                                                                <IconButton aria-label="eliminar" onClick={() => eliminarCondicion(row)} sx={{ width: '40px', color: 'red' }}>
+                                                                    <DeleteIcon />
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </TableCell>
+                                                    </TableRow>)
+                                                ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>

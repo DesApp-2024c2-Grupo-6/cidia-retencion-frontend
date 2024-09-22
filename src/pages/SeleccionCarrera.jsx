@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SelectComponent from '../components/SelectR';
-import { Button } from '@mui/material';
-import { Box } from '@mui/material';
+import { Button, Box, Autocomplete, TextField } from '@mui/material';
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import '../styles/ConfiguracionCarreras.css';
@@ -43,15 +42,13 @@ function SeleccionCarrera() {
             }
         }
         obtenerCarreras();
-        
-      }, [])
+
+    }, [])
 
 
     const handleSelect = (value) => {
-
         dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
         setConfigButton(value.v)
-
     };
 
     const handleOnClickConfiguracionCarrera = () => {
@@ -79,13 +76,21 @@ function SeleccionCarrera() {
                     }}
                 >
                     <h3 className="label">Seleccione una Carrera</h3>
-                    <SelectComponent options={carreras} onSelect={handleSelect} className={'selectcarreras'} placeholder='Carreras' />
+
+                    <Autocomplete
+                        disablePortal
+                        options={carreras}
+                        className={'selectcarreras'}
+                        freeSolo
+                        onChange={(event, newValue) => (newValue) ? handleSelect(newValue.value) : handleSelect({v:"", l:""})}
+                        renderInput={(params) => <TextField {...params} label="Carreras"/>}
+                    />
                     <Box
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '20px',
-                            marginTop:'20px',
+                            marginTop: '30px',
                             justifyContent: 'center',
                             alignItems: 'center'
 
@@ -97,7 +102,7 @@ function SeleccionCarrera() {
                             name={'Configurar'}
                             disabled={configButton ? false : true}
                             startIcon={<BuildIcon />}>Configurar
-                            
+
                         </Button>
                         <Button
                             onClick={handleOnClickConfiguracionParrafos}
