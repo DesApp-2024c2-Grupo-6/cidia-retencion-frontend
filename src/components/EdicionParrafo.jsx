@@ -22,7 +22,8 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     const [desabilitarResto, setDesabilitarResto] = useState(false);
     const [desabilitarNunca, setDesabilitarNunca] = useState(false);
     const [desabilitarSiempre, setDesabilitarSiempre] = useState(false);
-
+    const [sePuedeGuardarClave, setSePuedeGuardarClave] = useState(true);
+    const [sePuedeGuardarTexto, setSePuedeGuardarTexto] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,10 +38,25 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
         setListaMaterias(listadoSubjectData);
     }, [])
 
-    const handleClaveChange = (e) => setClave(e.target.value);
+    const handleClaveChange = (e) => 
+        {
+            setClave(e.target.value);
+            if(e.target.value === ""){
+                setSePuedeGuardarClave(false)
+            }
+            else{
+                setSePuedeGuardarClave(true)
+            }
+        }
     const handleTextoChange = (e) => {
         const lines = e.target.value.split('\n'); // Actualiza el texto como un array
         setTexto(lines);
+        if(e.target.value === ""){
+            setSePuedeGuardarTexto(false)
+        }
+        else{
+            setSePuedeGuardarTexto(true)
+        }
     };
   
     const handleCondicionesChange = (event, values) => {
@@ -68,6 +84,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
             values = values.filter(cond => cond !== 'MATERIAS_PENDIENTES' && cond !== 'MATERIAS_NO_PENDIENTES');
             setAutoCompleteOptionsDisabled(true);
         }
+        console.log(values)
         setCondicionesSeleccionadas(values);
     };
 
@@ -94,7 +111,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     //    };
     //    const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
 
-    //    console.log(listaSinDuplicados);
+    //    
 
     //    setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
     //}, []);
@@ -120,7 +137,6 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     useEffect(() => {
 
         if (listaCarrerasElejidas.length > 0) {
-            //console.log(listaCarrerasElejidas)
             const materiasFiltradas = listaMaterias.filter(materia =>
                 listaCarrerasElejidas.includes(materia.id_carrera)
             );
@@ -136,11 +152,9 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
             const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
 
             setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
-            //console.log(listaMateriasParaSelect)
 
         } else {
             setListaMateriasParaSelect([]);
-            //console.log("asd")
         }
         
 
@@ -173,7 +187,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     };
 
     //const handleOnClickConfiguracionParrafos = () => {
-    //    console.log("hola")
+    //    
     //    navigate('/configuracion/parrafos')
     //};
 
@@ -195,7 +209,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
         }
         return false;
   };
- //console.log(condiciones);
+
   return (
       <Box
           component="form"
@@ -243,7 +257,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
           </Stack>
           <Box display="flex" justifyContent="space-evenly">
               <Button variant="contained" color="primary" onClick={onCancel} startIcon={<ArrowCircleLeftIcon />}>Volver</Button>
-              <Button type="submit" variant="contained" startIcon={<SaveIcon />} color="secondary">Guardar</Button>
+              <Button type="submit" variant="contained" disabled={ !sePuedeGuardarClave || !sePuedeGuardarTexto } startIcon={<SaveIcon />} color="secondary">Guardar</Button>
           </Box>
       </Box>
   );

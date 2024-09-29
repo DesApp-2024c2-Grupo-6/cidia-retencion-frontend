@@ -11,25 +11,36 @@ export default function MateriasEspeciales (
     array, 
     handleUpdateYear,
     handleUpdateCampo}){
-
+        
     const [renderSubjects, setRenderSubjects] = useState(array);
     const handleOnDeleteRow = (index) => {
         const updateArray = renderSubjects.filter((_,i) => i != index);
         setRenderSubjects(updateArray) //actualizo estado local sino no cambia
         handleUpdateCampo(updateArray) //actualizo estado comp padre.
+        if (renderSubjects ==[]){
+            
+        }
     }
-
     const handleOnAddRow = () => {
         const newRow = {year: "", campo: ""};
         setRenderSubjects([...renderSubjects, newRow]);
     }
 
-    const handleInputChange = (e, pos, field) => {
+    
+    
+    const handleInputChangeAnio = (e, pos, field) => {
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        var updatedArray = renderSubjects.map( (item, index) =>  index === pos ? {...item, [field]: value} : item)
+        setRenderSubjects(updatedArray)
+        field === 'year' ? handleUpdateYear(updatedArray) : handleUpdateCampo(updatedArray);    
+    }
+    const handleInputChangeCampo = (e, pos, field) => {
         const value = e.target.value
         const updatedArray = renderSubjects.map( (item, index) =>  index === pos ? {...item, [field]: value} : item)
         setRenderSubjects(updatedArray)
         field === 'year' ? handleUpdateYear(updatedArray) : handleUpdateCampo(updatedArray);    
     }
+    
 
     useEffect( () => {setRenderSubjects([...array])}, [array])
 
@@ -70,7 +81,7 @@ export default function MateriasEspeciales (
                                 value={register.year}
                                 variant='standard'
                                 disabled={!isEdit}
-                                onChange={(e) => handleInputChange(e,pos,'year')}
+                                onChange={(e) => handleInputChangeAnio(e,pos,'year')}
                                 sx={
                                     {
                                         maxWidth: 'calc(30% - 5px)', 
@@ -81,12 +92,12 @@ export default function MateriasEspeciales (
                                 }
 
                             />  
-
+                            
                             <TextField
                                 value={register.campo}
                                 variant='standard'
                                 disabled={!isEdit}
-                                onChange={(e) => handleInputChange(e,pos,'campo')}
+                                onChange={(e) => handleInputChangeCampo(e,pos,'campo')}
                                 sx={
                                     {
                                         maxWidth: 'calc(30% - 5px)', 

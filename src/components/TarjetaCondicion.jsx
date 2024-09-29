@@ -88,6 +88,7 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
     ////PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
     const carrerasseleccionadas = (carreras) => {
         handeSelectionCareer(carreras);
+        console.log(carreras)
     };
     const [isChecked, setIsChecked] = useState(objeto?.config_condicion.checked || false);
     useEffect(() => {
