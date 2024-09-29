@@ -10,8 +10,8 @@ export default function PanelConfiguradorGral(
     handleUpdateCarrerMinimunSubject, 
     handleUpdateCarrerName}) {
    
-    const handleInputChange_1 = (e) => {handleUpdateCarrerRegularSuggest(e.target.value)}
-    const handleInputChange_2 = (e) => {handleUpdateCarrerMinimunSubject(e.target.value)}
+    const handleInputChange_1 = (e) => {handleUpdateCarrerRegularSuggest(e.target.value.replace(/[^0-9]/g, ''))}
+    const handleInputChange_2 = (e) => {handleUpdateCarrerMinimunSubject(e.target.value.replace(/[^0-9]/g, ''))}
     const handleInputChange_3 = (e) => {handleUpdateCarrerName(e.target.value)}
     return(
         <Box className='container-config'>

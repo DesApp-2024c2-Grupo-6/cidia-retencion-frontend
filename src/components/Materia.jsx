@@ -34,6 +34,12 @@ function Materia({data, setDeleted, handleSaveEdit}) {
         setFormData((prev) => ({ ...prev, [name]: value }));
         console.log(formData)
       };
+
+      const handleChangeAnio = (e) => {
+        const name = e.target.name;
+        const value = e.target.value.replace(/[^0-9]/g, '')
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      };
     
       const handleSave = () => {
         handleSaveEdit(formData);
@@ -41,7 +47,6 @@ function Materia({data, setDeleted, handleSaveEdit}) {
       };
 
     const handleOnClickDelete = async (data) => {
-        console.log("Estoy aca");
         const resSubject = await deleteSubject(data);
         if (resSubject.status === 200) {
             setDeleted();
@@ -108,7 +113,7 @@ function Materia({data, setDeleted, handleSaveEdit}) {
               label="Año"
               name="anio"
               value={formData.anio}
-              onChange={handleChange}
+              onChange={handleChangeAnio}
             />
             <TextField
               label="Campo"

@@ -220,10 +220,12 @@ function ConfiguracionCondicionCarrera() {
 
 
     const setearAnio = (event) => {
-        const valorAnio = event.target.value;
-        setAnio(valorAnio);
+        const value = event.target.value
+        if (value === '' || value >= 0) {
+            setAnio(value);
+        }
         setMateriasCondicionList(materiasList);
-        setselectCarreraDisabled(!!valorAnio && valorAnio > 0);
+        setselectCarreraDisabled(!!value && value > 0);
     }
     const setearMateria = (valor) => {
         setmateria(valor);
@@ -232,15 +234,23 @@ function ConfiguracionCondicionCarrera() {
         setinputAnio(!!valor);
     }
     const setearCantidad = (event) => {
-        const value = event.target.value;
+        const value = event.target.value
         if (value === '' || value >= 0) {
             setCantidad(value);
         }
+        
+
     }
     const setearAnioCompleto = (event) => {
-            setAnioCompleto(event.target.value);
+        const value = event.target.value
+        
+        if(value === "" || value >=0 ){
+            setAnioCompleto(value);
+        }
+            
     }
     const setearCondicion = (valor) => {
+        setCantidad("");
         setCondicion(valor);
         if (valor !== "") {
             setSePuedeGuardar(false);
@@ -379,7 +389,7 @@ function ConfiguracionCondicionCarrera() {
                 }
             }
             else if (condicionEliminar.codigo_condicion === "CANT-MATERIAS-ANIO") {
-                condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anio, cantidad: cond.obj.config_condicion.cantidad, campos: cond.obj.config_condicion.campos }
+                condicionEliminar.config_condicion = { anio: cond.obj.config_condicion.anioCompleto, cantidad: cond.obj.config_condicion.cantidad, campos: cond.obj.config_condicion.campos }
             }
         }
         
@@ -411,9 +421,11 @@ function ConfiguracionCondicionCarrera() {
         setCantidad("");
         setAnioCompleto("");
         setinputAnio(false);
+        setCondicion("");
         setselectCarreraDisabled(false);
         setOpen(true);
         setSePuedeGuardar(true);
+
     }
         
     const handleClose = () => setOpen(false);
@@ -473,6 +485,7 @@ function ConfiguracionCondicionCarrera() {
                                                         height: '7px'
                                                     }
                                                 }}
+                                                value = {anio}
                                                 placeholder="Año" onInput={ setearAnio } />
                                         </FormControl>
                                         <Box sx={{
@@ -489,6 +502,7 @@ function ConfiguracionCondicionCarrera() {
                                         }}>
                                         <SelectComponent options={tiposCondicionList} onSelect={setearCondicion} className={'selectcarreras'} placeholder='Seleccione Condiciones' />
                                     </Box>
+                                   
                                     {
                                         condicion == "CAMPOS-COMPLETOS" && (
 
@@ -533,6 +547,7 @@ function ConfiguracionCondicionCarrera() {
                                                                 textAlign: 'center',
                                                             }
                                                         }}
+                                                        value = {cantidad}
                                                         placeholder="Cant" onInput={ setearCantidad } />
                                                 </FormControl>
                                                 <Box sx={{
@@ -568,7 +583,9 @@ function ConfiguracionCondicionCarrera() {
                                                                 padding: '16.5px 0px 16.5px 0px'
                                                             }
                                                         }}
-                                                        placeholder="Año" onInput={setearAnioCompleto} />
+                                                        value = {anioCompleto}
+                                                        placeholder="Año"
+                                                        onInput={setearAnioCompleto} />
                                                 </FormControl>
                                                 <FormControl sx={{
                                                     width: '100%'
@@ -583,6 +600,7 @@ function ConfiguracionCondicionCarrera() {
                                                                 padding: '16.5px 5px 16.5px 5px'
                                                             }
                                                         }}
+                                                        value = {cantidad}
                                                         placeholder="Salvo Cantidad" onInput={setearCantidad} />
                                                 </FormControl>
                                             </Box>
@@ -601,15 +619,17 @@ function ConfiguracionCondicionCarrera() {
                                                         width: '100%'
                                                     }}>
                                                         <OutlinedInput
-                                                            type="number"
-                                                            sx={{
-                                                                '& input': {
-                                                                    textAlign: 'center',
-                                                                    height: '7px',
-                                                                    padding: '16.5px 0px 16.5px 0px'
-                                                                }
-                                                            }}
-                                                            placeholder="Año" onInput={setearAnioCompleto} />
+                                                        type="number"
+                                                        title="Coloque el año de la carrera que desea comparar."
+                                                        sx={{
+                                                            '& input': {
+                                                                textAlign: 'center',
+                                                                height: '7px',
+                                                                padding: '16.5px 0px 16.5px 0px'
+                                                            }
+                                                        }}
+                                                        value = {anioCompleto}
+                                                        placeholder="Añowqe" onInput={setearAnioCompleto} />
                                                     </FormControl>
                                                     <FormControl sx={{
                                                         width: '100%'
@@ -623,6 +643,7 @@ function ConfiguracionCondicionCarrera() {
                                                                     padding: '16.5px 0px 16.5px 0px'
                                                                 }
                                                             }}
+                                                            value = {cantidad}
                                                             placeholder="Cantidad" onInput={setearCantidad} />
                                                     </FormControl>
                                                     
