@@ -10,7 +10,7 @@ const baseURL = 'http://localhost:3001/api'
  */
 export const getCurrentConfigCareer = async (careerId) => {
     try {
-        const response = await axios.get(`${baseURL}/carreras/:id?careerId=`, { params: { careerId } });
+        const response = await axios.get(`${baseURL}/carreras/${careerId}`);
         return response;
     } catch (error) {
         return error;
@@ -31,7 +31,7 @@ export const updateOneCareer = async (data) => {
 //obtener todas las carreras
 export const getAllCareer = async () => {
     try {
-        const response = await axios.get(`${baseURL}/carreras/`);
+        const response = await axios.get(`${baseURL}/carreras`);
         return response;
     } catch (error) {
         return error;

@@ -4,6 +4,12 @@
     font-size: 1rem;
 }
 
+.autocompletecarreras {
+  width: 100%;
+  height: auto;
+}
+
+
 
 .label{
     margin-bottom:5px;
