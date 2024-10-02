@@ -494,6 +494,7 @@ function ConfiguracionCondicionCarrera() {
                                             {/*<SelectComponent options={materiasList} onSelect={setearMateria} className={'selectcarreras'} placeholder='Seleccione Materia' disabled={selectCarreraDisabled} />*/}
                                             <Autocomplete
                                                 disablePortal
+                                                disableClearable
                                                 options={materiasList}
                                                 className={'autocompletecarreras'}
                                                 freeSolo
@@ -536,6 +537,7 @@ function ConfiguracionCondicionCarrera() {
                                                 <Autocomplete
                                                 multiple
                                                 disablePortal
+                                                disableClearable
                                                 options={materiasCondicionList}
                                                 className={'autocompletecarreras'}
                                                 freeSolo

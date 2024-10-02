@@ -8,16 +8,16 @@ import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } fro
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-    const [cond, setCond] = useState([]); //Cris
+  const [cond, setCond] = useState([]); 
 
   useEffect(() => {
     const fetchParrafos = async () => {
       try {
         const response = await getAllParrafos();
         if (response.status === 200) {
-            const data = response.data.allParrafos[0]._rawData;
-            if (Array.isArray(data)) {
-                setParrafos(data);
+          const data = response.data.allParrafos[0]._rawData;
+          if (Array.isArray(data)) {
+            setParrafos(data);
           } else {
             console.error('Data fetched is not an array:', data);
           }
@@ -30,9 +30,9 @@ const ParagraphList = () => {
     };
 
     fetchParrafos();
-  }, []);
+  }, [editIndex]);
 
-  const agregarParrafo = async (clave , texto) => {
+  const agregarParrafo = async (clave, texto) => {
 
     try {
       const response = await createParrafo({
@@ -40,92 +40,80 @@ const ParagraphList = () => {
         nuevaClave: clave,
         nuevoTexto: texto
       });
-        console.log('Response from createParrafo:', response);
-        const dato = response.parrafo._rawData[response.parrafo._rawData.length - 1];
-        console.log(dato)
-        setParrafos([...parrafos, { key: dato.key, text: dato.text }]);
+      console.log('Response from createParrafo:', response);
+      const dato = response.parrafo._rawData[response.parrafo._rawData.length - 1];
+      console.log(dato)
+      setParrafos([...parrafos, { key: dato.key, text: dato.text }]);
     } catch (error) {
       console.error('Error creating paragraph:', error);
     }
   };
 
-  // CANTIDAD APROBADAS
-   const [cant_aprobadas, setCant_Aprobadas] = useState(0);
 
-    const setearcant_aprobadas = (val) => {
-        setCant_Aprobadas(val);
+  //DATOS QUE SON INFORMACION ADICIONAL DE "EN_CARRERA"
+  const [idsCarreras, setIdsCarreras] = useState([]);
+  const [incluye, setIncluye] = useState(false);
+
+  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_PENDIENTES"
+  const [idsMateriasMP, setIdsMateriasMP] = useState([]);
+  const [cantidadAprobadasMP, setCantidadAprobadasMP] = useState(0);
+
+  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_NO_PENDIENTES"
+  const [idsMateriasMNP, setIdsMateriasMNP] = useState([]);
+  const [cantidadAprobadasMNP, setCantidadAprobadasMNP] = useState(0);
+
+  //DATOS QUE SON INFORMACION ADICIONAL DE "CANTIDAD_APROBADAS"
+  const [cantidadAprobadas, setCantidadAprobadas] = useState(0);
+
+  const editarParrafo = async (index, newClave, newText, newConditions) => { 
+
+    const formatearCondicion = (condicion) => {
+      /*
+        Retorna la condicion recibida, pero agregando los valores definidos en Tarjeta condicion
+        segun su codigo de condicion
+        Parametros:
+          -condicion - objeto - Objeto que contiene el codigo y la configuracion de una condicion
+
+        Retorna: Objeto
+        EJ: formatearCondicion({codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[], incluye:true}})
+        => {codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[1, 5, 7], incluye:"excluye"}}
+      */
+      const configuracionesPorCodigo = {
+        "EN_CARRERA": {
+          id_carreras: idsCarreras,
+          en_carrera: (incluye) ? "incluye" : "excluye"
+        },
+        "MATERIAS_PENDIENTES": {
+          id_materias: idsMateriasMP,
+          cantidad: cantidadAprobadasMP
+        },
+        "MATERIAS_NO_PENDIENTES": {
+          id_materias: idsMateriasMNP,
+          cantidad: cantidadAprobadasMNP
+        },
+        "CANT_APROBADAS": {
+          cantidad: cantidadAprobadas
+        },
+        "DEFAULT": {}
+      }
+      return ({...condicion, config_condicion: (configuracionesPorCodigo[condicion.codigo_condicion] || {})})
     }
-    //---------------------------------------------------
-    // EN CARRERA
-    const [ids_carreras, setIds_Carreras] = useState([]);
-    const [incluye, setIncluye] = useState(false);
-    const setearIds_Carreras = (val) => {
-        setIds_Carreras(val);
-    }
-    const setearIncluye= (val) => {
-        setIncluye(val);
-    }
-    //---------------------------------------------------
-    const editarParrafo = async (index, newClave, newText, condi) => { //Cris
 
     try {
-        const updatedParrafo = {
-            keyanterior: parrafos[index].key,
-            key: newClave,
-            text: newText,
-            conditions:[]
-        }
 
-        //condi.forEach((c) =>
-        //{
-        //    if (c == "CANT_APROBADAS") {
-        //        updatedParrafo.conditions.push(
-        //        {
-        //            codigo_condicion: c,
-        //            config_condicion: { cant: cant_aprobadas }
-        //        })
-        //    }
-        //    if (c == "EN_CARRERA" && ids_carreras.length > 0) {
-        //        updatedParrafo.conditions.push(
-        //        {
-        //            codigo_condicion: c,
-        //            config_condicion: { id_carreras: ids_carreras, condicion_en_carrera: incluye ? "incluye" : "excluye" }
-        //        })
-        //    }
+      const condicionesFormateadas = newConditions.map(condicion => formatearCondicion(condicion))
 
-        //    //else {
-        //    //    updatedParrafo.conditions.push({ codigo_condicion: c })
-        //    //}
-            
-        //});
-
-        //conditions: [{ "codigo_condicion" : condi[0] }]
-        //updateFields: {
-        //  key: newClave,
-        //  text: newText,
-        //  conditions: condi //Cris
-        //}
-
-        //{
-        //    "key": "test de parrafo",
-        //        "text": ["Estimado", "", "Test"],
-        //            "conditions": [{
-        //                "codigo_condicion": "SIEMPRE"
-        //            }
-        //            ]
-        //}
+      const updatedParrafo = {
+        keyanterior: parrafos[index].key,
+        key: newClave,
+        text: newText,
+        conditions: condicionesFormateadas
+      }
+      console.log(updatedParrafo)
 
       const response = await updateOneParrafo(updatedParrafo);
-        console.log(response)
-      //if (response) {
-        const updatedParrafos = [...parrafos];
-        updatedParrafos[index].key = newClave;
-        updatedParrafos[index].text = newText;
-        setParrafos(updatedParrafos);
-        setEditIndex(null);
-      //} else {
-       // console.error('Error updating paragraph:');
-      //}
+      setEditIndex(null);
+
     } catch (error) {
       console.error('Error updating paragraph:', error);
     }
@@ -197,7 +185,7 @@ const ParagraphList = () => {
                 }}
               >
                 <ParrafoPlantilla
-                          key={index}//agregado
+                  key={index}//agregado
                   text={paragraph.text}
                   clave={paragraph.key}
                   onEditClick={() => setEditIndex(index)}
@@ -209,7 +197,7 @@ const ParagraphList = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => agregarParrafo("ejemplo de Clave","ejemplo de texto")}
+            onClick={() => agregarParrafo("ejemplo de Clave", "ejemplo de texto")}
             sx={{ marginTop: '16px' }}
           >
             Añadir Párrafo
@@ -217,14 +205,19 @@ const ParagraphList = () => {
         </>
       ) : (
         <EdicionParrafo
-                      initialClave={parrafos[editIndex].key}
-                      initialTexto={parrafos[editIndex].text}
-                      onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
-                      onCancel={() => setEditIndex(null)}
-                      condiciones={parrafos[editIndex].conditions} //Cris
-                      setearcant_aprobadas={setearcant_aprobadas}
-                      setearIds_Carreras={setearIds_Carreras}
-                      setearIncluye={setearIncluye}
+          initialClave={parrafos[editIndex].key}
+          initialTexto={parrafos[editIndex].text}
+          condiciones={parrafos[editIndex].conditions} //Cris
+          onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
+          onCancel={() => setEditIndex(null)}
+          setCantidadAprobadas={setCantidadAprobadas}
+          setIdsCarrerasEC={setIdsCarreras}
+          setIncluyeEC={setIncluye}
+          setIdsMateriasMP = {setIdsMateriasMP}
+          setCantidadAprobadasMP = {setCantidadAprobadasMP}
+          setIdsMateriasMNP = {setIdsMateriasMNP}
+          setCantidadAprobadasMNP = {setCantidadAprobadasMNP}
+          carrerasSeleccionadas = {idsCarreras}
         />
       )}
     </Box>

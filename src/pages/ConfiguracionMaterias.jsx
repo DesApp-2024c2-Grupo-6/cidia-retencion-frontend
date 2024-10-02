@@ -24,7 +24,6 @@ function ConfiguracionMaterias() {
         }
         
       }
-
       getSubjects(IdCarrera)
     }, [save, deleted])
 
@@ -64,6 +63,7 @@ function ConfiguracionMaterias() {
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Código Materia</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Año</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Campo</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold',backgroundColor: '#609800', color: '#FFFFFF' }}>Nombre Completo</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold',backgroundColor: '#609800', color: '#FFFFFF' }}>Nombre Especial</Typography>
         <Typography sx={{ flex: 1.5, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
       </Box>
