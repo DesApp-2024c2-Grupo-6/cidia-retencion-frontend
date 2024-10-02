@@ -23,15 +23,16 @@ function SeleccionCarrera() {
         setMessage({});
         const obtenerCarreras = async () => {
             const carreras = await getAllCareer();
+            console.log(carreras)
             if (carreras.status === 200) {
-                const career = carreras.data;
+                const careers = carreras.data.allCareers.filter(carrera => carrera.careerId != undefined);
                 setMessage({
                     code: carreras.status,
                     msg: `Se han traido todas las carreras.`
                 })
-                const lista = career.allCareers.map(c => ({
-                    label: `Carrera ${c.careerId}`,
-                    value: { v: c.careerId, l: `Carrera ${c.careerId}` }
+                const lista = careers.map(c => ({
+                    label: `${c.careerName}`,
+                    value: { v: c.careerId, l: `${c.careerName}` }
                 }));
                 setCarrerasList(lista);
             } else {
@@ -79,11 +80,12 @@ function SeleccionCarrera() {
 
                     <Autocomplete
                         disablePortal
+                        disableClearable
                         options={carreras}
                         className={'selectcarreras'}
                         freeSolo
                         onChange={(event, newValue) => (newValue) ? handleSelect(newValue.value) : handleSelect({v:"", l:""})}
-                        renderInput={(params) => <TextField {...params} label="Carreras"/>}
+                        renderInput={(params) => <TextField {...params} label="Carreras" />}
                     />
                     <Box
                         sx={{

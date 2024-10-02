@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Box, Typography, TextField, Checkbox } from '@mui/material';
 import SelectMultipleAR from './SelectMultipleAR';
 
-const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, set_setearcant_aprobadas }) => {
+const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handleSelectionCareer, listaMaterias, listaMateriasParaSelect, handleCheckbox, deshabilitarCampoNumerico, setCantidadAprobadas,
+    setIdsMateriasMP, setCantidadAprobadasMP, setIdsMateriasMNP, setCantidadAprobadasMNP, checkboxDisabled
+}) => {
 
     const [listamateriasseleccionadas, setListamateirasseleccionadas] = useState([])
 
     useEffect(() => {
-
         const lista = listaMaterias.map(m => ({
             value: m.id_materia,
             label: `Materia ${m.id_materia}`
@@ -23,97 +23,56 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
         setListamateirasseleccionadas(listaMateriasParaSelect.length > 0 ? listaMateriasParaSelect : listaSinDuplicados);
     }, [listaMaterias])
 
-    //const [listaCarrerasElejidas, setListaCarrerasElejidas] = useState([]);
-    ////LA LISTA PARA LAS MATERIAS
-    //const [listaMateriasParaSelect, setListaMateriasParaSelect] = useState([]);
-
-    //const [renderMaterias, setRenderMaterias] = useState(listaMaterias);
-
-    //// PARA CARGAR INICIALMENTE LA LISTA DE MATERIAS
-    //useEffect(() => {
-    //    const materiasFiltradas = renderMaterias.filter(materia =>
-    //        listaCarrerasElejidas.length > 0 ? listaCarrerasElejidas.includes(materia.id_carrera) : renderMaterias
-    //    );
-    //    const listaFiltrada = materiasFiltradas.map(m => ({
-    //        value: m.id_materia,
-    //        label: `Materia ${m.id_materia}`
-    //    }));
-    //    const eliminarDuplicados = (arr) => {
-    //        const map = new Map();
-    //        return arr.filter(item => !map.has(item.value) && map.set(item.value, true));
-    //    };
-    //    const listaSinDuplicados = eliminarDuplicados(listaFiltrada);
-
-    //    setListaMateriasParaSelect(listaSinDuplicados.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
-    //}, []);
-
-    ////PARA FILTRAR LA LISTA DE MATERIAS CON LAS CARRERAS ELEGIDAS
-    //useEffect(() => {
-    //    if (condicion !== "MATERIAS_PENDIENTES" && condicion !== "MATERIAS_NO_PENDIENTES")
-    //    {
-    //        if (listaCarrerasElejidas.length > 0) {
-    //            const materiasFiltradas = renderMaterias.filter(materia =>
-    //                listaCarrerasElejidas.includes(materia.id_carrera)
-    //            );
-    //            const listaFiltrada = materiasFiltradas.map(m => ({
-    //                value: m.id_materia,
-    //                label: `Materia ${m.id_materia}`
-    //            }));
-    //            console.log("cantidad de materias: ",listaFiltrada.length)
-    //            setListaMateriasParaSelect(listaFiltrada);
-    //        } else {
-    //            setListaMateriasParaSelect([]);
-    //        }
-    //    }
-
-    //}, [listaCarrerasElejidas, listaMaterias]);
-
-    const [cantidad, setCantidad] = useState(objeto != undefined ? objeto.config_condicion.cant : '');
-    //const [cantidadAprobadas, setCantidadAprobadas] = useState(objeto != undefined ? objeto.config_condicion.cant : '');
-    //const [cantidadmaterias, setcantidadMaterias] = useState(objeto != undefined ?  objeto.config_condicion.cant  : '');
-    //useEffect(() => {
-    //    setCantidadAprobadas(objeto.config_condicion.cant || '');
-    //}, [objeto.config_condicion.cant]);
+ 
+    //CANTIDAD_APROBADAS
+    const [cantidad, setCantidad] = useState((condicion == "CANT_APROBADAS" && objeto.config_condicion.cantidad) ? objeto.config_condicion.cantidad : '');
+    //CANTIDAD_APROBADAS DE MATERIAS_PENDIENTES
+    const [cantidadMP, setCantidadMP] = useState((condicion == "MATERIAS_PENDIENTES" && objeto.config_condicion.cantidad) ? objeto.config_condicion.cantidad : '');
+    //CANTIDAD_APROBADAS DE MATERIAS_NO_PENDIENTES
+    const [cantidadMNP, setCantidadMNP] = useState((condicion == "MATERIAS_NO_PENDIENTES" && objeto.config_condicion.cantidad) ? objeto.config_condicion.cantidad : '');
 
 
-    const setear_cantidad = (val) => {
-        setCantidad(val);
-        //set_setearcant_aprobadas(val); 
-    };
 
-    //const [lascarreras, setlascarreas] = useState(objeto.config_condicion.id_carreras)
-
-    
-
-    ////PARA CARGAR LA LISTA DE CARRERAS ELEGIDAS
+    ////SIN USAR
     const carrerasseleccionadas = (carreras) => {
         handeSelectionCareer(carreras);
         console.log(carreras)
     };
-    const [isChecked, setIsChecked] = useState(objeto?.config_condicion.checked || false);
-    useEffect(() => {
-        setIsChecked(objeto?.config_condicion.condicion_en_carrera == "incluye");
-    }, [objeto]);
 
+    const [isChecked, setIsChecked] = useState((objeto.config_condicion.en_carrera == "incluye"));
+
+    //SIN USAR
     const handleCheckboxChange = (event) => {
         const checked = event.target.checked;
         setIsChecked(checked);
         handleCheckbox(checked);
     };
 
-    const handleMateriasPendientesChange = (materias) => {
-        //setMateriasSeleccionadas(materias);
+    const handleCarrerasEnCarreraChange = (idCarreras) => {
+        //Teniamos un bug donde aveces idCarreras era una lista de objetos y no una de numeros, la linea de abajo soluciona ese bug
+        const lista = (idCarreras && typeof idCarreras[0] == 'number') ? idCarreras : idCarreras.map(carrera => carrera.value)
+        handleSelectionCareer(lista)
+    }
+
+    const handleMateriasPendientesChange = (idMaterias) => {
+        //Teniamos un bug donde aveces idCarreras era una lista de objetos y no una de numeros, la linea de abajo soluciona ese bug
+        const lista = (idMaterias && typeof idMaterias[0] == 'number') ? idMaterias : idMaterias.map(materia => materia.value)
+        setIdsMateriasMP(lista)
     };
 
-    const handleMateriasNoPendientesChange = (materias) => {
-        //setMateriasSeleccionadas(materias);
+    const handleMateriasNoPendientesChange = (idMaterias) => {
+        //Teniamos un bug donde aveces idCarreras era una lista de objetos y no una de numeros, la linea de abajo soluciona ese bug
+        const lista = (idMaterias && typeof idMaterias[0] == 'number') ? idMaterias : idMaterias.map(materia => materia.value)
+        setIdsMateriasMNP(lista)
+
     };
 
     return (
         <Box sx={{
             display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
-            }, }}>
+            },
+        }}>
             {condicion === "CANT_APROBADAS" && (
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -125,7 +84,7 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" value={cantidad}  variant="outlined" onChange={(event) => setear_cantidad(event.target.value)} />
+                            <TextField type="number" value={cantidad} variant="outlined" onChange={(event) => { setCantidadAprobadas(event.target.value), setCantidad(event.target.value) }} />
                         </Box>
                     </Box>
                 </Box>
@@ -137,11 +96,8 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
                         </Box>
                         <Box sx={{ width: '60%', textAlign: 'center' }}>
-                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">{condicion === "EN_CARRERA" ? "Carreras" : "Materias"}</Typography>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Carreras</Typography>
                         </Box>
-                        {/*<Box sx={{ width: '10%', textAlign: 'center' }}>*/}
-                        {/*    <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>*/}
-                        {/*</Box>*/}
                         <Box sx={{ width: '10%', textAlign: 'center' }}>
                             <Typography sx={{ fontWeight: 'bold' }} variant="body2">Va en carrera</Typography>
                         </Box>
@@ -151,18 +107,15 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listaCarreras} seleccionadas={objeto?.config_condicion.id_carreras}  onSelect={carrerasseleccionadas} placeholder='Seleccione Carreras'></SelectMultipleAR>
+                            <SelectMultipleAR options={listaCarreras} seleccionadas={objeto.config_condicion.id_carreras} onSelect={handleCarrerasEnCarreraChange} placeholder='Seleccione Carreras'></SelectMultipleAR>
                         </Box>
-                        {/*<Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
-                        {/*    <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />*/}
-                        {/*</Box>*/}
                         <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Checkbox checked={isChecked } onChange={(event) => { handleCheckbox(event.target.checked) }} />
+                            <Checkbox disabled={checkboxDisabled} checked={isChecked} onChange={(event) => { setIsChecked(event.target.checked), handleCheckbox(event.target.checked) }} />
                         </Box>
                     </Box>
                 </Box>
             )}
-            {(condicion === "MATERIAS_PENDIENTES" || condicion === "MATERIAS_NO_PENDIENTES") && (
+            {(condicion === "MATERIAS_PENDIENTES") && (
 
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
@@ -181,42 +134,42 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handeSelectionCare
                             <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
                         </Box>
                         <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <SelectMultipleAR options={listamateriasseleccionadas} seleccionadas={objeto?.config_condicion.id_materias} onSelect={handleMateriasPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
+                            <SelectMultipleAR options={listamateriasseleccionadas} seleccionadas={objeto.config_condicion.id_materias} onSelect={(value) => handleMateriasPendientesChange(value)} placeholder='Seleccione Materias'></SelectMultipleAR>
                         </Box>
                         <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <TextField type="number" value={cantidad} variant="outlined" onChange={(event) => setear_cantidad(event.target.value)} sx={{ width: '100%' }} />
-                            {/*<TextField type="number" value={cantidadmaterias} variant="outlined" sx={{ width: '100%' }}  />*/}
+                            <TextField type="number" value={cantidadMP} variant="outlined" onChange={(event) => {setCantidadAprobadasMP(event.target.value), setCantidadMP(event.target.value)}} sx={{ width: '100%' }} />
                         </Box>
                     </Box>
                 </Box>
             )}
-            {/*condicion === "MATERIAS_NO_PENDIENTES" && (*/}
+            {(condicion === "MATERIAS_NO_PENDIENTES") && (
 
-            {/*    <Box>*/}
-            {/*        <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>*/}
-            {/*            <Box sx={{ width: '25%', textAlign: 'center' }}>*/}
-            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>*/}
-            {/*            </Box>*/}
-            {/*            <Box sx={{ width: '60%', textAlign: 'center' }}>*/}
-            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>*/}
-            {/*            </Box>*/}
-            {/*            <Box sx={{ width: '10%', textAlign: 'center' }}>*/}
-            {/*                <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>*/}
-            {/*            </Box>*/}
-            {/*        </Box>*/}
-            {/*        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>*/}
-            {/*            <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
-            {/*                <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>*/}
-            {/*            </Box>*/}
-            {/*                    <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
-            {/*                        <SelectMultipleAR options={listaMateriasParaSelect} onSelect={handleMateriasNoPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>*/}
-            {/*            </Box>*/}
-            {/*            <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>*/}
-            {/*                <TextField type="number" variant="outlined" sx={{ width: '100%' }} disabled={deshabilitarCampoNumerico} />*/}
-            {/*            </Box>*/}
-            {/*        </Box>*/}
-            {/*    </Box>*/}
-            {/*)}*/}
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Materias</Typography>
+                        </Box>
+                        <Box sx={{ width: '10%', textAlign: 'center' }}>
+                            <Typography sx={{ fontWeight: 'bold' }} variant="body2">Cantidad</Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
+                        <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{condicion}</Typography>
+                        </Box>
+                        <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <SelectMultipleAR options={listamateriasseleccionadas} seleccionadas={objeto?.config_condicion.id_materias} onSelect={handleMateriasNoPendientesChange} placeholder='Seleccione Materias'></SelectMultipleAR>
+                        </Box>
+                        <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <TextField type="number" value={cantidadMNP} variant="outlined" onChange={(event) => {setCantidadAprobadasMNP(event.target.value), setCantidadMNP(event.target.value)}} sx={{ width: '100%' }} />
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+
         </Box>
     );
 };
