@@ -3,10 +3,8 @@ import { TextField, Button, Box, Autocomplete } from '@mui/material';
 import TarjetaCondicion from './TarjetaCondicion';
 import Stack from '@mui/material/Stack';
 import '../styles/SelectMultipleAR.css';
-import { useNavigate } from 'react-router-dom';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import SaveIcon from '@mui/icons-material/Save';
-import { cond, unset } from 'lodash';
 import { getAllCareer } from '../services/CareerService';
 import { getAllSubjectData } from '../services/SubjectDataService';
 
@@ -91,22 +89,13 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
     const handleClaveChange = (e) => 
         {
             setClave(e.target.value);
-            if(e.target.value === ""){
-                setSePuedeGuardarClave(false)
-            }
-            else{
-                setSePuedeGuardarClave(true)
-            }
+            setSePuedeGuardarClave((e.target.value !== ""))
         }
+
     const handleTextoChange = (e) => {
         const lines = e.target.value.split('\n'); // Actualiza el texto como un array
         setTexto(lines);
-        if(e.target.value === ""){
-            setSePuedeGuardarTexto(false)
-        }
-        else{
-            setSePuedeGuardarTexto(true)
-        }
+        setSePuedeGuardarTexto((e.target.value !== ""))
     };
 
 
@@ -197,12 +186,6 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
         setListaCarrerasElejidas(carreras);
         setIdsCarrerasEC(carreras);
     };
-
-
-
-
-    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
     const handleSave = (e) => {
         e.preventDefault();
