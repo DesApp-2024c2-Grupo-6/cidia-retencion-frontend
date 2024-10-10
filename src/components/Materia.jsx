@@ -111,6 +111,11 @@ function Materia({data, setDeleted, handleSaveEdit}) {
               disabled
             />
             <TextField
+              label="Nombre Completo"
+              value={formData.subjectName}
+              disabled
+            />
+            <TextField
               label="Año"
               name="anio"
               value={formData.anio}
