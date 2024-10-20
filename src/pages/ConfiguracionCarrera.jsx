@@ -117,6 +117,8 @@ function ConfiguracionCarrera() {
         navigate('/configuracion');
     }
 
+
+
     return (
         <>
             <Box sx={{
@@ -145,6 +147,7 @@ function ConfiguracionCarrera() {
                             array={carrera.unahurSubjects ? carrera.unahurSubjects : []}
                             handleUpdateYear={(newValue) => handleUpdateYear(0,newValue)}
                             handleUpdateCampo={(newValue) => handleUpdateCampo(0,newValue)}
+                            
                             />
                             
                         <MateriasEspeciales 
@@ -152,7 +155,9 @@ function ConfiguracionCarrera() {
                             title={"NIVELES INGLES"} 
                             array={carrera.englishLevels ? carrera.englishLevels : []}
                             handleUpdateYear={(newValue) => handleUpdateYear(1,newValue)}
-                            handleUpdateCampo={(newValue) => handleUpdateCampo(1,newValue)}/> 
+                            handleUpdateCampo={(newValue) => handleUpdateCampo(1,newValue)}
+                            
+                            /> 
                     </Box>
                     <PanelConfiguradorGral 
                         isEdit={isEdit}

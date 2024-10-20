@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import Materia from '../components/Materia';
 import { getSubjectsByCareer, getSubjectsNotRegisteredByCareer, updateSubject, createSubject } from '../services/SubjectDataService';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import { deleteSubject } from '../services/SubjectDataService';
+import ConfirmarBorrado from '../components/ConfirmarBorrado';
 
 
 
@@ -84,6 +86,29 @@ function ConfiguracionMaterias() {
   const handleClicBack = () => {
     navigate('/configuracion/carrera');
   }
+
+  const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+  const [materiaABorrar, setMateriaABorrar] = React.useState({});
+
+  const handleBorrado = (materia) =>{
+      setOpenBorrado(true);
+      setMateriaABorrar(materia);
+  }
+
+  const handleCloseBorrado = () => {
+      setOpenBorrado(false);
+      setMateriaABorrar({});
+  }
+  const handleOnClickDelete = async (data) => {
+    handleCloseBorrado()
+    const resSubject = await deleteSubject(data);
+    if (resSubject.status === 200) {
+        setDeleted();
+      console.log("OK")
+    } else {
+      console.log("No OK")
+    } 
+  }
   return (
     <Box
       sx={{
@@ -97,7 +122,7 @@ function ConfiguracionMaterias() {
         overflow: 'hidden',
       }}
     >
-
+      <ConfirmarBorrado openBorrado = {openBorrado} setDeleted={setDeleted} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {handleOnClickDelete} elementoAEliminar = {materiaABorrar} textoBorrado = "¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
       <Box
         sx={{
           display: 'flex',
@@ -135,7 +160,7 @@ function ConfiguracionMaterias() {
       </Box>
 
       {!estaAbierto && subjects?.map((item) => (
-        <Materia key={item.id_materia} setDeleted={() => setDeleted(!deleted)} data={item} handleSaveEdit={handleSaveEdit} />
+        <Materia key={item.id_materia}  data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
       ))}
 
       <Button

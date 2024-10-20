@@ -27,6 +27,7 @@ import SelectComponent from '../components/SelectR';
 import { getAllSuggestionCondition } from '../services/RegistrationSuggestionConditionService';
 import { getAllSuggestionConditionUse, createConditionUse, deleteConditionUse } from '../services/RegistrationSuggestionConditionUseService';
 import { getAllSubjectData } from '../services/SubjectDataService';
+import ConfirmarBorrado from '../components/ConfirmarBorrado';
 
 
 function createData(key, id, anio, materia, codigo_condicion, config_condicion, obj) {
@@ -67,8 +68,8 @@ function ConfiguracionCondicionCarrera() {
     const [condicionesList, setCondicionesList] = useState([]);
     const [actualizarTablaCondiciones, setActualizarTablaCondiciones] = useState(false);
     const [sePuedeGuardar, setSePuedeGuardar] = useState(true);
-
-    //Traer todas las condiciones que ya estan asociada a una materia ? de la API
+    
+       //Traer todas las condiciones que ya estan asociada a una materia ? de la API
     useEffect(() => {
         setMessage({});
         const obtenerCondicionesSugestionUse = async () => {
@@ -370,7 +371,7 @@ function ConfiguracionCondicionCarrera() {
 
 
     const eliminarCondicion = async (cond) => {
-
+        console.log(cond)
         let condicionEliminar = {
             id_carrera: cond.obj.id_carrera,
             codigo_condicion: cond.obj.codigo_condicion,
@@ -402,7 +403,7 @@ function ConfiguracionCondicionCarrera() {
         }
 
         const deletecondicion = await deleteConditionUse(condicionEliminar);
-
+        handleCloseBorrado();
         if (deletecondicion.status === 200) {
             setActualizarTablaCondiciones(!actualizarTablaCondiciones);
             setMessage({
@@ -437,8 +438,19 @@ function ConfiguracionCondicionCarrera() {
 
     }
 
+    const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+    const [condicionABorrar, setCondicionABorrar] = React.useState({});
+
+    const handleBorrado = (cond) =>{
+        setOpenBorrado(true);
+        setCondicionABorrar(cond);
+    }
+
+    const handleCloseBorrado = () => {
+        setOpenBorrado(false);
+        setCondicionABorrar({});
+    }
     const handleClose = () => setOpen(false);
-    
 
     return (
 
@@ -461,9 +473,10 @@ function ConfiguracionCondicionCarrera() {
                             marginBottom: '50px'
                         }}>
                         <Box>
+                            <ConfirmarBorrado openBorrado = {openBorrado} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {eliminarCondicion} elementoAEliminar = {condicionABorrar} textoBorrado = "¿Está seguro de que desea eliminar esta condición?"     ></ConfirmarBorrado>
                             <Modal
                                 open={open}
-                                onClose={handleClose}
+                                onClose={() => handleClose}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"
                             >
@@ -778,7 +791,7 @@ function ConfiguracionCondicionCarrera() {
                                                             {/*    <EditIcon />*/}
                                                             {/*</IconButton>*/}
                                                             <Tooltip title="Eliminar condición.">
-                                                                <IconButton aria-label="eliminar" onClick={() => eliminarCondicion(row)} sx={{ width: '40px', color: 'red' }}>
+                                                                <IconButton aria-label="eliminar" onClick={() => handleBorrado(row)} sx={{ width: '40px', color: 'red' }}>
                                                                     <DeleteIcon />
                                                                 </IconButton>
                                                             </Tooltip>
