@@ -31,7 +31,7 @@ function ConfiguracionMaterias() {
     specialSubjectName: "",
   }
   const [nuevaMateria, setNuevaMateria] = useState(MATERIA_VACIA)
-  const sePuedeGuardar = (nuevaMateria.id_materia && nuevaMateria.anio)
+  const sePuedeGuardar = (nuevaMateria.id_materia && (nuevaMateria.anio >= 1 && nuevaMateria.anio <= 7))
 
   const handleNuevaMateriaChange = (event) => {
     const { name, value } = event.target;
@@ -58,11 +58,14 @@ function ConfiguracionMaterias() {
     getSubjects(IdCarrera)
   }, [save, deleted])
 
+
   useEffect(() => {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
       if (materias.status === 200) {
-        setMateriasSinRegistrar(materias.data.materiasSinRegistrar);
+        const materias = materias.data.materiasSinRegistrar
+        setMateriasSinRegistrar(materias);
+
       }
     }
     getMateriasSinRegistrar(IdCarrera)
@@ -71,7 +74,6 @@ function ConfiguracionMaterias() {
 
   const handleSaveCreate = async (materiaACrear) => {
     const materiaCreada = await createSubject(materiaACrear);
-    console.log(materiaCreada)
     setEstaAbierto(false)
     setNuevaMateria(MATERIA_VACIA)
     setSave(!save);
@@ -148,7 +150,7 @@ function ConfiguracionMaterias() {
       {/*Modal para agregar materia*/}
       <Modal
         open={estaAbierto}
-        onClose={() => { setEstaAbierto(false) }}
+        onClose={handleModalClose}
       >
         <Box sx={{
           position: 'absolute',

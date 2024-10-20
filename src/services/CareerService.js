@@ -2,6 +2,8 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost:3001/api'
+const guaraniURL = 'http://localhost:4000'
+
 
 /**
  * Obtener la configuracion de una carrera
@@ -32,6 +34,16 @@ export const updateOneCareer = async (data) => {
 export const getAllCareer = async () => {
     try {
         const response = await axios.get(`${baseURL}/carreras`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+//obtener todas las carreras de la api de guarani
+export const getAllCareerGuarani = async () => {
+    try {
+        const response = await axios.get(`${guaraniURL}/carreras`);
         return response;
     } catch (error) {
         return error;

@@ -14,4 +14,4 @@ const generalAcademicData = [ {
     englishLevelIds: [31, 44]
 } ];
 
-export default listadoGeneralAcademicData;
+export default generalAcademicData;
