@@ -3,6 +3,7 @@ import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import EdicionParrafo from '../components/EdicionParrafo';
 import { Button, Box, Typography, Paper, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
 const ParagraphList = () => {
@@ -121,6 +122,7 @@ const ParagraphList = () => {
 
   const eliminarParrafo = async (key) => {
     try {
+      handleCloseBorrado()
       const response = await deleteOneParrafo(key);
       console.log('Parrafo eliminado:', response);
 
@@ -151,9 +153,22 @@ const ParagraphList = () => {
 
     setParrafos(updatedParrafos);
   };
+  const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+  const [parrafoABorrar, setParrafoABorrar] = React.useState({});
+
+  const handleBorrado = (parrafo) =>{
+      setOpenBorrado(true);
+      setParrafoABorrar(parrafo);
+  }
+
+  const handleCloseBorrado = () => {
+      setOpenBorrado(false);
+      setParrafoABorrar({});
+  }
 
   return (
     <Box
+      
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -164,6 +179,7 @@ const ParagraphList = () => {
         padding: '20px',
       }}
     >
+      <ConfirmarBorrado openBorrado = {openBorrado} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {eliminarParrafo} elementoAEliminar = {parrafoABorrar} textoBorrado = "¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
       <Typography variant="h4" component="h1" gutterBottom>
         Plantilla de E-mail
       </Typography>
@@ -189,7 +205,7 @@ const ParagraphList = () => {
                   text={paragraph.text}
                   clave={paragraph.key}
                   onEditClick={() => setEditIndex(index)}
-                  onDelete={() => eliminarParrafo(paragraph.key)}
+                  onDelete={() => handleBorrado(paragraph.key)}
                 />
               </Paper>
             </Grid>

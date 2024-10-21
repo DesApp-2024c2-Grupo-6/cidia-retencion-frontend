@@ -4,9 +4,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import { deleteSubject } from '../services/SubjectDataService';
 
-function Materia({data, setDeleted, handleSaveEdit}) {
+
+function Materia({data, handleSaveEdit, handleBorrado}) {
 
     const style = {
         position: 'absolute',
@@ -45,16 +45,8 @@ function Materia({data, setDeleted, handleSaveEdit}) {
         handleSaveEdit(formData);
         handleClose();
       };
-
-    const handleOnClickDelete = async (data) => {
-        const resSubject = await deleteSubject(data);
-        if (resSubject.status === 200) {
-            setDeleted();
-          console.log("OK")
-        } else {
-          console.log("No OK")
-        } 
-      }
+      
+    
 
     return(
         <Box
@@ -76,7 +68,7 @@ function Materia({data, setDeleted, handleSaveEdit}) {
         <Box sx={{ flex: 1.5, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
             <IconButton
                 sx={{ width: '25px' }}
-                onClick={() => handleOnClickDelete(data)}> 
+                onClick={() => handleBorrado(data)}> 
                 <DeleteIcon sx={{ color: 'red', fontSize: '18px'}} />
             </IconButton>
             <IconButton

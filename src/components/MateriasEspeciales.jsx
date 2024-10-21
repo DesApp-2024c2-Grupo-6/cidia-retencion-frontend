@@ -3,6 +3,8 @@ import DeleteIcon  from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import '../styles/MateriasCross.css';
 import { useState, useEffect } from "react";
+import React from "react";
+import ConfirmarBorrado from "./ConfirmarBorrado";
 
 
 export default function MateriasEspeciales (
@@ -17,6 +19,7 @@ export default function MateriasEspeciales (
         const updateArray = renderSubjects.filter((_,i) => i != index);
         setRenderSubjects(updateArray) //actualizo estado local sino no cambia
         handleUpdateCampo(updateArray) //actualizo estado comp padre.
+        handleCloseBorrado()
         if (renderSubjects ==[]){
             
         }
@@ -24,6 +27,18 @@ export default function MateriasEspeciales (
     const handleOnAddRow = () => {
         const newRow = {year: "", campo: ""};
         setRenderSubjects([...renderSubjects, newRow]);
+    }
+    const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+    const [materiaEspecialABorrar, setMateriaEspecialABorrar] = React.useState({});
+
+    const handleBorrado = (materia) =>{
+      setOpenBorrado(true);
+      setMateriaEspecialABorrar(materia);
+     }
+
+    const handleCloseBorrado = () => {
+        setOpenBorrado(false);
+        setMateriaEspecialABorrar({});
     }
 
     
@@ -46,6 +61,7 @@ export default function MateriasEspeciales (
 
     return(
         <Box className='card-materia'>
+            <ConfirmarBorrado openBorrado = {openBorrado} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {handleOnDeleteRow} elementoAEliminar = {materiaEspecialABorrar} textoBorrado = "¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
             <h5 className="card-materia-title">{title}</h5>
                 <div className="card-materia-item">
                     <FormLabel
@@ -112,7 +128,7 @@ export default function MateriasEspeciales (
                                 <IconButton
                                     disabled={!isEdit}
                                     sx={{ width: '25px' }}
-                                    onClick={() => handleOnDeleteRow(pos)}> 
+                                    onClick={() => handleBorrado(pos)}> 
                                     <DeleteIcon
                                         fontSize="small"
                                         sx={{ color: isEdit ? 'red' : 'grey'}} />
