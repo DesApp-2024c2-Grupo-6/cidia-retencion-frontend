@@ -51,7 +51,7 @@ function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
     
 
     const handleAgregarMateriaComun = () => {
-        const idNoDisponibles = materiasComunes.map(materia => materia.id);
+        const idNoDisponibles = materiasComunes.map(materia => materia.idLista);
         const generarIDRandom = () => {
             const idGenerado =  Math.floor(Math.random() * 10);
             return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom() : idGenerado

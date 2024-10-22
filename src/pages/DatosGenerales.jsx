@@ -15,15 +15,15 @@ import MateriasFake from '../components/DatosGenerales/MateriasFake';
 import ParesDeCarreras from '../components/DatosGenerales/ParesDeCarreras';
 
 //Datos de prueba
-import {getAllSubjectData} from '../services/SubjectDataService'
+import {getAllSubjectData,getAllSubjectsGuarani} from '../services/SubjectDataService'
 import listadoCarrerasGuarani from '../services/listadoCarrerasGuarani'
 import listadoGeneralAcademicData from '../services/listadoGeneralAcademicData'
 import MateriasComunes from '../components/DatosGenerales/MateriasComunes';
-const listaMaterias = await getAllSubjectData()
-const listaFiltrada = listaMaterias.data.allSubjects.filter((materia) => {return materia.subjectName != undefined})
+const materiasSiu = await getAllSubjectsGuarani()
+const listaFiltrada = materiasSiu.data.materiasSiu.filter((materia) => {return materia.name != undefined})
 const materiasSinRepetidos = listaFiltrada.filter((value, index, self) =>
     index === self.findIndex((t) => (
-      t.id_materia === value.id_materia
+      t.id === value.id
     ))
   )
 
@@ -34,13 +34,12 @@ function DatosGenerales() {
     const materiasComunesConNombres = listadoGeneralAcademicData[0].specialSubjects.map(subject => ({id: subject.id, name:subject.name, realName:"Nombre de la materia"}))
 
     const [datosGenerales, setDatosGenerales] = useState({...listadoGeneralAcademicData[0], careerPairs: paresCarrerasConNombres, specialSubjects:materiasComunesConNombres})
-    
     const [carrerasGuarani, setCarrerasGuarani] = useState(listadoCarrerasGuarani)
 
     //Funciones para editar las propiedades de generalAcademicData
     const editarParesCarrerasDatosGenerales = (nuevosPares) => setDatosGenerales({...datosGenerales, careerPairs: nuevosPares})
     const editarMateriasComunesDatosGenerales = (nuevasMaterias) => setDatosGenerales({...datosGenerales, specialSubjects: nuevasMaterias})
-    
+    const [materiasInglesSeleccionadas, setMateriasSeleccionadas] = React.useState([])
     /*
     useEffect(() => {
 
@@ -57,9 +56,11 @@ function DatosGenerales() {
 
             <NivelesIngles
             materias = {materiasSinRepetidos}
+            setMaterias = {setMateriasSeleccionadas}
             />
             <MateriasFake
             materias = {materiasSinRepetidos}
+            setMaterias = {setMateriasSeleccionadas}
             />
 
             

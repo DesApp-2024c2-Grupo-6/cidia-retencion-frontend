@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Button, Box, IconButton, Typography, Autocomplete, TextField, Input } from '@mui/material';
 
 
-const NivelesIngles = ({materias}) => {
+const NivelesIngles = ({materias,setMaterias}) => {
 
-    const [materiasInglesSeleccionadas, setMateriasSeleccionadas] = React.useState([])
+    
 
 
     const handleOnChange = (event, listaDeMateriasSeleccionadas) =>{
-        setMateriasSeleccionadas(listaDeMateriasSeleccionadas)
+        setMaterias(listaDeMateriasSeleccionadas)
     }
 
   
@@ -48,13 +48,14 @@ const NivelesIngles = ({materias}) => {
 
             }}>
                 <Stack  id = "smar" spacing={3}>
-                 <Autocomplete
+                <Autocomplete
                     multiple
                     id="select-ingles"
                     options={materias}
-                    getOptionLabel={(option) => option.subjectName}
+                    getOptionLabel={(option) => option.name + " #" + option.id.toString()}
                     onChange={handleOnChange}
-                    renderInput={(params) => <TextField {...params} label="Niveles de Inglés" variant="outlined" placeholder="Seleccione Materias" />}
+                    renderInput={(params) => <TextField {...params} label="Niveles Inglés" variant="outlined" placeholder="Seleccione Materias" />}
+
                 /> 
                 </Stack>
                 

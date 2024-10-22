@@ -15,6 +15,15 @@ export const getAllSubjectData = async () => {
     }
 }
 
+export const getAllSubjectsGuarani = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/materias/siu`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 export const getSubjectsByCareer = async (id_carrera) => {
     try {
         const response = await axios.get(`${baseURL}/materias/${id_carrera}`);
