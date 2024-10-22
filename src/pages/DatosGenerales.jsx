@@ -7,21 +7,26 @@ import SaveIcon from '@mui/icons-material/Save';
 //Estilos
 import '../styles/ConfiguracionCarreras.css';
 import { useNavigate } from 'react-router-dom';
+import NivelesIngles from '../components/DatosGenerales/NivelesDeIngles';
+import MateriasFake from '../components/DatosGenerales/MateriasFake';
+
 
 //Componentes
 import ParesDeCarreras from '../components/DatosGenerales/ParesDeCarreras';
 
 //Datos de prueba
+import {getAllSubjectData} from '../services/SubjectDataService'
 import listadoCarrerasGuarani from '../services/listadoCarrerasGuarani'
 import listadoGeneralAcademicData from '../services/listadoGeneralAcademicData'
 import MateriasComunes from '../components/DatosGenerales/MateriasComunes';
-
+const listaMaterias = await getAllSubjectData()
 
 function DatosGenerales() {
 
     //Esto se va a setear con un fetch cuando este lista la api de generalAcademicData
     const paresCarrerasConNombres = listadoGeneralAcademicData[0].careerPairs.map(par => ({shortCareer:{nombre: "Nombre carrera corta", id:par.shortCareer.id}, longCareer:{nombre: "Nombre carrera larga", id:par.longCareer.id}}))
     const materiasComunesConNombres = listadoGeneralAcademicData[0].specialSubjects.map(subject => ({id: subject.id, name:subject.name, realName:"Nombre de la materia"}))
+
     const [datosGenerales, setDatosGenerales] = useState({...listadoGeneralAcademicData[0], careerPairs: paresCarrerasConNombres, specialSubjects:materiasComunesConNombres})
     
     const [carrerasGuarani, setCarrerasGuarani] = useState(listadoCarrerasGuarani)
@@ -43,11 +48,22 @@ function DatosGenerales() {
             editarDatosGenerales = {editarParesCarrerasDatosGenerales}
             carrerasGuaraniData={carrerasGuarani}
             />
+
+            <NivelesIngles
+            materias = {listaMaterias.data.allSubjects}
+            />
+            <MateriasFake
+            materias = {listaMaterias.data.allSubjects}
+            />
+
+            
             <MateriasComunes
             materiasComunesData={datosGenerales.specialSubjects}
             editarDatosGenerales = {editarMateriasComunesDatosGenerales}
             carrerasGuaraniData={carrerasGuarani}
             />
+            
+
         </>
     );
 }
