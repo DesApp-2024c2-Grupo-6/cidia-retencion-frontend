@@ -20,6 +20,12 @@ import listadoCarrerasGuarani from '../services/listadoCarrerasGuarani'
 import listadoGeneralAcademicData from '../services/listadoGeneralAcademicData'
 import MateriasComunes from '../components/DatosGenerales/MateriasComunes';
 const listaMaterias = await getAllSubjectData()
+const listaFiltrada = listaMaterias.data.allSubjects.filter((materia) => {return materia.subjectName != undefined})
+const materiasSinRepetidos = listaFiltrada.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+      t.id_materia === value.id_materia
+    ))
+  )
 
 function DatosGenerales() {
 
@@ -50,10 +56,10 @@ function DatosGenerales() {
             />
 
             <NivelesIngles
-            materias = {listaMaterias.data.allSubjects}
+            materias = {materiasSinRepetidos}
             />
             <MateriasFake
-            materias = {listaMaterias.data.allSubjects}
+            materias = {materiasSinRepetidos}
             />
 
             

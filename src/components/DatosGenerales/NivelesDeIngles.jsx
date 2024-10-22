@@ -55,11 +55,7 @@ const NivelesIngles = ({materias}) => {
                     getOptionLabel={(option) => option.subjectName}
                     onChange={handleOnChange}
                     renderInput={(params) => <TextField {...params} label="Niveles de Inglés" variant="outlined" placeholder="Seleccione Materias" />}
-
                 /> 
-                
-                   
-                
                 </Stack>
                 
 
