@@ -13,7 +13,7 @@ import { getAllCareerGuarani } from '../../services/CareerService.js'
 //Datos de prueba
 
 
-function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGenerales}) {
+function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGenerales, guardarDatosGenerales, sePuedeGuardar}) {
     /*
         Retorna la seccion donde se gestionan los pares de carreras
         Parametros:
@@ -28,7 +28,6 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
 
     const [seAgregoParNuevo, setSeAgregoParNuevo] = useState(false)
-    const sePuedeGuardar = paresCarreras.every(par => par.shortCareer.id != "" && par.longCareer.id != "");
 
     const editarParDeCarreras = (nuevoPar) => {
         /*
@@ -38,6 +37,8 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         */
         const paresEditados = paresCarreras.map(par => (par.id == nuevoPar.id) ? nuevoPar : par)
         setParesCarreras(paresEditados)
+        editarDatosGenerales(paresEditados)
+
     }
 
     const borrarParDeCarreras = (idABorrar) => {
@@ -48,6 +49,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         */
         const paresRestantes = paresCarreras.filter(par => (par.id != idABorrar))
         setParesCarreras(paresRestantes)
+        editarDatosGenerales(paresRestantes)
     }
     
     const handleAgregarPar = () => {
@@ -61,11 +63,12 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
             const idGenerado =  Math.floor(Math.random() * 10);
             return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom() : idGenerado
         }
-        const CARRERA_VACIA =  {id: (generarIDRandom()), shortCareer: { id: "", nombre:"-" }, longCareer: { id: "", nombre:"-" }}
+        const CARRERA_VACIA =  {id: (generarIDRandom()), shortCareer: { id: "", nombre:"" }, longCareer: { id: "", nombre:"" }}
         setParesCarreras([CARRERA_VACIA,...paresCarreras])
-        setSeAgregoParNuevo(true)
+        editarDatosGenerales([CARRERA_VACIA,...paresCarreras])
     }
 
+    /*
     const handleSave = () => {
         const paresCarrerasFormateados = paresCarreras.map( par => 
             ({longCareer:{
@@ -77,8 +80,8 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                     nombre: par.shortCareer.nombre
                 }
             }))
-        editarDatosGenerales(paresCarrerasFormateados)
     }
+     */
 
     return (
         <>
@@ -108,7 +111,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                         onClick={handleAgregarPar}>
                         <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
                     </IconButton>
-                    <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={handleSave}>
+                    <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
                         Guardar
                     </Button>
                 </Box>

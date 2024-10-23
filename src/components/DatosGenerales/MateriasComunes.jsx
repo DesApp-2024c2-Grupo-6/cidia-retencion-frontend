@@ -14,20 +14,18 @@ import FilaMateriaComun from './FilaMateriaComun.jsx';
 //Datos de prueba
 
 
-function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
+function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosGenerales}) {
     /*
         Retorna la seccion donde se gestionan los pares de carreras
         Parametros:
             -paresCarrerasData - Lista de objetos - Lista que contiene los datos de las materias comunes. Propiedad specialSubject de generalAcademicData
-            -carrerasGuaraniData - Lista de objetos - Lista que las carreras de siu guarani.
+            -materiasGuaraniData - Lista de objetos - Lista que las materias de siu guarani.
     */
 
     materiasComunesData = materiasComunesData.map((materia, index) => ({idLista:index, ...materia}))
 
-    const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData)
+    const [materiasGuarani, setmateriasGuarani] = useState(materiasGuaraniData)
     const [materiasComunes, setMateriasComunes] = useState(materiasComunesData)
-
-    const [seAgregoMateriaNueva, setSeAgregoMateriaNueva] = useState(false)
 
     const editarMateriaComun = (nuevaMateria) => {
         /*
@@ -37,6 +35,7 @@ function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
         */
         const materiasEditadas = materiasComunes.map(materia => (materia.idLista == nuevaMateria.idLista) ? nuevaMateria : materia)
         setMateriasComunes(materiasEditadas)
+        editarDatosGenerales(materiasEditadas)
     }
 
     const borrarMateriaComun = (idListaABorrar) => {
@@ -47,6 +46,7 @@ function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
         */
         const materiasRestantes = materiasComunes.filter(materia => (materia.idLista != idListaABorrar))
         setMateriasComunes(materiasRestantes)
+        editarDatosGenerales(materiasRestantes)
     }
     
 
@@ -58,7 +58,7 @@ function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
         }
         const MATERIA_VACIA = {idLista:(generarIDRandom()), id: "", name: "", realName:"" }
         setMateriasComunes([MATERIA_VACIA, ...materiasComunes])
-        setSeAgregoMateriaNueva(true)
+        editarDatosGenerales([MATERIA_VACIA, ...materiasComunes])
     }
 
     return (
@@ -113,7 +113,7 @@ function MateriasComunes({materiasComunesData, carrerasGuaraniData}) {
                             <FilaMateriaComun
                                 key={materia.idLista} 
                                 materiaComunData={materia} 
-                                carrerasDisponibles={carrerasGuarani} 
+                                materiasDisponibles={materiasGuarani} 
                                 editarMateriaComun = {editarMateriaComun} 
                                 borrarMateriaComun = {borrarMateriaComun} 
                             />)

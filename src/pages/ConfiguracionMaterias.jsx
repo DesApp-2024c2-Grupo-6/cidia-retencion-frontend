@@ -20,7 +20,7 @@ function ConfiguracionMaterias() {
   const [deleted, setDeleted] = useState(false);
 
   //Modal para agregar una materia
-  const [materiasSinRegistrar, setMateriasSinRegistrar] = useState()
+  const [materiasSinRegistrar, setMateriasSinRegistrar] = useState([])
   const [estaAbierto, setEstaAbierto] = useState(false);
 
   const MATERIA_VACIA = {
@@ -51,6 +51,7 @@ function ConfiguracionMaterias() {
     const getSubjects = async (id_carrera) => {
       const subj = await getSubjectsByCareer(id_carrera);
       if (subj.status === 200) {
+        console.log(subj)
         setSubjects(subj.data.subjectsByCareer);
       }
 
@@ -62,11 +63,8 @@ function ConfiguracionMaterias() {
   useEffect(() => {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
-      if (materias.status === 200) {
-        const materias = materias.data.materiasSinRegistrar
-        setMateriasSinRegistrar(materias);
-
-      }
+      const materiasData = materias.data.materiasSinRegistrar
+      setMateriasSinRegistrar(materiasData);
     }
     getMateriasSinRegistrar(IdCarrera)
 

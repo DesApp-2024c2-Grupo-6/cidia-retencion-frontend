@@ -43,7 +43,8 @@ export const getAllCareer = async () => {
 //obtener todas las carreras de la api de guarani
 export const getAllCareerGuarani = async () => {
     try {
-        const response = await axios.get(`${guaraniURL}/carreras`);
+        //const response = await axios.get(`${guaraniURL}/carreras`);
+        const response = await axios.get(`${baseURL}/carreras/siu`);
         return response;
     } catch (error) {
         return error;

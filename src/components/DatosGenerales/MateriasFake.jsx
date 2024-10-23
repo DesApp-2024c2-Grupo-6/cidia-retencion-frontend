@@ -3,14 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Button,Stack, Box, IconButton, Typography, Autocomplete, TextField, Input } from '@mui/material';
 
 import { CloseRounded } from '@mui/icons-material';
-const MateriasFake = ({materias, setMaterias}) => {
+const MateriasFake = ({materias, editarDatosGenerales, materiasFakeData}) => {
 
-
-
-    const handleOnChange = (event, listaDeMateriasSeleccionadas) =>{
-        setMaterias(listaDeMateriasSeleccionadas)
-    }
-
+    const handleOnChange = (event, listaDeMateriasSeleccionadas) => editarDatosGenerales(listaDeMateriasSeleccionadas.map(materia => materia.id))
 
     return(
 
@@ -48,9 +43,10 @@ const MateriasFake = ({materias, setMaterias}) => {
                 <Stack  id = "smar" spacing={3}>
                  <Autocomplete
                     multiple
-                    id="select-ingles"
+                    id="select-fake"
                     options={materias}
-                    getOptionLabel={(option) => option.name + " ID: " + option.id.toString()}
+                    value={materias.filter(materia => materiasFakeData.includes(materia.id))}
+                    getOptionLabel={(option) => option.name + " #" + option.id.toString()}
                     onChange={handleOnChange}
                     renderInput={(params) => <TextField {...params} label="Materias Fake" variant="outlined" placeholder="Seleccione Materias" />}
 

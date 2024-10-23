@@ -7,12 +7,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function FilaMateriaComun({ materiaComunData, carrerasDisponibles, editarMateriaComun, borrarMateriaComun }) {
+function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateriaComun, borrarMateriaComun }) {
     /*
         Retorna una fila con una el nombre de una materia, sun nombre especial y sus acciones de editar y borrar
         Parametros:
             -materiaComunData - Objeto - EJ:  { idLista: 1, id: 4, name: "Nuevos Entornos", realName:"Nuevos entornos y lenguajes: la produccion de conocimiento digital" },
-            -carrerasDisponibles - Objeto - Lista de carreras traidas de la api de guarani
+            -materiasDisponibles - Objeto - Lista de materias traidas de la api de guarani
             -editarMateriaComun(nuevaMateria) - Funcion - Funcion que edita un objeto de la lista de materias comunes
             -borrarMateriaComun(idListaABorrar) - Funcion - Funcion que borra un objeto de la lista de materias comunes
         Retorna: JSX
@@ -36,7 +36,7 @@ function FilaMateriaComun({ materiaComunData, carrerasDisponibles, editarMateria
 
     }
 
-    const handleMateriaIdChange = (event, nuevaMateria) => setMateriaEditada({ ...materiaEditada, realName: nuevaMateria.nombre, id: nuevaMateria.id })
+    const handleMateriaIdChange = (event, nuevaMateria) => setMateriaEditada({ ...materiaEditada, realName: nuevaMateria.name, id: nuevaMateria.id })
     const handleMateriaNameChange = (event) => setMateriaEditada({ ...materiaEditada, name: event.target.value })
 
 
@@ -84,9 +84,9 @@ function FilaMateriaComun({ materiaComunData, carrerasDisponibles, editarMateria
                                 sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'bold', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
                                 disablePortal
                                 disableClearable
-                                options={carrerasDisponibles}
-                                value={({id: materiaEditada.id, nombre: materiaEditada.realName})}
-                                getOptionLabel={op => op.nombre}
+                                options={materiasDisponibles}
+                                value={({id: materiaEditada.id, name: materiaEditada.realName})}
+                                getOptionLabel={op => op.name}
                                 getOptionKey={op => op.id}
                                 onChange={handleMateriaIdChange}
                                 freeSolo

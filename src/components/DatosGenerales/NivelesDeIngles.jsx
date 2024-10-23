@@ -3,17 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Button, Box, IconButton, Typography, Autocomplete, TextField, Input } from '@mui/material';
 
 
-const NivelesIngles = ({materias,setMaterias}) => {
-
-    
+const NivelesIngles = ({materias, editarDatosGenerales, nivelesInglesData}) => {
 
 
-    const handleOnChange = (event, listaDeMateriasSeleccionadas) =>{
-        setMaterias(listaDeMateriasSeleccionadas)
-    }
+    const handleOnChange = (event, listaDeMateriasSeleccionadas) => editarDatosGenerales(listaDeMateriasSeleccionadas.map(materia => materia.id))
 
-  
-    
+
     return(
         <Box
         sx={{
@@ -52,6 +47,7 @@ const NivelesIngles = ({materias,setMaterias}) => {
                     multiple
                     id="select-ingles"
                     options={materias}
+                    value={materias.filter(materia => nivelesInglesData.includes(materia.id))}
                     getOptionLabel={(option) => option.name + " #" + option.id.toString()}
                     onChange={handleOnChange}
                     renderInput={(params) => <TextField {...params} label="Niveles Inglés" variant="outlined" placeholder="Seleccione Materias" />}
