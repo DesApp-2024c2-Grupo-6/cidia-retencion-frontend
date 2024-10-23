@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 //Servicios
 import { getAllCareerGuarani } from '../../services/CareerService.js'
+import ConfirmarBorrado from '../ConfirmarBorrado.jsx'
 
 //Datos de prueba
 
@@ -40,6 +41,18 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         editarDatosGenerales(paresEditados)
 
     }
+    const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+    const [parDeCarrerasABorrar, setParDeCarrerasABorrar] = React.useState({});
+
+    const handleBorrado = (parrafo) =>{
+        setOpenBorrado(true);
+        setParDeCarrerasABorrar(parrafo);
+    }
+
+    const handleCloseBorrado = () => {
+        setOpenBorrado(false);
+        setParrafoABorrar({});
+    }
 
     const borrarParDeCarreras = (idABorrar) => {
         /*
@@ -50,6 +63,8 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         const paresRestantes = paresCarreras.filter(par => (par.id != idABorrar))
         setParesCarreras(paresRestantes)
         editarDatosGenerales(paresRestantes)
+        handleCloseBorrado()
+        
     }
     
     const handleAgregarPar = () => {
@@ -93,6 +108,13 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                 marginTop: 8,
                 marginBottom: 3
             }}>
+                <ConfirmarBorrado
+                openBorrado = {openBorrado}
+                handleCloseBorrado = {handleCloseBorrado}
+                funcionEliminar = {borrarParDeCarreras}
+                elementoAEliminar = {parDeCarrerasABorrar}
+                textoBorrado = "¿Está seguro de que desea eliminar este par de carreras?">
+                </ConfirmarBorrado>
                 {/*Pares de carreras*/}
                 <Box sx={{
                     width: '1000px',
@@ -105,6 +127,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                     gap: '10px'
 
                 }}>
+                    
                     <h2 className="label">Pares carreras</h2>
                     <IconButton
                         sx={{ display: 'inline', width: 'auto', marginTop: '10px' }}
@@ -140,7 +163,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                                 parDeCarrerasData={parCarreras} 
                                 carrerasDisponibles={carrerasGuarani} 
                                 editarParDeCarreras = {editarParDeCarreras} 
-                                borrarParDeCarreras = {borrarParDeCarreras} 
+                                borrarParDeCarreras = {handleBorrado} 
                             />)
                     }
                 </Box>
