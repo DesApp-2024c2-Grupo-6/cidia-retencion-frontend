@@ -10,6 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 //Servicios
 import { getAllCareerGuarani } from '../../services/CareerService.js'
 import FilaMateriaComun from './FilaMateriaComun.jsx';
+import ConfirmarBorrado from '../ConfirmarBorrado.jsx'
 
 //Datos de prueba
 
@@ -47,8 +48,21 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
         const materiasRestantes = materiasComunes.filter(materia => (materia.idLista != idListaABorrar))
         setMateriasComunes(materiasRestantes)
         editarDatosGenerales(materiasRestantes)
+        handleCloseBorrado()
     }
     
+    const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+    const [materiaComunABorrar, setMateriaComunABorrar] = React.useState({});
+
+    const handleBorrado = (parrafo) =>{
+        setOpenBorrado(true);
+        setMateriaComunABorrar(parrafo);
+    }
+
+    const handleCloseBorrado = () => {
+        setOpenBorrado(false);
+        setParrafoABorrar({});
+    }
 
     const handleAgregarMateriaComun = () => {
         const idNoDisponibles = materiasComunes.map(materia => materia.idLista);
@@ -71,6 +85,13 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
                 marginTop: 8,
                 marginBottom: 3
             }}>
+                <ConfirmarBorrado
+                openBorrado = {openBorrado}
+                handleCloseBorrado = {handleCloseBorrado}
+                funcionEliminar = {borrarMateriaComun}
+                elementoAEliminar = {materiaComunABorrar}
+                textoBorrado = "¿Está seguro de que desea eliminar esta materia?">
+                </ConfirmarBorrado>
                 {/*Materias comunes*/}
                 <Box sx={{
                     width: '1000px',
@@ -115,7 +136,7 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
                                 materiaComunData={materia} 
                                 materiasDisponibles={materiasGuarani} 
                                 editarMateriaComun = {editarMateriaComun} 
-                                borrarMateriaComun = {borrarMateriaComun} 
+                                borrarMateriaComun = {handleBorrado} 
                             />)
                     }
                 </Box>
