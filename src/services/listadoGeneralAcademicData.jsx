@@ -1,4 +1,4 @@
-const generalAcademicData = [ { 
+const generalAcademicData = { 
     careerPairs: [
         { shortCareer: { id: 21 }, longCareer: { id: 38 } },
         { shortCareer: { id: 7 }, longCareer: { id: 13 } },
@@ -12,6 +12,6 @@ const generalAcademicData = [ {
         { id: 41, name: "Programación" }
     ],
     englishLevelIds: [31, 44]
-} ];
+};
 
-export default listadoGeneralAcademicData;
+export default generalAcademicData;

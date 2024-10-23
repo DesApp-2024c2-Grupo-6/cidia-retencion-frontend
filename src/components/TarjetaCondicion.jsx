@@ -11,7 +11,7 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handleSelectionCar
     useEffect(() => {
         const lista = listaMaterias.map(m => ({
             value: m.id_materia,
-            label: `Materia ${m.id_materia}`
+            label: m.subjectName
         }));
 
         const eliminarDuplicados = (arr) => {
@@ -21,9 +21,11 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handleSelectionCar
         const listaSinDuplicados = eliminarDuplicados(lista);
 
         setListamateirasseleccionadas(listaMateriasParaSelect.length > 0 ? listaMateriasParaSelect : listaSinDuplicados);
+    
     }, [listaMaterias])
 
- 
+    console.log(listamateriasseleccionadas)
+    
     //CANTIDAD_APROBADAS
     const [cantidad, setCantidad] = useState((condicion == "CANT_APROBADAS" && objeto.config_condicion.cantidad) ? objeto.config_condicion.cantidad : '');
     //CANTIDAD_APROBADAS DE MATERIAS_PENDIENTES
@@ -116,7 +118,6 @@ const TarjetaCondicion = ({ condicion, objeto, listaCarreras, handleSelectionCar
                 </Box>
             )}
             {(condicion === "MATERIAS_PENDIENTES") && (
-
                 <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
                         <Box sx={{ width: '25%', textAlign: 'center' }}>

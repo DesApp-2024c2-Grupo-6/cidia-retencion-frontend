@@ -5,11 +5,13 @@ import ConfiguracionCarrera from "./pages/ConfiguracionCarrera";
 import ConfiguracionCondicionCarrera from "./pages/ConfiguracionCondicionesCarrera";
 import ConfiguracionMaterias from "./pages/ConfiguracionMaterias";
 import Home from "./pages/Home";
+import DatosGenerales from "./pages/DatosGenerales";
 
 export function Router() {
     return (
         <Routes>
             <Route path='/configuracion' element={<SeleccionCarrera />} />
+            <Route path='/configuracion/datos-generales' element={<DatosGenerales/>} />
             <Route path='/configuracion/carrera' element={<ConfiguracionCarrera />} />
             <Route path='/configuracion/parrafos' element={<ListaParrafos />} />
             <Route path='/configuracion/condiciones' element={<ConfiguracionCondicionCarrera /> } />

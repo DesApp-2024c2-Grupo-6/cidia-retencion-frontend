@@ -23,7 +23,6 @@ function SeleccionCarrera() {
         setMessage({});
         const obtenerCarreras = async () => {
             const carreras = await getAllCareer();
-            console.log(carreras)
             if (carreras.status === 200) {
                 const careers = carreras.data.allCareers.filter(carrera => carrera.careerId != undefined);
                 setMessage({
@@ -60,6 +59,11 @@ function SeleccionCarrera() {
         navigate('/configuracion/parrafos')
     };
 
+    const handleOnClickConfiguracionDatosGenerales = () => {
+        navigate('/configuracion/datos-generales')
+    };
+
+
     return (
         <>
             <Box sx={{
@@ -93,6 +97,7 @@ function SeleccionCarrera() {
                             flexDirection: 'column',
                             gap: '20px',
                             marginTop: '30px',
+                            marginBottom: '30px',
                             justifyContent: 'center',
                             alignItems: 'center'
 
@@ -111,6 +116,12 @@ function SeleccionCarrera() {
                             variant="contained"
                             name={'Plantillas-e-mail'}
                             startIcon={<ListIcon />}>Lista Párrafos
+                        </Button>
+                        <Button
+                            onClick={handleOnClickConfiguracionDatosGenerales}
+                            variant="contained"
+                            name={'Plantillas-e-mail'}
+                            startIcon={<ListIcon />}>Datos generales
                         </Button>
                     </Box>
                 </Box>

@@ -163,7 +163,7 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
             );
             const listaFiltrada = materiasFiltradas.map(m => ({
                 value: m.id_materia,
-                label: `Materia ${m.id_materia}`
+                label: m.subjectName
             }));
 
             const eliminarDuplicados = (arr) => {
