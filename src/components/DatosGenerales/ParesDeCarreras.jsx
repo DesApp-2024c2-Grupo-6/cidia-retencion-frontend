@@ -21,6 +21,8 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
             -paresCarrerasData - Lista de objetos - Lista que contiene los pares de carreras. Propiedad careerPairs de generalAcademicData
             -carrerasGuaraniData - Lista de objetos - Lista que las carreras de siu guarani.
             -editarDatosGenerales(nuevoValor) - Funcion - Funcion que edita la propiedad careerPairs de los datos generales
+            -guardarDatosGenerales - Funcion - Funciona que hace un PUT para actualizar los datos generales en el BE
+            -sePuedeGuardar - Booleano - Indica si los datos generales se pueden guardar
     */
 
     paresCarrerasData = paresCarrerasData.map((par, index) => ({id:index, ...par}))

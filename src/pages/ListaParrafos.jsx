@@ -7,9 +7,9 @@ import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
 const ParagraphList = () => {
-  const [parrafos, setParrafos] = useState([]);
+  const [parrafos, setParrafos] = useState();
   const [editIndex, setEditIndex] = useState(null);
-  const [cond, setCond] = useState([]); 
+  const [cond, setCond] = useState([]);
 
   useEffect(() => {
     const fetchParrafos = async () => {
@@ -18,7 +18,38 @@ const ParagraphList = () => {
         if (response.status === 200) {
           const data = response.data.allParrafos[0]._rawData;
           if (Array.isArray(data)) {
-            setParrafos(data);
+            /*
+            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
+              const nuevoOrdenParrafos = data.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
+              window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrdenParrafos))
+              console.log(nuevoOrdenParrafos)
+            }
+            const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
+            const parrafosConOrden = data.map(parrafo => {
+              const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
+              if (ordenParrafo == null)
+                return ({ ...parrafo, orden: ordenParrafos.length })
+              else
+                return ({ ...parrafo, orden: ordenParrafo.orden })
+            })
+            const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p2.orden - p1.orden)
+            setParrafos(parrafosOrdenados);
+            */
+            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null)
+              setParrafos(data)
+            else {
+              const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
+              const parrafosConOrden = data.map(parrafo => {
+                const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
+                if (ordenParrafo == null)
+                  return ({ ...parrafo, orden: ordenParrafos.length })
+                else
+                  return ({ ...parrafo, orden: ordenParrafo.orden })
+              })
+              const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p1.orden - p2.orden)
+              setParrafos(parrafosOrdenados);
+            }
+
           } else {
             console.error('Data fetched is not an array:', data);
           }
@@ -32,6 +63,20 @@ const ParagraphList = () => {
 
     fetchParrafos();
   }, [editIndex]);
+
+  useEffect(() => {
+    const ordenarParrafos = () => {
+      if (parrafos) {
+        if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
+          const ordenCreado = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
+          window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(ordenCreado))
+        }
+        const nuevoOrden = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
+        window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrden))
+      }
+    }
+    ordenarParrafos()
+  }, [parrafos])
 
   const agregarParrafo = async (clave, texto) => {
 
@@ -66,7 +111,7 @@ const ParagraphList = () => {
   //DATOS QUE SON INFORMACION ADICIONAL DE "CANTIDAD_APROBADAS"
   const [cantidadAprobadas, setCantidadAprobadas] = useState(0);
 
-  const editarParrafo = async (index, newClave, newText, newConditions) => { 
+  const editarParrafo = async (index, newClave, newText, newConditions) => {
 
     const formatearCondicion = (condicion) => {
       /*
@@ -97,7 +142,7 @@ const ParagraphList = () => {
         },
         "DEFAULT": {}
       }
-      return ({...condicion, config_condicion: (configuracionesPorCodigo[condicion.codigo_condicion] || {})})
+      return ({ ...condicion, config_condicion: (configuracionesPorCodigo[condicion.codigo_condicion] || {}) })
     }
 
     try {
@@ -150,25 +195,25 @@ const ParagraphList = () => {
     const draggedParagraph = updatedParrafos[oldIndex];
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
-
+    console.log(updatedParrafos)
     setParrafos(updatedParrafos);
   };
   const [openBorrado, setOpenBorrado] = React.useState(Boolean);
   const [parrafoABorrar, setParrafoABorrar] = React.useState({});
 
-  const handleBorrado = (parrafo) =>{
-      setOpenBorrado(true);
-      setParrafoABorrar(parrafo);
+  const handleBorrado = (parrafo) => {
+    setOpenBorrado(true);
+    setParrafoABorrar(parrafo);
   }
 
   const handleCloseBorrado = () => {
-      setOpenBorrado(false);
-      setParrafoABorrar({});
+    setOpenBorrado(false);
+    setParrafoABorrar({});
   }
 
   return (
     <Box
-      
+
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -179,7 +224,7 @@ const ParagraphList = () => {
         padding: '20px',
       }}
     >
-      <ConfirmarBorrado openBorrado = {openBorrado} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {eliminarParrafo} elementoAEliminar = {parrafoABorrar} textoBorrado = "¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
+      <ConfirmarBorrado openBorrado={openBorrado} handleCloseBorrado={handleCloseBorrado} funcionEliminar={eliminarParrafo} elementoAEliminar={parrafoABorrar} textoBorrado="¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
       <Typography variant="h4" component="h1" gutterBottom>
         Plantilla de E-mail
       </Typography>
@@ -229,11 +274,11 @@ const ParagraphList = () => {
           setCantidadAprobadas={setCantidadAprobadas}
           setIdsCarrerasEC={setIdsCarreras}
           setIncluyeEC={setIncluye}
-          setIdsMateriasMP = {setIdsMateriasMP}
-          setCantidadAprobadasMP = {setCantidadAprobadasMP}
-          setIdsMateriasMNP = {setIdsMateriasMNP}
-          setCantidadAprobadasMNP = {setCantidadAprobadasMNP}
-          carrerasSeleccionadas = {idsCarreras}
+          setIdsMateriasMP={setIdsMateriasMP}
+          setCantidadAprobadasMP={setCantidadAprobadasMP}
+          setIdsMateriasMNP={setIdsMateriasMNP}
+          setCantidadAprobadasMNP={setCantidadAprobadasMNP}
+          carrerasSeleccionadas={idsCarreras}
         />
       )}
     </Box>

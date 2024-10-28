@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import NivelesIngles from '../components/DatosGenerales/NivelesDeIngles';
 import MateriasFake from '../components/DatosGenerales/MateriasFake';
 
-
 //Componentes
 import ParesDeCarreras from '../components/DatosGenerales/ParesDeCarreras';
 
@@ -19,6 +18,8 @@ import { getAllSubjectsGuarani } from '../services/SubjectDataService'
 import { getAllCareerGuarani } from '../services/CareerService'
 import { getGeneralAcademicData, updateGeneralAcademicData } from '../services/GeneralAcademicDataService'
 
+//Utils
+import { isEqual } from 'lodash';
 
 //import listadoCarrerasGuarani from '../services/listadoCarrerasGuarani'
 import listadoGeneralAcademicData from '../services/listadoGeneralAcademicData'
@@ -42,12 +43,14 @@ function DatosGenerales() {
   const DATOS_VACIOS = {careerPairs: [],fakeSubjectIds: [], specialSubjects: [], englishLevelIds: []};
 
   const [datosGenerales, setDatosGenerales] = useState(DATOS_VACIOS)
+  const [datosGeneralesSinEditar, setDatosGeneralesSinEditar] = useState(DATOS_VACIOS)
   const [carrerasGuarani, setCarrerasGuarani] = useState(listadoCarrerasGuarani)
   const [estanLosDatosCargados, setEstanLosDatosCargados] = useState(false)
 
   
   const datosGeneralesConNombres = (datosGenerales) => {
-    //Esto es para agregar los nombres a las carreras y materias de los datos generales
+    //Aregrega los nombres a las carreras y materias de los datos generales
+    //Retorna un objeto
     const paresCarrerasConNombres = datosGenerales.careerPairs.map(par => {
       const parConNombre = par;
       const carreraCortaGuarani = listadoCarrerasGuarani.find(carrera => carrera.id == par.shortCareer.id)
@@ -82,12 +85,11 @@ function DatosGenerales() {
   useEffect(() => {
     const getDatosGenerales = async () => {
       const datosGeneralesRecibidos = await getGeneralAcademicData()
-      console.log(datosGeneralesRecibidos)
       await setDatosGenerales(datosGeneralesConNombres(datosGeneralesRecibidos.data.datosAcademicos))
+      await setDatosGeneralesSinEditar(structuredClone(datosGeneralesConNombres(datosGeneralesRecibidos.data.datosAcademicos)))
       setEstanLosDatosCargados(true)
     }
     getDatosGenerales()
-
   }, [])
 
   
@@ -95,7 +97,8 @@ function DatosGenerales() {
   //Confirmacion de guardado
   const hayParCarreraVacio = datosGenerales.careerPairs.find(par => par.shortCareer.id == "" || par.longCareer.id == "")
   const hayMateriaComunVacia = datosGenerales.specialSubjects.find(materia => materia.id == "" || materia.name == "")
-  const sePuedeGuardar = !hayParCarreraVacio && !hayMateriaComunVacia
+  const hayCambios = !isEqual(datosGenerales, datosGeneralesSinEditar)
+  const sePuedeGuardar = hayCambios && !hayParCarreraVacio && !hayMateriaComunVacia
 
   //Funciones para editar las propiedades de generalAcademicData
   const editarParesCarrerasDatosGenerales = (nuevosPares) => setDatosGenerales({ ...datosGenerales, careerPairs: nuevosPares })
