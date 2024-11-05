@@ -36,7 +36,14 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
         */
         const materiasEditadas = materiasComunes.map(materia => (materia.idLista == nuevaMateria.idLista) ? nuevaMateria : materia)
         setMateriasComunes(materiasEditadas)
-        editarDatosGenerales(materiasEditadas)
+
+        const materiasSinIdLista = materiasEditadas.map(materia => {
+            const nuevaMateria = {...materia}
+            delete nuevaMateria.idLista;
+            return nuevaMateria;
+        })
+        console.log(materiasSinIdLista)
+        editarDatosGenerales(materiasSinIdLista)
     }
 
     const borrarMateriaComun = (idListaABorrar) => {
@@ -47,7 +54,12 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
         */
         const materiasRestantes = materiasComunes.filter(materia => (materia.idLista != idListaABorrar))
         setMateriasComunes(materiasRestantes)
-        editarDatosGenerales(materiasRestantes)
+        const materiasSinIdLista = materiasRestantes.map(materia => {
+            const nuevaMateria = {...materia}
+            delete nuevaMateria.idLista;
+            return nuevaMateria;
+        })
+        editarDatosGenerales(materiasSinIdLista)
         handleCloseBorrado()
     }
     

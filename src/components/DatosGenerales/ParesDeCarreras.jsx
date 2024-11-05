@@ -27,7 +27,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
 
     paresCarrerasData = paresCarrerasData.map((par, index) => ({id:index, ...par}))
 
-    const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData)
+    const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({id:carrera.id, nombre:carrera.nombre})))
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
 
     const [seAgregoParNuevo, setSeAgregoParNuevo] = useState(false)
@@ -40,7 +40,12 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         */
         const paresEditados = paresCarreras.map(par => (par.id == nuevoPar.id) ? nuevoPar : par)
         setParesCarreras(paresEditados)
-        editarDatosGenerales(paresEditados)
+        const paresSinId = paresEditados.map(par => {
+            const nuevoPar = {...par}
+            delete nuevoPar.id;
+            return nuevoPar;
+        })
+        editarDatosGenerales(paresSinId)
 
     }
     const [openBorrado, setOpenBorrado] = React.useState(Boolean);
@@ -64,7 +69,12 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         */
         const paresRestantes = paresCarreras.filter(par => (par.id != idABorrar))
         setParesCarreras(paresRestantes)
-        editarDatosGenerales(paresRestantes)
+        const paresSinId = paresRestantes.map(par => {
+            const nuevoPar = {...par}
+            delete nuevoPar.id;
+            return nuevoPar;
+        })
+        editarDatosGenerales(paresSinId)
         handleCloseBorrado()
         
     }
@@ -84,21 +94,6 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         setParesCarreras([CARRERA_VACIA,...paresCarreras])
         editarDatosGenerales([CARRERA_VACIA,...paresCarreras])
     }
-
-    /*
-    const handleSave = () => {
-        const paresCarrerasFormateados = paresCarreras.map( par => 
-            ({longCareer:{
-                    id: par.longCareer.id, 
-                    nombre:par.longCareer.nombre
-                }, 
-                shortCareer:{
-                    id: par.shortCareer.id, 
-                    nombre: par.shortCareer.nombre
-                }
-            }))
-    }
-     */
 
     return (
         <>
