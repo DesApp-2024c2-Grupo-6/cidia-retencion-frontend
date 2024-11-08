@@ -50,3 +50,14 @@ export const getAllCareerGuarani = async () => {
         return error;
     }
 }
+
+//Guardar los datos de una carrera nueva
+export const saveCareer = async (careerData) => {
+    try {
+        const response = await axios.post(`${baseURL}/carreras`, careerData);
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
