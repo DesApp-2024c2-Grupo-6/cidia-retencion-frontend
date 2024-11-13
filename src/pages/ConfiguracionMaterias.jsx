@@ -65,10 +65,12 @@ function ConfiguracionMaterias() {
   useEffect(() => {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
-      const materiasData = materias.data.materiasSinRegistrar
+      const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
+
       setMateriasSinRegistrar(materiasData);
     }
     getMateriasSinRegistrar(IdCarrera)
+
 
   }, [save, deleted])
 
