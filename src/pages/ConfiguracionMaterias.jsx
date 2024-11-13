@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Materia from '../components/Materia';
-import { getSubjectsByCareer, getSubjectsNotRegisteredByCareer, updateSubject, createSubject } from '../services/SubjectDataService';
+import { getSubjectsByCareerAndPlan, getSubjectsNotRegisteredByCareer, updateSubject, createSubject } from '../services/SubjectDataService';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { deleteSubject } from '../services/SubjectDataService';
 import ConfirmarBorrado from '../components/ConfirmarBorrado';
@@ -57,9 +57,9 @@ function ConfiguracionMaterias() {
   }
 
   useEffect(() => {
-    const getSubjects = async (id_carrera) => {
+    const getSubjects = async (id_carrera, id_plan) => {
       const listaCampos = []
-      const subj = await getSubjectsByCareer(id_carrera);
+      const subj = await getSubjectsByCareerAndPlan(id_carrera,id_plan);
       if (subj.status === 200) {
         setSubjects(subj.data.subjectsByCareer);
         subj.data.subjectsByCareer.forEach(materia => {
@@ -81,7 +81,7 @@ function ConfiguracionMaterias() {
       
 
     }
-    getSubjects(IdCarrera)
+    getSubjects(IdCarrera, IdPlan)
     
   }, [save, deleted])
 
