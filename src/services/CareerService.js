@@ -19,6 +19,15 @@ export const getCurrentConfigCareer = async (careerId) => {
     }
 }
 
+export const getCarreraConPlan = async (careerId,planId) => {
+    try {
+        const response = await axios.get(`${baseURL}/carreras/${careerId}/plan/${planId}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 //Actualizar una carrera
 export const updateOneCareer = async (data) => {
     try {

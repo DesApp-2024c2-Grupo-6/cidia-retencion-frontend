@@ -5,6 +5,7 @@ import { Button, Box, Autocomplete, TextField, Modal, Typography, Select, MenuIt
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import DeleteIcon from '@mui/icons-material/Delete';
+
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -48,7 +49,7 @@ function SeleccionCarrera() {
                 })
                 const lista = careers.map(c => ({
                     label: `${c.careerName}`,
-                    value: { v: c.careerId, l: `${c.careerName}` }
+                    value: { v: c.careerId, l: `${c.careerName}`,p:c.planId }
                 }));
                 setCarrerasList(lista);
             } else {
@@ -64,7 +65,7 @@ function SeleccionCarrera() {
 
 
     const handleSelect = (value) => {
-        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l }));
+        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l,IdPlan: value.p}));
         setConfigButton(value.v)
     };
 
@@ -97,7 +98,6 @@ function SeleccionCarrera() {
         const carreraData = {careerId: nuevaCarrera.id, planId: nuevaCarrera.planId }
         const response = await saveCareer(carreraData)
         if(response.status == 200){
-            console.log("Carrera creada")
             dispatch(addCarrera({ IdCarrera: nuevaCarrera.id, nombreCarrera: "Nueva carrera" }));
             setConfigButton(nuevaCarrera.id)
             navigate('/configuracion/carrera')
