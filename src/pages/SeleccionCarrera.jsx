@@ -14,14 +14,13 @@ import '../styles/ConfiguracionCarreras.css';
 import { useDispatch } from 'react-redux';
 import { addCarrera } from '../redux/carreraSlice';
 
-import { getAllCareer, saveCareer } from '../services/CareerService';
+import { getAllCareer, saveCareer,getAllCareerGuarani,getAllCareerGuaraniConPlanes } from '../services/CareerService';
 import { useNavigate } from 'react-router-dom';
 
 //Services
 
 
 //Datos de prueba
-import listadoCarrerasPlanes from '../services/listadoCarrerasGuaraniPlanes.json'
 
 
 function SeleccionCarrera() {
@@ -36,7 +35,7 @@ function SeleccionCarrera() {
     const [seEstaAgregandoCarrera, setSeEstaAgregandoCarrera] = useState(Boolean);
     const NUEVA_CARRERA_VACIA = {id: "", planId: "", nombre: "", estado: "", planes: []}
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
-
+    const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
     useEffect(() => {
         setMessage({});
         const obtenerCarreras = async () => {
@@ -52,7 +51,6 @@ function SeleccionCarrera() {
                     value: { v: c.careerId, l: `${c.careerName}`,p:c.planId }
                 }));
                 setCarrerasList(lista);
-                console.log(lista[0])
             } else {
                 setMessage({
                     code: carreras.status,
@@ -63,6 +61,35 @@ function SeleccionCarrera() {
         obtenerCarreras();
 
     }, [])
+
+    useEffect(() =>{
+        setMessage({});
+        const obtenerCarrerasGuarani = async () => {
+            const carreras = await getAllCareerGuaraniConPlanes();
+            if (carreras.status === 200) {
+ 
+                setMessage({
+                    code: carreras.status,
+                    msg: `Se han traido todas las carreras.`
+                })
+                const lista = carreras.data.map(c => ({
+                    //id: "", planId: "", nombre: "", estado: ""
+                    id: c.id,
+                    planId: "",
+                    nombre: c.nombre,
+                    estado: c.estado,
+                    planes:c.planes
+                }));
+                SetListadoCarrerasPlanes(lista);
+            } else {
+                setMessage({
+                    code: carreras.status,
+                    msg: carreras.statusText
+                })
+            }
+        }
+        obtenerCarrerasGuarani();
+    },[])
 
 
     const handleSelect = (value) => {
@@ -86,8 +113,9 @@ function SeleccionCarrera() {
         setSeEstaAgregandoCarrera(true)
     };
 
-    const handleNuevaCarreraChange = (index, carrera) => {
-        setNuevaCarrera({ ...carrera, planId: "" })
+    const handleNuevaCarreraChange = (event, value) => {
+        setNuevaCarrera({ ...value, planId: "" })
+        dispatch(addCarrera({ IdCarrera: value.id, nombreCarrera: value.nombre}));
     }
 
     const handleCloseModal = () => {
@@ -99,7 +127,7 @@ function SeleccionCarrera() {
         const carreraData = {careerId: nuevaCarrera.id, planId: nuevaCarrera.planId }
         const response = await saveCareer(carreraData)
         if(response.status == 200){
-            dispatch(addCarrera({ IdCarrera: nuevaCarrera.id, nombreCarrera: "Nueva carrera" }));
+            dispatch(addCarrera({ IdCarrera: nuevaCarrera.id, nombreCarrera: nuevaCarrera.nombre,IdPlan: nuevaCarrera.planId}));
             setConfigButton(nuevaCarrera.id)
             navigate('/configuracion/carrera')
         }
