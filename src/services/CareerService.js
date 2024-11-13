@@ -49,6 +49,17 @@ export const getAllCareer = async () => {
     }
 }
 
+//obtener todas las carreras con planes
+export const getCarrerasConPlan = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/carreras/conPlanes`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+
 //obtener todas las carreras de la api de guarani
 export const getAllCareerGuarani = async () => {
     try {
@@ -73,7 +84,6 @@ export const getAllCareerGuaraniConPlanes = async () => {
 export const saveCareer = async (careerData) => {
     try {
         const response = await axios.post(`${baseURL}/carreras`, careerData);
-        console.log(response);
         return response;
     } catch (error) {
         return error;

@@ -14,7 +14,7 @@ import '../styles/ConfiguracionCarreras.css';
 import { useDispatch } from 'react-redux';
 import { addCarrera } from '../redux/carreraSlice';
 
-import { getAllCareer, saveCareer,getAllCareerGuarani,getAllCareerGuaraniConPlanes } from '../services/CareerService';
+import { getAllCareer, saveCareer,getCarrerasConPlan,getAllCareerGuaraniConPlanes } from '../services/CareerService';
 import { useNavigate } from 'react-router-dom';
 
 //Services
@@ -39,7 +39,7 @@ function SeleccionCarrera() {
     useEffect(() => {
         setMessage({});
         const obtenerCarreras = async () => {
-            const carreras = await getAllCareer();
+            const carreras = await getCarrerasConPlan();
             if (carreras.status === 200) {
                 const careers = carreras.data.allCareers.filter(carrera => carrera.careerId != undefined);
                 setMessage({
@@ -47,10 +47,11 @@ function SeleccionCarrera() {
                     msg: `Se han traido todas las carreras.`
                 })
                 const lista = careers.map(c => ({
-                    label: `${c.careerName}`,
+                    label: `${c.careerName} - ${c.planName}`,
                     value: { v: c.careerId, l: `${c.careerName}`,p:c.planId }
                 }));
                 setCarrerasList(lista);
+ 
             } else {
                 setMessage({
                     code: carreras.status,
@@ -59,6 +60,7 @@ function SeleccionCarrera() {
             }
         }
         obtenerCarreras();
+        
 
     }, [])
 
