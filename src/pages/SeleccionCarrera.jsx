@@ -52,6 +52,7 @@ function SeleccionCarrera() {
                     value: { v: c.careerId, l: `${c.careerName}`,p:c.planId }
                 }));
                 setCarrerasList(lista);
+                console.log(lista[0])
             } else {
                 setMessage({
                     code: carreras.status,

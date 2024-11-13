@@ -24,7 +24,7 @@ function ConfiguracionMaterias() {
 
   //Modal para agregar una materia
   const [materiasSinRegistrar, setMateriasSinRegistrar] = useState([])
-  const [camposMaterias, setCamposMaterias] = useState(() => new Set(["CB"]))
+  const [camposMaterias, setCamposMaterias] = useState(["CB"])
   const [estaAbierto, setEstaAbierto] = useState(false);
 
   const MATERIA_VACIA = {
