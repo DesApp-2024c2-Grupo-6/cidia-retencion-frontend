@@ -17,16 +17,19 @@ function ConfiguracionMaterias() {
   const navigate = useNavigate()
   const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
   const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+  const IdPlan = useSelector((state) => state.carrera.IdPlan);
   const [subjects, setSubjects] = useState([]);
   const [save, setSave] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
   //Modal para agregar una materia
   const [materiasSinRegistrar, setMateriasSinRegistrar] = useState([])
+  const [camposMaterias, setCamposMaterias] = useState(() => new Set(["CB"]))
   const [estaAbierto, setEstaAbierto] = useState(false);
 
   const MATERIA_VACIA = {
     id_carrera: IdCarrera,
+    id_plan:IdPlan,
     id_materia: "",
     anio: "",
     campo: "",
@@ -44,6 +47,10 @@ function ConfiguracionMaterias() {
     setNuevaMateria((prev) => ({ ...prev, id_materia: materia.id }));
   }
 
+  const handleNuevaMateriaCampoAutocompleteChange = (event, campo) => {
+    setNuevaMateria((prev) => ({ ...prev, campo: campo }));
+  }
+
   const handleModalClose = () => {
     setEstaAbierto(false)
     setNuevaMateria(MATERIA_VACIA)
@@ -51,14 +58,31 @@ function ConfiguracionMaterias() {
 
   useEffect(() => {
     const getSubjects = async (id_carrera) => {
+      const listaCampos = []
       const subj = await getSubjectsByCareer(id_carrera);
       if (subj.status === 200) {
-        console.log(subj)
         setSubjects(subj.data.subjectsByCareer);
+        subj.data.subjectsByCareer.forEach(materia => {
+          if(materia.campo !== ""  && materia.campo !== undefined && !listaCampos.includes(materia.campo)){
+            listaCampos.push(materia.campo)
+          }
+        })
       }
+      
+
+        if(listaCampos.length > 0){
+          setCamposMaterias(listaCampos)
+        }
+        else{
+          setCamposMaterias(["CB"])
+        }
+        
+      
+      
 
     }
     getSubjects(IdCarrera)
+    
   }, [save, deleted])
 
 
@@ -66,8 +90,9 @@ function ConfiguracionMaterias() {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
-
+      
       setMateriasSinRegistrar(materiasData);
+
     }
     getMateriasSinRegistrar(IdCarrera)
 
@@ -106,9 +131,7 @@ function ConfiguracionMaterias() {
     const resSubject = await deleteSubject(data);
     if (resSubject.status === 200) {
         setDeleted();
-      console.log("OK")
     } else {
-      console.log("No OK")
     } 
   }
   return (
@@ -216,11 +239,16 @@ function ConfiguracionMaterias() {
               value={nuevaMateria.anio}
               onChange={handleNuevaMateriaChange}
             />
-            <TextField
-              label="Campo"
-              name="campo"
-              value={nuevaMateria.campo}
-              onChange={handleNuevaMateriaChange}
+            <Autocomplete
+                value={nuevaMateria.campo}
+                onChange={handleNuevaMateriaCampoAutocompleteChange}
+                onInputChange={handleNuevaMateriaCampoAutocompleteChange}
+                id="campo-nueva-materia"
+                options={camposMaterias}
+                disablePortal
+                disableClearable
+                freeSolo
+                renderInput={(params) => <TextField {...params} label="Campo" />}
             />
             <TextField
               label="Nombre Especial"
