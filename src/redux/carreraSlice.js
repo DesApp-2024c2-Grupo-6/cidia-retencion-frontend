@@ -13,6 +13,7 @@ export const carreraSlice = createSlice({
       addCarrera: (state, action) => {
           state.IdCarrera = action.payload.IdCarrera;
           state.nombreCarrera = action.payload.nombreCarrera;
+          state.IdPlan  = action.payload.IdPlan;
         }
     }
 });

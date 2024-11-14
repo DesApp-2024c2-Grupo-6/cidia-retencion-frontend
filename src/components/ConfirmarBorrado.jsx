@@ -32,7 +32,7 @@ const ConfirmarBorrado = (props) =>{
                     textAlign: "center",
                     marginBottom: '10px'
                 }}>
-                    <Typography variant="h6" sx>
+                    <Typography variant="h6">
                         {textoBorrado}
                     </Typography>
             </Box>

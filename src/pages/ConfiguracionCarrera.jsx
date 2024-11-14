@@ -11,12 +11,11 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import '../styles/ConfiguracionCarreras.css';
 import PanelConfiguradorGral from '../components/PanelConfiguradorGral'
 import MateriasEspeciales from '../components/MateriasEspeciales';
-import { updateOneCareer, getCurrentConfigCareer } from '../services/CareerService';
+import { updateOneCareer, getCurrentConfigCareer, getCarreraConPlan } from '../services/CareerService';
 
 function ConfiguracionCarrera() {
     //recupero el store
-    const { IdCarrera, nombreCarrera } = useSelector((state) => state.carrera);
-
+    const { IdCarrera, nombreCarrera, IdPlan } = useSelector((state) => state.carrera);
     const [isEdit, setIsEdit] = useState(false);
     const [carrera, setCarrera] = useState({}); 
     const [message, setMessage] = useState({codigo: 0, msg:""});
@@ -26,6 +25,7 @@ function ConfiguracionCarrera() {
         setMessage({})
         if(isEdit){
             const upCareer = await updateOneCareer(carrera);
+
             if(upCareer.status === 200){
                 setMessage({
                     code: upCareer.status,
@@ -51,13 +51,13 @@ function ConfiguracionCarrera() {
     }
 
     useEffect(() => {
-        if (IdCarrera !== undefined && IdCarrera != ""){
+        if (IdCarrera !== undefined && IdCarrera != "" && IdPlan !== undefined && IdPlan != ""){
             setMessage({})
             const obtenerCarrera = async() => {
-                const carr = await getCurrentConfigCareer(IdCarrera);
-                
+                const carr = await getCarreraConPlan(IdCarrera,IdPlan);
                 if(carr.status === 200){
-                    const career = carr.data.careerData;
+                    console.log(carr.data)
+                    const career = carr.data.carrera;
                     setMessage({
                         code: carr.status,
                         msg: `Datos de carrera ${career.careerId} obtenidos`

@@ -19,6 +19,15 @@ export const getCurrentConfigCareer = async (careerId) => {
     }
 }
 
+export const getCarreraConPlan = async (careerId,planId) => {
+    try {
+        const response = await axios.get(`${baseURL}/carreras/${careerId}/plan/${planId}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 //Actualizar una carrera
 export const updateOneCareer = async (data) => {
     try {
@@ -40,11 +49,41 @@ export const getAllCareer = async () => {
     }
 }
 
+//obtener todas las carreras con planes
+export const getCarrerasConPlan = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/carreras/conPlanes`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+
 //obtener todas las carreras de la api de guarani
 export const getAllCareerGuarani = async () => {
     try {
         //const response = await axios.get(`${guaraniURL}/carreras`);
         const response = await axios.get(`${baseURL}/carreras/siu`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+//obtener todas las carreras de la api de guarani con planes
+export const getAllCareerGuaraniConPlanes = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/carreras/siu/conPlanes`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+//Guardar los datos de una carrera nueva
+export const saveCareer = async (careerData) => {
+    try {
+        const response = await axios.post(`${baseURL}/carreras`, careerData);
         return response;
     } catch (error) {
         return error;
