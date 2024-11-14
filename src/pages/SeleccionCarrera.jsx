@@ -48,7 +48,7 @@ function SeleccionCarrera() {
                 })
                 const lista = careers.map(c => ({
                     label: `${c.careerName} - ${c.planName}`,
-                    value: { v: c.careerId, l: `${c.careerName}`,p:c.planId }
+                    value: { v: c.careerId, l: `${c.careerName} - ${c.planName}`,p:c.planId }
                 }));
                 setCarrerasList(lista);
  
@@ -95,6 +95,7 @@ function SeleccionCarrera() {
 
 
     const handleSelect = (value) => {
+        console.log(value)
         dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l,IdPlan: value.p}));
         setConfigButton(value.v)
     };
