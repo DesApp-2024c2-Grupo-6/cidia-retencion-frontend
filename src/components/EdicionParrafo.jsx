@@ -12,7 +12,7 @@ import { getAllSubjectData } from '../services/SubjectDataService';
 
 const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condiciones, setCantidadAprobadas, setIdsCarrerasEC, setIncluyeEC,
     setIdsMateriasMP, setCantidadAprobadasMP, setIdsMateriasMNP, setCantidadAprobadasMNP, carrerasSeleccionadas
-}) => { //Cris
+}) => { 
 
     //DATOS DEL PARRAFO
     const [clave, setClave] = useState(initialClave);
@@ -66,7 +66,9 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
                 label: `${c.careerName}`,
                 value: c.careerId
             }));
-            setListaCarreras(listaMapeada);
+            const set = new Set(listaMapeada.map(JSON.stringify))
+            const listaMapeadaSinDuplicados = Array.from(set).map( JSON.parse );
+            setListaCarreras(listaMapeadaSinDuplicados);
         }
         obtenerCarreras()
     }, [])
@@ -76,12 +78,8 @@ const EdicionParrafo = ({ initialClave, initialTexto, onSave, onCancel, condicio
         const obtenerMaterias = async () => {
             const materias = await getAllSubjectData()
             const materiasFiltradas = materias.data.allSubjects.filter(materia => carrerasSeleccionadas.includes(materia.id_carrera))
-            /*
-            const lista = materiasFiltradas.map(materia => ({
-                label: `Materia ${materia.id_materia}`,
-                value: materia.id_materia
-            }));*/
             setListaMaterias(materiasFiltradas);
+            console.log(materiasFiltradas)
         }
         obtenerMaterias()
     }, [carrerasSeleccionadas])

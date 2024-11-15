@@ -4,12 +4,11 @@ import EdicionParrafo from '../components/EdicionParrafo';
 import { Button, Box, Typography, Paper, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
-import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
+import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState();
   const [editIndex, setEditIndex] = useState(null);
-  const [cond, setCond] = useState([]);
 
   useEffect(() => {
     const fetchParrafos = async () => {
@@ -18,9 +17,7 @@ const ParagraphList = () => {
         if (response.status === 200) {
           const data = response.data.allParrafos[0]._rawData;
           if (Array.isArray(data)) {
-        
-              setParrafos(data)
-
+            setParrafos(data)
           } else {
             console.error('Data fetched is not an array:', data);
           }
@@ -36,21 +33,18 @@ const ParagraphList = () => {
   }, [editIndex]);
 
 
-  const agregarParrafo = async (clave, texto) => {
-
-    try {
-      const response = await createParrafo({
-        parrafoId: '668f20a4fb3e34d777eb3e1', //Aca tocar por el id 
-        nuevaClave: clave,
-        nuevoTexto: texto
-      });
-      console.log('Response from createParrafo:', response);
-      const dato = response.parrafo._rawData[response.parrafo._rawData.length - 1];
-      console.log(dato)
-      setParrafos([...parrafos, { key: dato.key, text: dato.text }]);
-    } catch (error) {
-      console.error('Error creating paragraph:', error);
+  const agregarParrafo = async () => {
+    const clave = "Clave " + parrafos.length;
+    const texto = "Texto " + parrafos.length;
+    const response = await createParrafo({ nuevaClave: clave, nuevoTexto: texto });
+    console.log(response)
+    if (response.status == 200) {
+      //El nuevo parrafo se agrega al principio de la lista
+      const nuevoParrafo = response.data.parrafosData._rawData[0];
+      setParrafos([nuevoParrafo, ...parrafos])
     }
+    else 
+      console.error('Error: No se pudo crear el parrafo', response);
   };
 
 
@@ -139,7 +133,8 @@ const ParagraphList = () => {
     }
   };
 
-  const guardarOrdenParrafos = () => console.log("Orden guardado")
+  const guardarOrdenParrafos = async(listaParrafos) => await updateAllParrafos({parrafos: listaParrafos})
+  
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
@@ -155,9 +150,8 @@ const ParagraphList = () => {
     const draggedParagraph = updatedParrafos[oldIndex];
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
-    console.log(updatedParrafos)
-    guardarOrdenParrafos();
     setParrafos(updatedParrafos);
+    guardarOrdenParrafos(updatedParrafos)
   };
   const [openBorrado, setOpenBorrado] = React.useState(Boolean);
   const [parrafoABorrar, setParrafoABorrar] = React.useState({});
@@ -191,6 +185,14 @@ const ParagraphList = () => {
       </Typography>
       {editIndex === null ? (
         <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => agregarParrafo()}
+            sx={{ marginY: '12px' }}
+          >
+            Añadir Párrafo
+          </Button>
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
               <Paper
@@ -216,14 +218,6 @@ const ParagraphList = () => {
               </Paper>
             </Grid>
           ))}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => agregarParrafo("ejemplo de Clave", "ejemplo de texto")}
-            sx={{ marginTop: '16px' }}
-          >
-            Añadir Párrafo
-          </Button>
         </>
       ) : (
         <EdicionParrafo

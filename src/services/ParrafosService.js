@@ -10,7 +10,7 @@ const baseURL = 'http://localhost:3001/api'
 export const createParrafo = async (data) => {
     try {
         const response = await axios.post(`${baseURL}/parrafos`, data);
-        return response.data; // Asumiendo que quieres devolver solo los datos, no el objeto completo de respuesta.
+        return response; // Asumiendo que quieres devolver solo los datos, no el objeto completo de respuesta.
     } catch (error) {
         return error;
     }
@@ -25,6 +25,20 @@ export const updateOneParrafo = async (data) => {
     try {
         const response = await axios.put(`${baseURL}/parrafos/:id`, data);
         return response.data; // Asumiendo que quieres devolver solo los datos, no el objeto completo de respuesta.
+    } catch (error) {
+        return error;
+    }
+};
+
+/**
+ * Actualizar todos los parrafos
+ * @param {object} data - Los datos del párrafo a actualizar
+ * @returns {Promise<object>} - La respuesta del servidor
+ */
+export const updateAllParrafos = async (data) => {
+    try {
+        const response = await axios.put(`${baseURL}/parrafos/all`, data);
+        return response; 
     } catch (error) {
         return error;
     }
