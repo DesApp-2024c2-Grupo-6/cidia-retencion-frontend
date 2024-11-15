@@ -18,37 +18,8 @@ const ParagraphList = () => {
         if (response.status === 200) {
           const data = response.data.allParrafos[0]._rawData;
           if (Array.isArray(data)) {
-            /*
-            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
-              const nuevoOrdenParrafos = data.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-              window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrdenParrafos))
-              console.log(nuevoOrdenParrafos)
-            }
-            const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
-            const parrafosConOrden = data.map(parrafo => {
-              const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
-              if (ordenParrafo == null)
-                return ({ ...parrafo, orden: ordenParrafos.length })
-              else
-                return ({ ...parrafo, orden: ordenParrafo.orden })
-            })
-            const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p2.orden - p1.orden)
-            setParrafos(parrafosOrdenados);
-            */
-            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null)
+        
               setParrafos(data)
-            else {
-              const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
-              const parrafosConOrden = data.map(parrafo => {
-                const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
-                if (ordenParrafo == null)
-                  return ({ ...parrafo, orden: ordenParrafos.length })
-                else
-                  return ({ ...parrafo, orden: ordenParrafo.orden })
-              })
-              const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p1.orden - p2.orden)
-              setParrafos(parrafosOrdenados);
-            }
 
           } else {
             console.error('Data fetched is not an array:', data);
@@ -64,19 +35,6 @@ const ParagraphList = () => {
     fetchParrafos();
   }, [editIndex]);
 
-  useEffect(() => {
-    const ordenarParrafos = () => {
-      if (parrafos) {
-        if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
-          const ordenCreado = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-          window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(ordenCreado))
-        }
-        const nuevoOrden = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-        window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrden))
-      }
-    }
-    ordenarParrafos()
-  }, [parrafos])
 
   const agregarParrafo = async (clave, texto) => {
 
@@ -181,6 +139,8 @@ const ParagraphList = () => {
     }
   };
 
+  const guardarOrdenParrafos = () => console.log("Orden guardado")
+
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
@@ -196,6 +156,7 @@ const ParagraphList = () => {
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
     console.log(updatedParrafos)
+    guardarOrdenParrafos();
     setParrafos(updatedParrafos);
   };
   const [openBorrado, setOpenBorrado] = React.useState(Boolean);

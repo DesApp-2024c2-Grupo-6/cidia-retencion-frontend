@@ -46,6 +46,8 @@ function DatosGenerales() {
   const [datosGeneralesSinEditar, setDatosGeneralesSinEditar] = useState(DATOS_VACIOS)
   const [carrerasGuarani, setCarrerasGuarani] = useState(listadoCarrerasGuarani)
   const [estanLosDatosCargados, setEstanLosDatosCargados] = useState(false)
+  const [seGuardaronLosDatos, setSeGuardaronLosDatos] = useState(false)
+
 
   
   const datosGeneralesConNombres = (datosGenerales) => {
@@ -88,9 +90,10 @@ function DatosGenerales() {
       await setDatosGenerales(datosGeneralesConNombres(datosGeneralesRecibidos.data.datosAcademicos))
       await setDatosGeneralesSinEditar(structuredClone(datosGeneralesConNombres(datosGeneralesRecibidos.data.datosAcademicos)))
       setEstanLosDatosCargados(true)
+      setSeGuardaronLosDatos(false)
     }
     getDatosGenerales()
-  }, [])
+  }, [seGuardaronLosDatos])
 
   
 
@@ -99,6 +102,7 @@ function DatosGenerales() {
   const hayMateriaComunVacia = datosGenerales.specialSubjects.find(materia => materia.id == "" || materia.name == "")
   const hayCambios = !isEqual(datosGenerales, datosGeneralesSinEditar)
   const sePuedeGuardar = hayCambios && !hayParCarreraVacio && !hayMateriaComunVacia
+  const mensajeGuardado = (hayParCarreraVacio || hayMateriaComunVacia) ? "Debe llenar todos los campos" : (!hayCambios) ? "No hay cambios para guardar" : "Hay cambios sin guardar"
 
   //Funciones para editar las propiedades de generalAcademicData
   const editarParesCarrerasDatosGenerales = (nuevosPares) => setDatosGenerales({ ...datosGenerales, careerPairs: nuevosPares })
@@ -106,7 +110,11 @@ function DatosGenerales() {
   const editarNivelesInglesDatosGenerales = (listaIds) => setDatosGenerales({ ...datosGenerales, englishLevelIds: listaIds })
   const editarMateriasFakeDatosGenerales = (listaMateriasFake) => setDatosGenerales({ ...datosGenerales, fakeSubjectIds: listaMateriasFake })
 
-  const guardarDatosGenerales = async () => await updateGeneralAcademicData(datosGenerales)
+  const guardarDatosGenerales = async () => {
+    const response = await updateGeneralAcademicData(datosGenerales)
+    if (response.status == 200)
+      setSeGuardaronLosDatos(true)
+  }
 
   return (
     <>
@@ -117,6 +125,7 @@ function DatosGenerales() {
         carrerasGuaraniData={carrerasGuarani}
         guardarDatosGenerales={guardarDatosGenerales}
         sePuedeGuardar={sePuedeGuardar}
+        mensajeGuardado = {mensajeGuardado}
       />
     }
 

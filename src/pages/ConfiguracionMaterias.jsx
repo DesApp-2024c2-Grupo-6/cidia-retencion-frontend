@@ -140,7 +140,7 @@ function ConfiguracionMaterias() {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        maxWidth: '800px',
+        maxWidth: '1000px',
         margin: 'auto',
         marginTop: 3,
         borderRadius: '4px',
@@ -154,7 +154,8 @@ function ConfiguracionMaterias() {
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'no-wrap',
-          gap: '10px'
+          gap: '10px',
+          marginBottom:'16px'
         }}
       >
         <Typography
@@ -172,21 +173,23 @@ function ConfiguracionMaterias() {
       <Box
         sx={{
           display: 'flex',
-          backgroundColor: '#609800',
+          gap: '8px',
+          backgroundColor: 'green',
           padding: '8px',
         }}
       >
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Código Materia</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Año</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Campo</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', backgroundColor: '#609800', color: '#FFFFFF' }}>Nombre Completo</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', backgroundColor: '#609800', color: '#FFFFFF' }}>Nombre Especial</Typography>
-        <Typography sx={{ flex: 1.5, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre Completo</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre Especial</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
       </Box>
 
-      {!estaAbierto && subjects?.map((item) => (
-        <Materia key={item.id_materia}  data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
-      ))}
+      {subjects?.map((item, index) => {
+        if ( !estaAbierto || (estaAbierto && index <= 15))
+        return <Materia key={item.id_materia}  data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
+      })}
 
       <Button
         onClick={handleClicBack}
