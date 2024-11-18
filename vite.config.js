@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   esbuild: {
     supported: {
-      'top-level.await': true
+      'top-level-await': true
     },
   },
 });
