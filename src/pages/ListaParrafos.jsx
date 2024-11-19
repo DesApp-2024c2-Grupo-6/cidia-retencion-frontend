@@ -36,7 +36,6 @@ const ParagraphList = () => {
     fetchParrafos();
   }, [editIndex]);
 
-
   const agregarParrafo = async () => {
     const cantidadClavesSinEditar = parrafos.filter(parrafo => parrafo.key.includes("nuevaClave")).length
     const clave = `nuevaClave(${cantidadClavesSinEditar})`
@@ -53,20 +52,7 @@ const ParagraphList = () => {
   };
 
 
-  //DATOS QUE SON INFORMACION ADICIONAL DE "EN_CARRERA"
-  const [idsCarreras, setIdsCarreras] = useState([]);
-  const [incluye, setIncluye] = useState(false);
 
-  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_PENDIENTES"
-  const [idsMateriasMP, setIdsMateriasMP] = useState([]);
-  const [cantidadAprobadasMP, setCantidadAprobadasMP] = useState(0);
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_NO_PENDIENTES"
-  const [idsMateriasMNP, setIdsMateriasMNP] = useState([]);
-  const [cantidadAprobadasMNP, setCantidadAprobadasMNP] = useState(0);
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "CANTIDAD_APROBADAS"
-  const [cantidadAprobadas, setCantidadAprobadas] = useState(0);
 
   const editarParrafo2 = async (parrafo) => {
     const response = await updateOneParrafo(parrafo);
@@ -76,60 +62,6 @@ const ParagraphList = () => {
       console.log("Error:" +response)
     setEditIndex(null);
   }
-
-  const editarParrafo = async (index, newClave, newText, newConditions) => {
-
-    const formatearCondicion = (condicion) => {
-      /*
-        Retorna la condicion recibida, pero agregando los valores definidos en Tarjeta condicion
-        segun su codigo de condicion
-        Parametros:
-          -condicion - objeto - Objeto que contiene el codigo y la configuracion de una condicion
-
-        Retorna: Objeto
-        EJ: formatearCondicion({codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[], incluye:true}})
-        => {codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[1, 5, 7], incluye:"excluye"}}
-      */
-      const configuracionesPorCodigo = {
-        "EN_CARRERA": {
-          id_carreras: idsCarreras,
-          en_carrera: (incluye) ? "incluye" : "excluye"
-        },
-        "MATERIAS_PENDIENTES": {
-          id_materias: idsMateriasMP,
-          cantidad: cantidadAprobadasMP
-        },
-        "MATERIAS_NO_PENDIENTES": {
-          id_materias: idsMateriasMNP,
-          cantidad: cantidadAprobadasMNP
-        },
-        "CANT_APROBADAS": {
-          cantidad: cantidadAprobadas
-        },
-        "DEFAULT": {}
-      }
-      return ({ ...condicion, config_condicion: (configuracionesPorCodigo[condicion.codigo_condicion] || {}) })
-    }
-
-    try {
-
-      const condicionesFormateadas = newConditions.map(condicion => formatearCondicion(condicion))
-
-      const updatedParrafo = {
-        keyanterior: parrafos[index].key,
-        key: newClave,
-        text: newText,
-        conditions: condicionesFormateadas
-      }
-      console.log(updatedParrafo)
-
-      const response = await updateOneParrafo(updatedParrafo);
-      setEditIndex(null);
-
-    } catch (error) {
-      console.error('Error updating paragraph:', error);
-    }
-  };
 
   const eliminarParrafo = async (key) => {
     try {
@@ -148,7 +80,6 @@ const ParagraphList = () => {
   };
 
   const guardarOrdenParrafos = async (listaParrafos) => await updateAllParrafos({ parrafos: listaParrafos })
-
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
@@ -231,29 +162,11 @@ const ParagraphList = () => {
           ))}
         </>
       ) : (
-        /*
-        <EdicionParrafo
-          initialClave={parrafos[editIndex].key}
-          initialTexto={parrafos[editIndex].text}
-          condiciones={parrafos[editIndex].conditions} //Cris
-          onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
-          onCancel={() => setEditIndex(null)}
-          setCantidadAprobadas={setCantidadAprobadas}
-          setIdsCarrerasEC={setIdsCarreras}
-          setIncluyeEC={setIncluye}
-          setIdsMateriasMP={setIdsMateriasMP}
-          setCantidadAprobadasMP={setCantidadAprobadasMP}
-          setIdsMateriasMNP={setIdsMateriasMNP}
-          setCantidadAprobadasMNP={setCantidadAprobadasMNP}
-          carrerasSeleccionadas={idsCarreras}
-        />*/
         <EdicionParrafo2
           parrafoData={parrafos[editIndex]}
           editarParrafo={editarParrafo2}
           handleCancelar={() => setEditIndex(null)}
-        >
-
-        </EdicionParrafo2>
+        />
       )}
     </Box>
   );

@@ -383,7 +383,8 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                                         handleConfiguracionCondicionChange={handleConfiguracionCondicionChange}
                                         materiasData={materiasPosibles}
                                     />
-                                    : <FormPrueba condicion={condicionSeleccionada} />
+                                    : <></>
+                                
                     )
                     }
                 </Box>
