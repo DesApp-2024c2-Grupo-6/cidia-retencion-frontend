@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-const baseURL = 'https://cidia-retencion-backend.onrender.com:3001/api'
+const baseURL = 'https://cidia-retencion-backend.onrender.com/api'
 
 
 export const getAllSuggestionCondition = async () => {
