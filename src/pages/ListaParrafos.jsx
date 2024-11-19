@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
 import EdicionParrafo from '../components/EdicionParrafo';
-import { Button, Box, Typography, Paper, Grid } from '@mui/material';
+import EdicionParrafo2 from '../components/parrafo/EdicionParrafo2';
+
+import { Button, Box, Typography, Paper, Grid, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
@@ -34,8 +38,9 @@ const ParagraphList = () => {
 
 
   const agregarParrafo = async () => {
-    const clave = "Clave " + parrafos.length;
-    const texto = "Texto " + parrafos.length;
+    const cantidadClavesSinEditar = parrafos.filter(parrafo => parrafo.key.includes("nuevaClave")).length
+    const clave = `nuevaClave(${cantidadClavesSinEditar})`
+    const texto = `nuevoTexto(${cantidadClavesSinEditar})`
     const response = await createParrafo({ nuevaClave: clave, nuevoTexto: texto });
     console.log(response)
     if (response.status == 200) {
@@ -43,7 +48,7 @@ const ParagraphList = () => {
       const nuevoParrafo = response.data.parrafosData._rawData[0];
       setParrafos([nuevoParrafo, ...parrafos])
     }
-    else 
+    else
       console.error('Error: No se pudo crear el parrafo', response);
   };
 
@@ -62,6 +67,15 @@ const ParagraphList = () => {
 
   //DATOS QUE SON INFORMACION ADICIONAL DE "CANTIDAD_APROBADAS"
   const [cantidadAprobadas, setCantidadAprobadas] = useState(0);
+
+  const editarParrafo2 = async (parrafo) => {
+    const response = await updateOneParrafo(parrafo);
+    if (response.status == 200)
+      console.log("Parrafo editado")
+    else
+      console.log("Error:" +response)
+    setEditIndex(null);
+  }
 
   const editarParrafo = async (index, newClave, newText, newConditions) => {
 
@@ -133,8 +147,8 @@ const ParagraphList = () => {
     }
   };
 
-  const guardarOrdenParrafos = async(listaParrafos) => await updateAllParrafos({parrafos: listaParrafos})
-  
+  const guardarOrdenParrafos = async (listaParrafos) => await updateAllParrafos({ parrafos: listaParrafos })
+
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
@@ -185,14 +199,11 @@ const ParagraphList = () => {
       </Typography>
       {editIndex === null ? (
         <>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => agregarParrafo()}
-            sx={{ marginY: '12px' }}
-          >
-            Añadir Párrafo
-          </Button>
+          <IconButton
+            sx={{ display: 'inline', width: 'auto', marginTop: '5px' }}
+            onClick={() => agregarParrafo()}>
+            <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
+          </IconButton>
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
               <Paper
@@ -220,6 +231,7 @@ const ParagraphList = () => {
           ))}
         </>
       ) : (
+        /*
         <EdicionParrafo
           initialClave={parrafos[editIndex].key}
           initialTexto={parrafos[editIndex].text}
@@ -234,7 +246,14 @@ const ParagraphList = () => {
           setIdsMateriasMNP={setIdsMateriasMNP}
           setCantidadAprobadasMNP={setCantidadAprobadasMNP}
           carrerasSeleccionadas={idsCarreras}
-        />
+        />*/
+        <EdicionParrafo2
+          parrafoData={parrafos[editIndex]}
+          editarParrafo={editarParrafo2}
+          handleCancelar={() => setEditIndex(null)}
+        >
+
+        </EdicionParrafo2>
       )}
     </Box>
   );
