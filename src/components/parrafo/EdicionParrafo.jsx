@@ -10,7 +10,7 @@ import SelectMultipleAR from '../SelectMultipleAR';
 
 
 
-const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondicionChange, handleCarrerasElegidasChange }) => {
+const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondicionChange, handleCarrerasElegidasChange, checkBoxDeshabilitado }) => {
 
     const CODIGO = "EN_CARRERA";
     const [configuracion, setConfiguracion] = useState(condicionData.config_condicion)
@@ -45,7 +45,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
             },
         }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
-                <Box sx={{ width: '15%', textAlign: 'center' }}>
+                <Box sx={{ width: '20%', textAlign: 'center' }}>
                     <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
                 </Box>
                 <Box sx={{ width: '60%', textAlign: 'center' }}>
@@ -56,7 +56,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
-                <Box sx={{ width: '15%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{CODIGO}</Typography>
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -74,7 +74,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
                     />
                 </Box>
                 <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Checkbox checked={configuracion.en_carrera == "incluye"} onClick={handleVaEnCarreraChange} />
+                    <Checkbox disabled={checkBoxDeshabilitado} checked={configuracion.en_carrera == "incluye"} onClick={handleVaEnCarreraChange} />
                 </Box>
             </Box>
         </Box>
@@ -146,7 +146,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
             },
         }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-around', gap: 1 }}>
-                <Box sx={{ width: '25%', textAlign: 'center' }}>
+                <Box sx={{ width: '20%', textAlign: 'center' }}>
                     <Typography sx={{ fontWeight: 'bold' }} variant="body2">Condición</Typography>
                 </Box>
                 <Box sx={{ width: '60%', textAlign: 'center' }}>
@@ -157,7 +157,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 1 }}>
-                <Box sx={{ width: '25%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ width: '20%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography variant="body1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{CODIGO}</Typography>
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -182,14 +182,6 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
     )
 }
 
-
-const FormPrueba = ({ condicion }) => {
-    return (
-        <>
-            <p>{condicion.codigo_condicion}</p>
-        </>
-    )
-}
 
 const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
 
@@ -334,7 +326,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
 
         return esIncompatible
     };
-
+ 
     return (
         <Box
             component="form"
@@ -369,7 +361,9 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                                 condicionData={condicionSeleccionada}
                                 handleConfiguracionCondicionChange={handleConfiguracionCondicionChange}
                                 handleCarrerasElegidasChange={handleCarrerasElegidasChange}
-                                carrerasData={carreras} />
+                                carrerasData={carreras}
+                                checkBoxDeshabilitado={codigosCondicionSeleccionados.includes("MATERIAS_PENDIENTES") || codigosCondicionSeleccionados.includes("MATERIAS_NO_PENDIENTES")}
+                                />
                             : (condicionSeleccionada.codigo_condicion == "CANT_APROBADAS")
                                 ? <FormCantAprobadas
                                     key={condicionSeleccionada.codigo_condicion}
@@ -383,8 +377,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                                         handleConfiguracionCondicionChange={handleConfiguracionCondicionChange}
                                         materiasData={materiasPosibles}
                                     />
-                                    : <></>
-                                
+                                    :<span key={condicionSeleccionada.codigo_condicion}/>
                     )
                     }
                 </Box>

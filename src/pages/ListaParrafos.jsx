@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
-import EdicionParrafo from '../components/EdicionParrafo';
-import EdicionParrafo2 from '../components/parrafo/EdicionParrafo2';
+import EdicionParrafo from '../components/parrafo/EdicionParrafo';
 
 import { Button, Box, Typography, Paper, Grid, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
 const ParagraphList = () => {
-  const [parrafos, setParrafos] = useState();
+  const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+
+  const hayParrafoIncompleto = parrafos && parrafos.some(parrafo => parrafo.key == "" || parrafo.text == "")
 
   useEffect(() => {
     const fetchParrafos = async () => {
@@ -37,9 +37,8 @@ const ParagraphList = () => {
   }, [editIndex]);
 
   const agregarParrafo = async () => {
-    const cantidadClavesSinEditar = parrafos.filter(parrafo => parrafo.key.includes("nuevaClave")).length
-    const clave = `nuevaClave(${cantidadClavesSinEditar})`
-    const texto = `nuevoTexto(${cantidadClavesSinEditar})`
+    const clave = ``
+    const texto = ``
     const response = await createParrafo({ nuevaClave: clave, nuevoTexto: texto });
     console.log(response)
     if (response.status == 200) {
@@ -51,15 +50,12 @@ const ParagraphList = () => {
       console.error('Error: No se pudo crear el parrafo', response);
   };
 
-
-
-
-  const editarParrafo2 = async (parrafo) => {
+  const editarParrafo = async (parrafo) => {
     const response = await updateOneParrafo(parrafo);
     if (response.status == 200)
       console.log("Parrafo editado")
     else
-      console.log("Error:" +response)
+      console.log("Error:" + response)
     setEditIndex(null);
   }
 
@@ -132,9 +128,19 @@ const ParagraphList = () => {
         <>
           <IconButton
             sx={{ display: 'inline', width: 'auto', marginTop: '5px' }}
-            onClick={() => agregarParrafo()}>
-            <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
+            onClick={() => agregarParrafo()}
+            disabled={hayParrafoIncompleto}
+          >
+            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '48px' }} />
           </IconButton>
+          {hayParrafoIncompleto&&
+          <Typography sx={{
+              fontSize: 'small',
+              textAlign: 'start',
+              marginBottom: '5px',
+              color:'red'
+            }}>Hay parrafos con datos incompletos</Typography>
+          }
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
               <Paper
@@ -162,9 +168,9 @@ const ParagraphList = () => {
           ))}
         </>
       ) : (
-        <EdicionParrafo2
+        <EdicionParrafo
           parrafoData={parrafos[editIndex]}
-          editarParrafo={editarParrafo2}
+          editarParrafo={editarParrafo}
           handleCancelar={() => setEditIndex(null)}
         />
       )}
