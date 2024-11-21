@@ -65,7 +65,7 @@ function Materia({data, handleSaveEdit, handleBorrado}) {
         <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px',fontSize: '12px', alignContent: 'center' }}>{data.campo}</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.subjectName}</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.specialSubjectName}</Typography>
-        <Box sx={{ flex: 1.5, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
+        <Box sx={{ flex: 1, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
             <IconButton
                 sx={{ width: '25px' }}
                 onClick={() => handleBorrado(data)}> 

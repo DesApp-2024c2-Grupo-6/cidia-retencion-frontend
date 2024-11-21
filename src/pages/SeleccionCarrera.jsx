@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SelectComponent from '../components/SelectR';
-import { Button, Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl} from '@mui/material';
+import { Button, Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 //Iconos
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
@@ -14,7 +14,7 @@ import '../styles/ConfiguracionCarreras.css';
 import { useDispatch } from 'react-redux';
 import { addCarrera } from '../redux/carreraSlice';
 
-import { getAllCareer, saveCareer,getCarrerasConPlan,getAllCareerGuaraniConPlanes } from '../services/CareerService';
+import { getAllCareer, saveCareer, getCarrerasConPlan, getAllCareerGuaraniConPlanes } from '../services/CareerService';
 import { useNavigate } from 'react-router-dom';
 
 //Services
@@ -33,7 +33,7 @@ function SeleccionCarrera() {
 
     //Agregar carrera
     const [seEstaAgregandoCarrera, setSeEstaAgregandoCarrera] = useState(Boolean);
-    const NUEVA_CARRERA_VACIA = {id: "", planId: "", nombre: "", estado: "", planes: []}
+    const NUEVA_CARRERA_VACIA = { id: "", planId: "", nombre: "", estado: "", planes: [] }
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
     const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
     useEffect(() => {
@@ -48,10 +48,10 @@ function SeleccionCarrera() {
                 })
                 const lista = careers.map(c => ({
                     label: `${c.careerName} - ${c.planName}`,
-                    value: { v: c.careerId, l: `${c.careerName} - ${c.planName}`,p:c.planId }
+                    value: { v: c.careerId, l: `${c.careerName} - ${c.planName}`, p: c.planId }
                 }));
                 setCarrerasList(lista);
- 
+
             } else {
                 setMessage({
                     code: carreras.status,
@@ -60,16 +60,16 @@ function SeleccionCarrera() {
             }
         }
         obtenerCarreras();
-        
+
 
     }, [])
 
-    useEffect(() =>{
+    useEffect(() => {
         setMessage({});
         const obtenerCarrerasGuarani = async () => {
             const carreras = await getAllCareerGuaraniConPlanes();
             if (carreras.status === 200) {
- 
+
                 setMessage({
                     code: carreras.status,
                     msg: `Se han traido todas las carreras.`
@@ -80,7 +80,7 @@ function SeleccionCarrera() {
                     planId: "",
                     nombre: c.nombre,
                     estado: c.estado,
-                    planes:c.planes
+                    planes: c.planes
                 }));
                 SetListadoCarrerasPlanes(lista);
             } else {
@@ -91,12 +91,12 @@ function SeleccionCarrera() {
             }
         }
         obtenerCarrerasGuarani();
-    },[])
+    }, [])
 
 
     const handleSelect = (value) => {
         console.log(value)
-        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l,IdPlan: value.p}));
+        dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l, IdPlan: value.p }));
         setConfigButton(value.v)
     };
 
@@ -118,7 +118,7 @@ function SeleccionCarrera() {
 
     const handleNuevaCarreraChange = (event, value) => {
         setNuevaCarrera({ ...value, planId: "" })
-        dispatch(addCarrera({ IdCarrera: value.id, nombreCarrera: value.nombre}));
+        dispatch(addCarrera({ IdCarrera: value.id, nombreCarrera: value.nombre }));
     }
 
     const handleCloseModal = () => {
@@ -127,14 +127,14 @@ function SeleccionCarrera() {
     }
 
     const handleSaveModal = async () => {
-        const carreraData = {careerId: nuevaCarrera.id, planId: nuevaCarrera.planId }
+        const carreraData = { careerId: nuevaCarrera.id, planId: nuevaCarrera.planId }
         const response = await saveCareer(carreraData)
-        if(response.status == 200){
-            dispatch(addCarrera({ IdCarrera: nuevaCarrera.id, nombreCarrera: nuevaCarrera.nombre,IdPlan: nuevaCarrera.planId}));
+        if (response.status == 200) {
+            dispatch(addCarrera({ IdCarrera: nuevaCarrera.id, nombreCarrera: nuevaCarrera.nombre, IdPlan: nuevaCarrera.planId }));
             setConfigButton(nuevaCarrera.id)
             navigate('/configuracion/carrera')
         }
-        else{
+        else {
             console.log("Error")
         }
         setSeEstaAgregandoCarrera(false)
@@ -162,7 +162,7 @@ function SeleccionCarrera() {
                 alignItems: 'center',
                 bgcolor: 'background.default',
                 marginTop: 8,
-                marginBottom: 3
+                marginBottom: 4
             }}>
                 <Box
                     sx={{
@@ -170,9 +170,9 @@ function SeleccionCarrera() {
                         minWidth: '250px'
                     }}
                 >
-                    <h3 className="label">Seleccione una Carrera</h3>
-
+                    <h3 className='label' >Seleccione una Carrera:</h3>
                     <Autocomplete
+                        sx={{ marginTop: '10px' }}
                         disablePortal
                         disableClearable
                         options={carreras}
@@ -249,18 +249,21 @@ function SeleccionCarrera() {
                                 getOptionLabel={(carrera) => carrera.nombre}
                                 renderInput={(params) => <TextField {...params} label="Carrera" />}
                             />
-                            <Select
-                                labelId="select-planes"
-                                id="id-select-planes"
-                                value={nuevaCarrera.planId}
-                                label="Plan de estudios"
-                                disabled = {nuevaCarrera.id == ""}
-                                onChange={event => setNuevaCarrera({...nuevaCarrera, planId: event.target.value})}
-                            >
-                                {nuevaCarrera.planes.map(plan =>
-                                    <MenuItem key={plan.id} value={plan.id}>{"Plan "+ plan.fecha_entrada_vigencia}</MenuItem>
-                                )}
-                            </Select>
+                            <FormControl fullWidth>
+                                <InputLabel id="select-planes">Plan de estudio</InputLabel>
+                                <Select
+                                    labelId="select-planes"
+                                    id="id-select-planes"
+                                    value={nuevaCarrera.planId}
+                                    label="Plan de estudio"
+                                    disabled={nuevaCarrera.id == ""}
+                                    onChange={event => setNuevaCarrera({ ...nuevaCarrera, planId: event.target.value })}
+                                >
+                                    {nuevaCarrera.planes.map(plan =>
+                                        <MenuItem key={plan.id} value={plan.id}>{"Plan " + plan.fecha_entrada_vigencia}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
                             <Box
                                 sx={{ display: 'flex', gap: '10px' }}>
                                 <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleCloseModal}>Volver</Button>

@@ -14,7 +14,7 @@ import ConfirmarBorrado from '../ConfirmarBorrado.jsx'
 //Datos de prueba
 
 
-function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGenerales, guardarDatosGenerales, sePuedeGuardar}) {
+function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGenerales, guardarDatosGenerales, sePuedeGuardar, mensajeGuardado }) {
     /*
         Retorna la seccion donde se gestionan los pares de carreras
         Parametros:
@@ -23,11 +23,12 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
             -editarDatosGenerales(nuevoValor) - Funcion - Funcion que edita la propiedad careerPairs de los datos generales
             -guardarDatosGenerales - Funcion - Funciona que hace un PUT para actualizar los datos generales en el BE
             -sePuedeGuardar - Booleano - Indica si los datos generales se pueden guardar
+            -mensajeGuardado - String - Mensaje que indica si el documento se puede guardar o no y porque
     */
 
-    paresCarrerasData = paresCarrerasData.map((par, index) => ({id:index, ...par}))
+    paresCarrerasData = paresCarrerasData.map((par, index) => ({ id: index, ...par }))
 
-    const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({id:carrera.id, nombre:carrera.nombre})))
+    const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({ id: carrera.id, nombre: carrera.nombre })))
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
 
     const [seAgregoParNuevo, setSeAgregoParNuevo] = useState(false)
@@ -41,7 +42,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         const paresEditados = paresCarreras.map(par => (par.id == nuevoPar.id) ? nuevoPar : par)
         setParesCarreras(paresEditados)
         const paresSinId = paresEditados.map(par => {
-            const nuevoPar = {...par}
+            const nuevoPar = { ...par }
             delete nuevoPar.id;
             return nuevoPar;
         })
@@ -51,7 +52,7 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
     const [openBorrado, setOpenBorrado] = React.useState(Boolean);
     const [parDeCarrerasABorrar, setParDeCarrerasABorrar] = React.useState({});
 
-    const handleBorrado = (parrafo) =>{
+    const handleBorrado = (parrafo) => {
         setOpenBorrado(true);
         setParDeCarrerasABorrar(parrafo);
     }
@@ -70,15 +71,15 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
         const paresRestantes = paresCarreras.filter(par => (par.id != idABorrar))
         setParesCarreras(paresRestantes)
         const paresSinId = paresRestantes.map(par => {
-            const nuevoPar = {...par}
+            const nuevoPar = { ...par }
             delete nuevoPar.id;
             return nuevoPar;
         })
         editarDatosGenerales(paresSinId)
         handleCloseBorrado()
-        
+
     }
-    
+
     const handleAgregarPar = () => {
         /*
             Agrega un nuevo par vacio a la lista de pares de materas
@@ -86,13 +87,14 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                 -Se genera un id random el cual tienen todos los pares. Esto es el id que usa react para identificar cuando debe re-renderizar
         */
         const idNoDisponibles = paresCarreras.map(par => par.id);
-        const generarIDRandom = () => {
-            const idGenerado =  Math.floor(Math.random() * 10);
-            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom() : idGenerado
+
+        const generarIDRandom = (valorInicial) => {
+            const idGenerado =  valorInicial
+            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
         }
-        const CARRERA_VACIA =  {id: (generarIDRandom()), shortCareer: { id: "", nombre:"" }, longCareer: { id: "", nombre:"" }}
-        setParesCarreras([CARRERA_VACIA,...paresCarreras])
-        editarDatosGenerales([CARRERA_VACIA,...paresCarreras])
+        const CARRERA_VACIA = { id: (generarIDRandom(idNoDisponibles.length)), shortCareer: { id: "", nombre: "" }, longCareer: { id: "", nombre: "" } }
+        setParesCarreras([CARRERA_VACIA, ...paresCarreras])
+        editarDatosGenerales([CARRERA_VACIA, ...paresCarreras])
     }
 
     return (
@@ -106,11 +108,11 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                 marginBottom: 3
             }}>
                 <ConfirmarBorrado
-                openBorrado = {openBorrado}
-                handleCloseBorrado = {handleCloseBorrado}
-                funcionEliminar = {borrarParDeCarreras}
-                elementoAEliminar = {parDeCarrerasABorrar}
-                textoBorrado = "¿Está seguro de que desea eliminar este par de carreras?">
+                    openBorrado={openBorrado}
+                    handleCloseBorrado={handleCloseBorrado}
+                    funcionEliminar={borrarParDeCarreras}
+                    elementoAEliminar={parDeCarrerasABorrar}
+                    textoBorrado="¿Está seguro de que desea eliminar este par de carreras?">
                 </ConfirmarBorrado>
                 {/*Pares de carreras*/}
                 <Box sx={{
@@ -124,16 +126,25 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                     gap: '10px'
 
                 }}>
-                    
+
                     <h2 className="label">Pares carreras</h2>
                     <IconButton
                         sx={{ display: 'inline', width: 'auto', marginTop: '10px' }}
                         onClick={handleAgregarPar}>
                         <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
                     </IconButton>
-                    <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
-                        Guardar
-                    </Button>
+                    <Box>
+                        <Typography 
+                            sx={{fontSize:'small', 
+                            textAlign:'center', 
+                            marginBottom:'5px', 
+                            color:(mensajeGuardado == "Hay cambios sin guardar") ? '#f57f17' : 'red'}}
+                            >{mensajeGuardado}
+                        </Typography>
+                        <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
+                            Guardar
+                        </Button>
+                    </Box>
                 </Box>
                 <Box sx={{
                     width: '1000px',
@@ -154,13 +165,13 @@ function ParesDeCarreras({paresCarrerasData, carrerasGuaraniData, editarDatosGen
                     minWidth: '250px',
                 }}>
                     {
-                        paresCarreras.map((parCarreras) => 
-                            <FilaParDeCarreras 
-                                key={parCarreras.id} 
-                                parDeCarrerasData={parCarreras} 
-                                carrerasDisponibles={carrerasGuarani} 
-                                editarParDeCarreras = {editarParDeCarreras} 
-                                borrarParDeCarreras = {handleBorrado} 
+                        paresCarreras.map((parCarreras) =>
+                            <FilaParDeCarreras
+                                key={parCarreras.id}
+                                parDeCarrerasData={parCarreras}
+                                carrerasDisponibles={carrerasGuarani}
+                                editarParDeCarreras={editarParDeCarreras}
+                                borrarParDeCarreras={handleBorrado}
                             />)
                     }
                 </Box>

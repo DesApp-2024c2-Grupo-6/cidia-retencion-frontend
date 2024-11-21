@@ -21,7 +21,6 @@ const ConfirmarBorrado = (props) =>{
             transform: 'translate(-50%, -50%)',
             width: 600,
             bgcolor: 'background.paper',
-            border: '2px solid #000',
             boxShadow: 24,
             p: 4,
             display: 'block',
@@ -30,7 +29,7 @@ const ConfirmarBorrado = (props) =>{
             <Box
                 sx={{
                     textAlign: "center",
-                    marginBottom: '10px'
+                    marginBottom: '20px'
                 }}>
                     <Typography variant="h6">
                         {textoBorrado}
@@ -41,7 +40,7 @@ const ConfirmarBorrado = (props) =>{
                             sx={
                                 {
                                     display: 'flex',
-                                    justifyContent: 'space-between',
+                                    justifyContent: 'space-around',
                                     gap: '20px', 
                                     margin: '15px 15px 0px 15px', 
                                     boxShadow: 'none'

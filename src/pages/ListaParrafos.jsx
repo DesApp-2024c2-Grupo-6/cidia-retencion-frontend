@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
-import EdicionParrafo from '../components/EdicionParrafo';
-import { Button, Box, Typography, Paper, Grid } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import EdicionParrafo from '../components/parrafo/EdicionParrafo';
+
+import { Button, Box, Typography, Paper, Grid, IconButton } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
-import { getAllParrafos, updateOneParrafo, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
+import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
 
 const ParagraphList = () => {
-  const [parrafos, setParrafos] = useState();
+  const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [cond, setCond] = useState([]);
+
+  const hayParrafoIncompleto = parrafos && parrafos.some(parrafo => parrafo.key == "" || parrafo.text == "")
 
   useEffect(() => {
     const fetchParrafos = async () => {
@@ -18,38 +21,7 @@ const ParagraphList = () => {
         if (response.status === 200) {
           const data = response.data.allParrafos[0]._rawData;
           if (Array.isArray(data)) {
-            /*
-            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
-              const nuevoOrdenParrafos = data.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-              window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrdenParrafos))
-              console.log(nuevoOrdenParrafos)
-            }
-            const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
-            const parrafosConOrden = data.map(parrafo => {
-              const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
-              if (ordenParrafo == null)
-                return ({ ...parrafo, orden: ordenParrafos.length })
-              else
-                return ({ ...parrafo, orden: ordenParrafo.orden })
-            })
-            const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p2.orden - p1.orden)
-            setParrafos(parrafosOrdenados);
-            */
-            if (window.localStorage.getItem("ORDEN_PARRAFOS") == null)
-              setParrafos(data)
-            else {
-              const ordenParrafos = JSON.parse(window.localStorage.getItem("ORDEN_PARRAFOS"))
-              const parrafosConOrden = data.map(parrafo => {
-                const ordenParrafo = ordenParrafos.find(op => op.key == parrafo.key)
-                if (ordenParrafo == null)
-                  return ({ ...parrafo, orden: ordenParrafos.length })
-                else
-                  return ({ ...parrafo, orden: ordenParrafo.orden })
-              })
-              const parrafosOrdenados = parrafosConOrden.sort((p1, p2) => p1.orden - p2.orden)
-              setParrafos(parrafosOrdenados);
-            }
-
+            setParrafos(data)
           } else {
             console.error('Data fetched is not an array:', data);
           }
@@ -64,106 +36,28 @@ const ParagraphList = () => {
     fetchParrafos();
   }, [editIndex]);
 
-  useEffect(() => {
-    const ordenarParrafos = () => {
-      if (parrafos) {
-        if (window.localStorage.getItem("ORDEN_PARRAFOS") == null) {
-          const ordenCreado = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-          window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(ordenCreado))
-        }
-        const nuevoOrden = parrafos.map((parrafo, index) => ({ orden: index, key: parrafo.key }))
-        window.localStorage.setItem("ORDEN_PARRAFOS", JSON.stringify(nuevoOrden))
-      }
+  const agregarParrafo = async () => {
+    const clave = ``
+    const texto = ``
+    const response = await createParrafo({ nuevaClave: clave, nuevoTexto: texto });
+    console.log(response)
+    if (response.status == 200) {
+      //El nuevo parrafo se agrega al principio de la lista
+      const nuevoParrafo = response.data.parrafosData._rawData[0];
+      setParrafos([nuevoParrafo, ...parrafos])
     }
-    ordenarParrafos()
-  }, [parrafos])
-
-  const agregarParrafo = async (clave, texto) => {
-
-    try {
-      const response = await createParrafo({
-        parrafoId: '668f20a4fb3e34d777eb3e1', //Aca tocar por el id 
-        nuevaClave: clave,
-        nuevoTexto: texto
-      });
-      console.log('Response from createParrafo:', response);
-      const dato = response.parrafo._rawData[response.parrafo._rawData.length - 1];
-      console.log(dato)
-      setParrafos([...parrafos, { key: dato.key, text: dato.text }]);
-    } catch (error) {
-      console.error('Error creating paragraph:', error);
-    }
+    else
+      console.error('Error: No se pudo crear el parrafo', response);
   };
 
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "EN_CARRERA"
-  const [idsCarreras, setIdsCarreras] = useState([]);
-  const [incluye, setIncluye] = useState(false);
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_PENDIENTES"
-  const [idsMateriasMP, setIdsMateriasMP] = useState([]);
-  const [cantidadAprobadasMP, setCantidadAprobadasMP] = useState(0);
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "MATERIAS_NO_PENDIENTES"
-  const [idsMateriasMNP, setIdsMateriasMNP] = useState([]);
-  const [cantidadAprobadasMNP, setCantidadAprobadasMNP] = useState(0);
-
-  //DATOS QUE SON INFORMACION ADICIONAL DE "CANTIDAD_APROBADAS"
-  const [cantidadAprobadas, setCantidadAprobadas] = useState(0);
-
-  const editarParrafo = async (index, newClave, newText, newConditions) => {
-
-    const formatearCondicion = (condicion) => {
-      /*
-        Retorna la condicion recibida, pero agregando los valores definidos en Tarjeta condicion
-        segun su codigo de condicion
-        Parametros:
-          -condicion - objeto - Objeto que contiene el codigo y la configuracion de una condicion
-
-        Retorna: Objeto
-        EJ: formatearCondicion({codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[], incluye:true}})
-        => {codigo_condicion:"EN_CARRERA", config_condicion:{id_carreras:[1, 5, 7], incluye:"excluye"}}
-      */
-      const configuracionesPorCodigo = {
-        "EN_CARRERA": {
-          id_carreras: idsCarreras,
-          en_carrera: (incluye) ? "incluye" : "excluye"
-        },
-        "MATERIAS_PENDIENTES": {
-          id_materias: idsMateriasMP,
-          cantidad: cantidadAprobadasMP
-        },
-        "MATERIAS_NO_PENDIENTES": {
-          id_materias: idsMateriasMNP,
-          cantidad: cantidadAprobadasMNP
-        },
-        "CANT_APROBADAS": {
-          cantidad: cantidadAprobadas
-        },
-        "DEFAULT": {}
-      }
-      return ({ ...condicion, config_condicion: (configuracionesPorCodigo[condicion.codigo_condicion] || {}) })
-    }
-
-    try {
-
-      const condicionesFormateadas = newConditions.map(condicion => formatearCondicion(condicion))
-
-      const updatedParrafo = {
-        keyanterior: parrafos[index].key,
-        key: newClave,
-        text: newText,
-        conditions: condicionesFormateadas
-      }
-      console.log(updatedParrafo)
-
-      const response = await updateOneParrafo(updatedParrafo);
-      setEditIndex(null);
-
-    } catch (error) {
-      console.error('Error updating paragraph:', error);
-    }
-  };
+  const editarParrafo = async (parrafo) => {
+    const response = await updateOneParrafo(parrafo);
+    if (response.status == 200)
+      console.log("Parrafo editado")
+    else
+      console.log("Error:" + response)
+    setEditIndex(null);
+  }
 
   const eliminarParrafo = async (key) => {
     try {
@@ -181,6 +75,8 @@ const ParagraphList = () => {
     }
   };
 
+  const guardarOrdenParrafos = async (listaParrafos) => await updateAllParrafos({ parrafos: listaParrafos })
+
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData('index', index);
   };
@@ -195,8 +91,8 @@ const ParagraphList = () => {
     const draggedParagraph = updatedParrafos[oldIndex];
     updatedParrafos.splice(oldIndex, 1);
     updatedParrafos.splice(newIndex, 0, draggedParagraph);
-    console.log(updatedParrafos)
     setParrafos(updatedParrafos);
+    guardarOrdenParrafos(updatedParrafos)
   };
   const [openBorrado, setOpenBorrado] = React.useState(Boolean);
   const [parrafoABorrar, setParrafoABorrar] = React.useState({});
@@ -230,6 +126,21 @@ const ParagraphList = () => {
       </Typography>
       {editIndex === null ? (
         <>
+          <IconButton
+            sx={{ display: 'inline', width: 'auto', marginTop: '5px' }}
+            onClick={() => agregarParrafo()}
+            disabled={hayParrafoIncompleto}
+          >
+            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '48px' }} />
+          </IconButton>
+          {hayParrafoIncompleto&&
+          <Typography sx={{
+              fontSize: 'small',
+              textAlign: 'start',
+              marginBottom: '5px',
+              color:'red'
+            }}>Hay parrafos con datos incompletos</Typography>
+          }
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
             <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
               <Paper
@@ -255,30 +166,12 @@ const ParagraphList = () => {
               </Paper>
             </Grid>
           ))}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => agregarParrafo("ejemplo de Clave", "ejemplo de texto")}
-            sx={{ marginTop: '16px' }}
-          >
-            Añadir Párrafo
-          </Button>
         </>
       ) : (
         <EdicionParrafo
-          initialClave={parrafos[editIndex].key}
-          initialTexto={parrafos[editIndex].text}
-          condiciones={parrafos[editIndex].conditions} //Cris
-          onSave={(clave, texto, cond) => editarParrafo(editIndex, clave, texto, cond)} //Cris
-          onCancel={() => setEditIndex(null)}
-          setCantidadAprobadas={setCantidadAprobadas}
-          setIdsCarrerasEC={setIdsCarreras}
-          setIncluyeEC={setIncluye}
-          setIdsMateriasMP={setIdsMateriasMP}
-          setCantidadAprobadasMP={setCantidadAprobadasMP}
-          setIdsMateriasMNP={setIdsMateriasMNP}
-          setCantidadAprobadasMNP={setCantidadAprobadasMNP}
-          carrerasSeleccionadas={idsCarreras}
+          parrafoData={parrafos[editIndex]}
+          editarParrafo={editarParrafo}
+          handleCancelar={() => setEditIndex(null)}
         />
       )}
     </Box>

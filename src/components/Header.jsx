@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
+import Stack from '@mui/material/Stack';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,7 @@ function Header() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width:1220px)');
-    
+
     //funciones para navegar tendremos 2 por ahora Home y Configuracion
     const handleOnClickHome = () => {
         navigate('/home');
@@ -30,7 +31,7 @@ function Header() {
 
     const handleOnClickConfiguracion = () => {
         navigate('/configuracion');
-        if (isMobile) setDrawerOpen(false); 
+        if (isMobile) setDrawerOpen(false);
     }
 
     const buttons = [
@@ -43,12 +44,12 @@ function Header() {
     ];
 
     const drawerButtons = [
-        { text: 'Configuraciones', onClick: handleOnClickConfiguracion },
-        { text: 'Opción 2', onClick: handleOnClickHome },
-        { text: 'Opción 3' },
-        { text: 'Opción 4' },
-        { text: 'Opción 5' },
-        { text: 'Opción 6' },
+        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled:false },
+        { text: 'Opción 2', onClick: handleOnClickHome, disabled:true },
+        { text: 'Opción 3', disabled:true },
+        { text: 'Opción 4', disabled:true },
+        { text: 'Opción 5', disabled:true },
+        { text: 'Opción 6', disabled:true },
     ];
 
     const handleDrawerToggle = () => {
@@ -57,13 +58,11 @@ function Header() {
 
     return (
         <header>
-            
-                
-                {isMobile ? (
+            {isMobile ? (
                 <>
-                    <Box sx={{ width: '100%', height:'100px' }} display="flex" alignItems="center" justifyContent="space-between" >
-                        <img src={logo} alt="UNAHUR" style={{marginLeft:'30px', height: '100px' }} />
-                        <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerToggle} sx={{width:'50px', marginRight:'30px'}}>
+                    <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
+                        <img src={logo} alt="UNAHUR" style={{ marginLeft: '30px', height: '100px' }} />
+                        <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerToggle} sx={{ width: '50px', marginRight: '30px' }}>
                             <MenuIcon />
                         </IconButton>
                         <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
@@ -76,15 +75,37 @@ function Header() {
                             </List>
                         </Drawer>
                     </Box>
-                    </>
-                ) : (
-                        <>
+                </>
+            ) : (
+                <>
+
                     <img src={logo} alt="UNAHUR" />
+                    <Box>
+                        <Stack
+                            direction="row"
+                            spacing={-1}
+                            sx={{
+                                justifyContent: "flex-start",
+                                alignItems: "flex-end",
+                            }}
+                        >
+                            {
+                                drawerButtons.map(button =>
+                                    <Button sx={{ color: '#414345', fontWeight: 'bold' }}
+                                        key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>{button.text}</Button>
+                                )
+                            }
+                        </Stack>
+                    </Box>
+
+
+                    {/*
                     <ButtonGroup size="large" aria-label="large button group">
-                    {buttons}
-                            </ButtonGroup></>
-                )}
-            
+                        {buttons}
+                    </ButtonGroup></>*/}
+                </>
+            )}
+
         </header>
     );
 }
