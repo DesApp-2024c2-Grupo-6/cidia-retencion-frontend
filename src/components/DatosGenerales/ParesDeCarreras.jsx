@@ -87,11 +87,12 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                 -Se genera un id random el cual tienen todos los pares. Esto es el id que usa react para identificar cuando debe re-renderizar
         */
         const idNoDisponibles = paresCarreras.map(par => par.id);
-        const generarIDRandom = () => {
-            const idGenerado = Math.floor(Math.random() * 10);
-            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom() : idGenerado
+
+        const generarIDRandom = (valorInicial) => {
+            const idGenerado =  valorInicial
+            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
         }
-        const CARRERA_VACIA = { id: (generarIDRandom()), shortCareer: { id: "", nombre: "" }, longCareer: { id: "", nombre: "" } }
+        const CARRERA_VACIA = { id: (generarIDRandom(idNoDisponibles.length)), shortCareer: { id: "", nombre: "" }, longCareer: { id: "", nombre: "" } }
         setParesCarreras([CARRERA_VACIA, ...paresCarreras])
         editarDatosGenerales([CARRERA_VACIA, ...paresCarreras])
     }

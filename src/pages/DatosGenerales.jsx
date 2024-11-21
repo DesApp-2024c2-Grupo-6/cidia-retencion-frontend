@@ -20,43 +20,28 @@ import { getGeneralAcademicData, updateGeneralAcademicData } from '../services/G
 
 //Utils
 import { isEqual } from 'lodash';
-
-//import listadoCarrerasGuarani from '../services/listadoCarrerasGuarani'
-import listadoGeneralAcademicData from '../services/listadoGeneralAcademicData'
 import MateriasComunes from '../components/DatosGenerales/MateriasComunes';
 
-//Materias SIU
-const materiasSiu = await getAllSubjectsGuarani()
-const listaFiltrada = materiasSiu.data.materiasSiu.filter((materia) => { return materia.name != undefined })
-const materiasSinRepetidos = listaFiltrada.filter((value, index, self) =>
-  index === self.findIndex((t) => (
-    t.id === value.id
-  ))
-)
 
-//Carreras SIU
-const listadoCarrerasGuarani = (await getAllCareerGuarani()).data
+function FormDatosGenerales({ carrerasData, materiasData }) {
 
-
-function DatosGenerales() {
-
-  const DATOS_VACIOS = {careerPairs: [],fakeSubjectIds: [], specialSubjects: [], englishLevelIds: []};
+  const DATOS_VACIOS = { careerPairs: [], fakeSubjectIds: [], specialSubjects: [], englishLevelIds: [] };
 
   const [datosGenerales, setDatosGenerales] = useState(DATOS_VACIOS)
   const [datosGeneralesSinEditar, setDatosGeneralesSinEditar] = useState(DATOS_VACIOS)
-  const [carrerasGuarani, setCarrerasGuarani] = useState(listadoCarrerasGuarani)
+  const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasData)
   const [estanLosDatosCargados, setEstanLosDatosCargados] = useState(false)
   const [seGuardaronLosDatos, setSeGuardaronLosDatos] = useState(false)
 
 
-  
+
   const datosGeneralesConNombres = (datosGenerales) => {
     //Aregrega los nombres a las carreras y materias de los datos generales
     //Retorna un objeto
     const paresCarrerasConNombres = datosGenerales.careerPairs.map(par => {
       const parConNombre = par;
-      const carreraCortaGuarani = listadoCarrerasGuarani.find(carrera => carrera.id == par.shortCareer.id)
-      const carreraLargaGuarani = listadoCarrerasGuarani.find(carrera => carrera.id == par.longCareer.id)
+      const carreraCortaGuarani = carrerasData.find(carrera => carrera.id == par.shortCareer.id)
+      const carreraLargaGuarani = carrerasData.find(carrera => carrera.id == par.longCareer.id)
       if (carreraCortaGuarani != undefined)
         parConNombre.shortCareer.nombre = carreraCortaGuarani.nombre;
       else
@@ -71,7 +56,7 @@ function DatosGenerales() {
 
     const materiasComunesConNombres = datosGenerales.specialSubjects.map(subject => {
       const materiaConNombre = subject
-      const materiaGuarani = materiasSinRepetidos.find(materia => materia.id == materiaConNombre.id)
+      const materiaGuarani = materiasData.find(materia => materia.id == materiaConNombre.id)
       if (materiaGuarani != undefined)
         materiaConNombre.realName = materiaGuarani.name
       else
@@ -82,7 +67,7 @@ function DatosGenerales() {
     const datosFormateados = { ...datosGenerales, careerPairs: paresCarrerasConNombres, specialSubjects: materiasComunesConNombres }
     return datosFormateados
   }
-    
+
 
   useEffect(() => {
     const getDatosGenerales = async () => {
@@ -95,7 +80,7 @@ function DatosGenerales() {
     getDatosGenerales()
   }, [seGuardaronLosDatos])
 
-  
+
 
   //Confirmacion de guardado
   const hayParCarreraVacio = datosGenerales.careerPairs.find(par => par.shortCareer.id == "" || par.longCareer.id == "")
@@ -118,41 +103,72 @@ function DatosGenerales() {
 
   return (
     <>
-    { estanLosDatosCargados &&
-      <ParesDeCarreras
-        paresCarrerasData={datosGenerales.careerPairs}
-        editarDatosGenerales={editarParesCarrerasDatosGenerales}
-        carrerasGuaraniData={carrerasGuarani}
-        guardarDatosGenerales={guardarDatosGenerales}
-        sePuedeGuardar={sePuedeGuardar}
-        mensajeGuardado = {mensajeGuardado}
-      />
-    }
+      {estanLosDatosCargados &&
+        <ParesDeCarreras
+          paresCarrerasData={datosGenerales.careerPairs}
+          editarDatosGenerales={editarParesCarrerasDatosGenerales}
+          carrerasGuaraniData={carrerasData}
+          guardarDatosGenerales={guardarDatosGenerales}
+          sePuedeGuardar={sePuedeGuardar}
+          mensajeGuardado={mensajeGuardado}
+        />
+      }
 
       <NivelesIngles
-        materias={materiasSinRepetidos}
+        materias={materiasData}
         nivelesInglesData={datosGenerales.englishLevelIds}
         editarDatosGenerales={editarNivelesInglesDatosGenerales}
 
 
       />
       <MateriasFake
-        materias={materiasSinRepetidos}
+        materias={materiasData}
         materiasFakeData={datosGenerales.fakeSubjectIds}
         editarDatosGenerales={editarMateriasFakeDatosGenerales}
       />
 
-    {
-      estanLosDatosCargados &&
-      <MateriasComunes
-        materiasComunesData={datosGenerales.specialSubjects}
-        editarDatosGenerales={editarMateriasComunesDatosGenerales}
-        materiasGuaraniData={materiasSinRepetidos}
-      />
-    }
+      {
+        estanLosDatosCargados &&
+        <MateriasComunes
+          materiasComunesData={datosGenerales.specialSubjects}
+          editarDatosGenerales={editarMateriasComunesDatosGenerales}
+          materiasGuaraniData={materiasData}
+        />
+      }
 
     </>
   );
+}
+
+function DatosGenerales() {
+
+  const [materiasGuarani, setMateriasGuarani] = useState()
+  const [carrerasGuarani, setCarrerasGuarani] = useState()
+
+  useEffect(() => {
+    const getMateriasYCarreras = async () => {
+      const materias = (await getAllSubjectsGuarani()).data.materiasSiu
+      const listaFiltrada = materias.filter((materia) => { return materia.name != undefined })
+      const materiasSinRepetidos = listaFiltrada.filter((value, index, self) =>
+        index === self.findIndex((t) => (
+          t.id === value.id
+        ))
+      )
+      const carreras = (await getAllCareerGuarani()).data
+      setCarrerasGuarani(carreras)
+      setMateriasGuarani(materias)
+    }
+    getMateriasYCarreras()
+  }, [])
+
+  return (
+    <>
+      {materiasGuarani && carrerasGuarani &&
+        <FormDatosGenerales carrerasData={carrerasGuarani} materiasData={materiasGuarani} />
+      }
+    </>
+  );
+
 }
 
 export default DatosGenerales;

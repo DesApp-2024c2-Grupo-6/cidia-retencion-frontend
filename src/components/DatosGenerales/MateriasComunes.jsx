@@ -78,11 +78,11 @@ function MateriasComunes({materiasComunesData, materiasGuaraniData, editarDatosG
 
     const handleAgregarMateriaComun = () => {
         const idNoDisponibles = materiasComunes.map(materia => materia.idLista);
-        const generarIDRandom = () => {
-            const idGenerado =  Math.floor(Math.random() * 10);
-            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom() : idGenerado
+        const generarIDRandom = (valorInicial) => {
+            const idGenerado =  valorInicial
+            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
         }
-        const MATERIA_VACIA = {idLista:(generarIDRandom()), id: "", name: "", realName:"" }
+        const MATERIA_VACIA = {idLista:(generarIDRandom(idNoDisponibles.length)), id: "", name: "", realName:"" }
         setMateriasComunes([MATERIA_VACIA, ...materiasComunes])
         editarDatosGenerales([MATERIA_VACIA, ...materiasComunes])
     }
