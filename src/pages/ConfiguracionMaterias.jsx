@@ -188,7 +188,7 @@ function ConfiguracionMaterias() {
 
       {subjects?.map((item, index) => {
         if ( !estaAbierto || (estaAbierto && index <= 15))
-        return <Materia key={item.id_materia}  data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
+        return <Materia key={item.id_materia} campos = {camposMaterias}   data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
       })}
 
       <Button

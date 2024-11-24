@@ -39,7 +39,6 @@ function SeleccionCarrera() {
             const carreras = await getCarrerasConPlan();
             if (carreras.status === 200) {
                 const careers = carreras.data.allCareers.filter(carrera => carrera.careerId != undefined);
-                console.log(careers)
                 setMessage({
                     code: carreras.status,
                     msg: `Se han traido todas las carreras.`
@@ -88,7 +87,6 @@ function SeleccionCarrera() {
                         const listaCarreras = lista.filter(c => c.planes.length != 0)
                         listaCarreras.sort((a,b) => a.nombre.localeCompare(b.nombre))
                         SetListadoCarrerasPlanes(listaCarreras);
-                        console.log(listaCarreras)
                     } else {
                         setMessage({
                             code: carreras.status,

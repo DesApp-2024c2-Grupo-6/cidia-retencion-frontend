@@ -1,12 +1,12 @@
 import { React, useState } from 'react';
-import { Box, Typography, IconButton, Modal, TextField, Button } from '@mui/material';
+import { Box, Typography, IconButton, Modal, TextField, Button,  Autocomplete } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 
-function Materia({data, handleSaveEdit, handleBorrado}) {
+function Materia({data,campos, handleSaveEdit, handleBorrado}) {
 
     const style = {
         position: 'absolute',
@@ -45,7 +45,9 @@ function Materia({data, handleSaveEdit, handleBorrado}) {
         handleSaveEdit(formData);
         handleClose();
       };
-      
+      const handleCampoChange = (event, campo) => {
+        setFormData((prev) => ({ ...prev, campo: campo }));
+      }
     
 
     return(
@@ -113,11 +115,16 @@ function Materia({data, handleSaveEdit, handleBorrado}) {
               value={formData.anio}
               onChange={handleChangeAnio}
             />
-            <TextField
-              label="Campo"
-              name="campo"
-              value={formData.campo}
-              onChange={handleChange}
+            <Autocomplete
+                value={formData.campo}
+                onChange={handleCampoChange}
+                onInputChange={handleCampoChange}
+                id="campo-nueva-materia"
+                options={campos}
+                disablePortal
+                disableClearable
+                freeSolo
+                renderInput={(params) => <TextField {...params} label="Campo" />}
             />
             <TextField
               label="Nombre Especial"
