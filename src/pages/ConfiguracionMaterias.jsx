@@ -90,7 +90,7 @@ function ConfiguracionMaterias() {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
-      
+      materiasData.sort((a,b) => a.nombre.localeCompare(b.nombre))
       setMateriasSinRegistrar(materiasData);
 
     }
@@ -188,7 +188,7 @@ function ConfiguracionMaterias() {
 
       {subjects?.map((item, index) => {
         if ( !estaAbierto || (estaAbierto && index <= 15))
-        return <Materia key={item.id_materia}  data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
+        return <Materia key={item.id_materia} campos = {camposMaterias}   data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
       })}
 
       <Button
