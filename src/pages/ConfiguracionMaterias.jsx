@@ -90,7 +90,7 @@ function ConfiguracionMaterias() {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
-      
+      materiasData.sort((a,b) => a.nombre.localeCompare(b.nombre))
       setMateriasSinRegistrar(materiasData);
 
     }

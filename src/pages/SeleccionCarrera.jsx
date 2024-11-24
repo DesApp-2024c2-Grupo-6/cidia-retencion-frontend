@@ -30,6 +30,7 @@ function SeleccionCarrera() {
     const [carreras, setCarrerasList] = useState([]);
     const [configButton, setConfigButton] = useState("");
     const [message, setMessage] = useState({ codigo: 0, msg: "" });
+    const [listaIdsPlanes, setListaIdsPlanes] = useState(["idsNoCargados"]);
 
     //Agregar carrera
     const [seEstaAgregandoCarrera, setSeEstaAgregandoCarrera] = useState(Boolean);
@@ -50,6 +51,9 @@ function SeleccionCarrera() {
                     label: `${c.careerName} - ${c.planName}`,
                     value: { v: c.careerId, l: `${c.careerName} - ${c.planName}`, p: c.planId }
                 }));
+                const listaPlanes = lista.map(c => c.value.p)
+                setListaIdsPlanes(listaPlanes)
+                lista.sort((a,b) => a.label.localeCompare(b.label))
                 setCarrerasList(lista);
 
             } else {
@@ -64,38 +68,45 @@ function SeleccionCarrera() {
 
     }, [])
 
-    useEffect(() => {
-        setMessage({});
-        const obtenerCarrerasGuarani = async () => {
-            const carreras = await getAllCareerGuaraniConPlanes();
-            if (carreras.status === 200) {
-
-                setMessage({
-                    code: carreras.status,
-                    msg: `Se han traido todas las carreras.`
-                })
-                const lista = carreras.data.map(c => ({
-                    //id: "", planId: "", nombre: "", estado: ""
-                    id: c.id,
-                    planId: "",
-                    nombre: c.nombre,
-                    estado: c.estado,
-                    planes: c.planes
-                }));
-                SetListadoCarrerasPlanes(lista);
-            } else {
-                setMessage({
-                    code: carreras.status,
-                    msg: carreras.statusText
-                })
+        useEffect(() => {
+            setMessage({});
+            if(listaIdsPlanes[0] != "idsNoCargados"){
+                const obtenerCarrerasGuarani = async () => {
+                    const carreras = await getAllCareerGuaraniConPlanes();
+                    if (carreras.status === 200) {
+        
+                        setMessage({
+                            code: carreras.status,
+                            msg: `Se han traido todas las carreras.`
+                        })
+                        const lista = carreras.data.map(c => ({
+                            //id: "", planId: "", nombre: "", estado: ""
+                            id: c.id,
+                            planId: "",
+                            nombre: c.nombre,
+                            estado: c.estado,
+                            planes: c.planes
+                        }));
+                        lista.forEach(c => c.planes = c.planes.filter(p => !listaIdsPlanes.includes(p.id)))
+                        const listaCarreras = lista.filter(c => c.planes.length != 0)
+                        listaCarreras.sort((a,b) => a.nombre.localeCompare(b.nombre))
+                        SetListadoCarrerasPlanes(listaCarreras);
+                        console.log(listaCarreras)
+                    } else {
+                        setMessage({
+                            code: carreras.status,
+                            msg: carreras.statusText
+                        })
+                    }
+                }
+                obtenerCarrerasGuarani();
             }
-        }
-        obtenerCarrerasGuarani();
-    }, [])
+        }, [listaIdsPlanes])
+    
+    
 
 
     const handleSelect = (value) => {
-        console.log(value)
         dispatch(addCarrera({ IdCarrera: value.v, nombreCarrera: value.l, IdPlan: value.p }));
         setConfigButton(value.v)
     };
