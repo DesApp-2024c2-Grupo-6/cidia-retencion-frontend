@@ -1,96 +1,96 @@
 import { React, useState } from 'react';
-import { Box, Typography, IconButton, Modal, TextField, Button,  Autocomplete } from '@mui/material';
+import { Box, Typography, IconButton, Modal, TextField, Button, Autocomplete } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
 
-function Materia({data,campos, handleSaveEdit, handleBorrado}) {
+function Materia({ data, campos, handleSaveEdit, handleBorrado }) {
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-      };
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
-    const [open, setOpen] = useState(false);
-    const [formData, setFormData] = useState({});
-    
-    const handleOpen = (data) => {
-        setFormData(data);
-        setOpen(true);
-    }
-    const handleClose = () => setOpen(false);
-    
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        console.log(formData)
-      };
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({});
 
-      const handleChangeAnio = (e) => {
-        const name = e.target.name;
-        const value = e.target.value.replace(/[^0-9]/g, '')
-        setFormData((prev) => ({ ...prev, [name]: value }));
-      };
-    
-      const handleSave = () => {
-        handleSaveEdit(formData);
-        handleClose();
-      };
-      const handleCampoChange = (event, campo) => {
-        setFormData((prev) => ({ ...prev, campo: campo }));
-      }
-    
+  const handleOpen = (data) => {
+    setFormData(data);
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
 
-    return(
-        <Box
-            sx={{
-              display: 'flex',
-              '&:nth-of-type(odd)': {
-                  backgroundColor: '#f9f9f9',
-              },
-              '&:nth-of-type(even)': {
-                  backgroundColor: '#ffffff'
-              },
-            }}
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    console.log(formData)
+  };
+
+  const handleChangeAnio = (e) => {
+    const name = e.target.name;
+    const value = e.target.value.replace(/[^0-9]/g, '')
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    handleSaveEdit(formData);
+    handleClose();
+  };
+  const handleCampoChange = (event, campo) => {
+    setFormData((prev) => ({ ...prev, campo: campo }));
+  }
+
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        '&:nth-of-type(odd)': {
+          backgroundColor: '#f9f9f9',
+        },
+        '&:nth-of-type(even)': {
+          backgroundColor: '#ffffff'
+        },
+      }}
+    >
+      <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.id_materia}</Typography>
+      <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.anio}</Typography>
+      <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.campo}</Typography>
+      <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.subjectName}</Typography>
+      <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.specialSubjectName}</Typography>
+      <Box sx={{ flex: 1, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
+        <IconButton
+          sx={{ width: '25px' }}
+          onClick={() => handleOpen(data)}>
+          <EditIcon sx={{ color: 'blue', fontSize: '18px' }} />
+        </IconButton>
+        <IconButton
+          sx={{ width: '25px' }}
+          onClick={() => handleBorrado(data)}>
+          <DeleteIcon sx={{ color: 'red', fontSize: '18px' }} />
+        </IconButton>
+      </Box>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.id_materia}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.anio}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px',fontSize: '12px', alignContent: 'center' }}>{data.campo}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.subjectName}</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.specialSubjectName}</Typography>
-        <Box sx={{ flex: 1, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
-            <IconButton
-                sx={{ width: '25px' }}
-                onClick={() => handleBorrado(data)}> 
-                <DeleteIcon sx={{ color: 'red', fontSize: '18px'}} />
-            </IconButton>
-            <IconButton
-             sx={{ width: '25px' }}
-                onClick={() => handleOpen(data)}> 
-                <EditIcon sx={{color: 'blue', fontSize: '18px'}} />
-            </IconButton>
-        </Box>
-
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Editar Materia
-                </Typography>
-                <Box
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Editar Materia
+          </Typography>
+          <Box
             component="form"
             sx={{
               display: 'flex',
@@ -116,15 +116,15 @@ function Materia({data,campos, handleSaveEdit, handleBorrado}) {
               onChange={handleChangeAnio}
             />
             <Autocomplete
-                value={formData.campo}
-                onChange={handleCampoChange}
-                onInputChange={handleCampoChange}
-                id="campo-nueva-materia"
-                options={campos}
-                disablePortal
-                disableClearable
-                freeSolo
-                renderInput={(params) => <TextField {...params} label="Campo" />}
+              value={formData.campo}
+              onChange={handleCampoChange}
+              onInputChange={handleCampoChange}
+              id="campo-nueva-materia"
+              options={campos}
+              disablePortal
+              disableClearable
+              freeSolo
+              renderInput={(params) => <TextField {...params} label="Campo" />}
             />
             <TextField
               label="Nombre Especial"
@@ -133,21 +133,21 @@ function Materia({data,campos, handleSaveEdit, handleBorrado}) {
               onChange={handleChange}
             />
             <Box
-                            sx={{ display: 'flex' , gap: '10px'}}>
-                            <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleClose}>Volver</Button>
-                            <Button variant="contained" color="secondary" startIcon={<SaveIcon /> } onClick={handleSave}>
-               Guardar
+              sx={{ display: 'flex', gap: '10px' }}>
+              <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleClose}>Volver</Button>
+              <Button variant="contained" color="secondary" startIcon={<SaveIcon />} onClick={handleSave}>
+                Guardar
               </Button>
-              
+
             </Box>
 
           </Box>
-            </Box>
-        </Modal>
+        </Box>
+      </Modal>
 
-            
-      </Box>
-    )
+
+    </Box>
+  )
 }
 
 export default Materia;

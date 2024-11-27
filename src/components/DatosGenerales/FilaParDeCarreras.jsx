@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //Componentes MUI
 import { Button, Box, IconButton, Typography, Autocomplete, TextField } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 //Iconos
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +18,8 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
             -borrarParDeCarreras(idABorrar) - Funcion - Funcion que borra un objeto de la lista de pares de carreras
         Retorna: JSX
     */
+    const theme = useTheme();
+
     const [estaSiendoEditado, setEstaSiendoEditado] = useState(false)
 
     const [parCarreras, setParCarreras] = useState(parDeCarrerasData)
@@ -48,7 +51,7 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{parCarreras.longCareer.nombre}</Typography>
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'green' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main }}
                         onClick={handleEditButtonClick}>
                         <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
@@ -91,7 +94,7 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
                 />
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'green' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main}}
                         onClick={handleGuardarButtonClick}>
                         <SaveIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>

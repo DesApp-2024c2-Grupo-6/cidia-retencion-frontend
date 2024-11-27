@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import SelectComponent from '../components/SelectR';
-import { Button, Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 //Iconos
 import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
+import DataArrayIcon from '@mui/icons-material/DataArray';
+import AddIcon from '@mui/icons-material/Add';
+
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 
@@ -21,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 function SeleccionCarrera() {
+    const theme = useTheme()
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [carreras, setCarrerasList] = useState([]);
@@ -50,7 +55,7 @@ function SeleccionCarrera() {
 
                 const listaPlanes = lista.map(c => c.value.p)
                 setListaIdsPlanes(listaPlanes)
-                lista.sort((a,b) => a.label.localeCompare(b.label))
+                lista.sort((a, b) => a.label.localeCompare(b.label))
                 setCarrerasList(lista);
 
             } else {
@@ -65,40 +70,40 @@ function SeleccionCarrera() {
 
     }, [])
 
-        useEffect(() => {
-            setMessage({});
-            if(listaIdsPlanes[0] != "idsNoCargados"){
-                const obtenerCarrerasGuarani = async () => {
-                    const carreras = await getAllCareerGuaraniConPlanes();
-                    if (carreras.status === 200) {
-        
-                        setMessage({
-                            code: carreras.status,
-                            msg: `Se han traido todas las carreras.`
-                        })
-                        const lista = carreras.data.map(c => ({
-                            id: c.id,
-                            planId: "",
-                            nombre: c.nombre,
-                            estado: c.estado,
-                            planes: c.planes
-                        }));
-                        lista.forEach(c => c.planes = c.planes.filter(p => !listaIdsPlanes.includes(p.id)))
-                        const listaCarreras = lista.filter(c => c.planes.length != 0)
-                        listaCarreras.sort((a,b) => a.nombre.localeCompare(b.nombre))
-                        SetListadoCarrerasPlanes(listaCarreras);
-                    } else {
-                        setMessage({
-                            code: carreras.status,
-                            msg: carreras.statusText
-                        })
-                    }
+    useEffect(() => {
+        setMessage({});
+        if (listaIdsPlanes[0] != "idsNoCargados") {
+            const obtenerCarrerasGuarani = async () => {
+                const carreras = await getAllCareerGuaraniConPlanes();
+                if (carreras.status === 200) {
+
+                    setMessage({
+                        code: carreras.status,
+                        msg: `Se han traido todas las carreras.`
+                    })
+                    const lista = carreras.data.map(c => ({
+                        id: c.id,
+                        planId: "",
+                        nombre: c.nombre,
+                        estado: c.estado,
+                        planes: c.planes
+                    }));
+                    lista.forEach(c => c.planes = c.planes.filter(p => !listaIdsPlanes.includes(p.id)))
+                    const listaCarreras = lista.filter(c => c.planes.length != 0)
+                    listaCarreras.sort((a, b) => a.nombre.localeCompare(b.nombre))
+                    SetListadoCarrerasPlanes(listaCarreras);
+                } else {
+                    setMessage({
+                        code: carreras.status,
+                        msg: carreras.statusText
+                    })
                 }
-                obtenerCarrerasGuarani();
             }
-        }, [listaIdsPlanes])
-    
-    
+            obtenerCarrerasGuarani();
+        }
+    }, [listaIdsPlanes])
+
+
 
 
     const handleSelect = (value) => {
@@ -136,9 +141,11 @@ function SeleccionCarrera() {
         const carreraData = { careerId: nuevaCarrera.id, planId: nuevaCarrera.plan.id }
         const response = await saveCareer(carreraData)
         if (response.status == 200) {
-            dispatch(addCarrera({ IdCarrera: nuevaCarrera.id
-                , nombreCarrera: isNaN(nuevaCarrera.plan.nombre.slice(-4)) ?`${nuevaCarrera.plan.nombre} - ${nuevaCarrera.plan.fecha_entrada_vigencia.slice(0,4)}`: nuevaCarrera.plan.nombre,
-                IdPlan: nuevaCarrera.plan.id }));
+            dispatch(addCarrera({
+                IdCarrera: nuevaCarrera.id
+                , nombreCarrera: isNaN(nuevaCarrera.plan.nombre.slice(-4)) ? `${nuevaCarrera.plan.nombre} - ${nuevaCarrera.plan.fecha_entrada_vigencia.slice(0, 4)}` : nuevaCarrera.plan.nombre,
+                IdPlan: nuevaCarrera.plan.id
+            }));
             setConfigButton(nuevaCarrera.id)
             navigate('/configuracion/carrera')
         }
@@ -174,60 +181,70 @@ function SeleccionCarrera() {
             }}>
                 <Box
                     sx={{
-                        width: '500px',
+                        width: '650px',
                         minWidth: '250px'
                     }}
                 >
-                    <h3 className='label' >Seleccione una Carrera:</h3>
-                    <Autocomplete
-                        sx={{ marginTop: '10px' }}
-                        disablePortal
-                        disableClearable
-                        options={carreras}
-                        className={'selectcarreras'}
-                        freeSolo
-                        onChange={(event, newValue) => (newValue) ? handleSelect(newValue.value) : handleSelect({ v: "", l: "" })}
-                        renderInput={(params) => <TextField {...params} label="Carreras" />}
-                    />
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '20px',
-                            marginTop: '30px',
-                            marginBottom: '30px',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-
-                        }}
-                    >
+                    <Typography sx={{ textAlign: 'center', marginBottom: '30px', fontWeight: 'medium' }} variant="h5" component="h1" gutterBottom>
+                        Configuracion de carreras
+                    </Typography>
+                    <Stack direction="row" spacing={0.5}>
+                        <Autocomplete
+                            disablePortal
+                            disableClearable
+                            options={carreras}
+                            className={'selectcarreras'}
+                            freeSolo
+                            onChange={(event, newValue) => (newValue) ? handleSelect(newValue.value) : handleSelect({ v: "", l: "" })}
+                            renderInput={(params) => <TextField {...params} label="Carreras" sx={{ height: '55px' }} />}
+                        />
                         <Button
+                            sx={{
+                                width: '30px',
+                                height: '55px',
+                                display: "flex", justifyContent: "center", alignItems: "center",
+                                backgroundColor: theme.palette.primary.mainLight
+                            }}
                             onClick={handleOnClickConfiguracionCarrera}
                             variant="contained"
                             name={'Configurar'}
-                            disabled={configButton ? false : true}
-                            startIcon={<BuildIcon />}>Configurar
-
+                            size="small"
+                            disabled={configButton ? false : true}>
+                            <BuildIcon />
                         </Button>
+                    </Stack>
+                    <Stack direction="row"
+                        spacing={1}
+                        sx={{
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                            marginTop: '25px'
+                        }}>
                         <Button
+                            sx={{ padding: '10px' }}
                             onClick={handleOnClickConfiguracionParrafos}
                             variant="contained"
-                            name={'Plantillas-e-mail'}
-                            startIcon={<ListIcon />}>Lista Párrafos
+                            name={'Plantillas-e-mail'}>
+                            <ListIcon sx={{ marginRight: '5px' }} />
+                            Lista Párrafos
                         </Button>
                         <Button
+                            sx={{ padding: '10px' }}
                             onClick={handleOnClickConfiguracionDatosGenerales}
                             variant="contained"
-                            name={'Plantillas-e-mail'}
-                            startIcon={<ListIcon />}>Datos generales
+                            name={'Datos-generales'}>
+                            <DataArrayIcon sx={{ marginRight: '5px' }} />
+                            Datos generales
                         </Button>
                         <Button
+                            sx={{ padding: '10px' }}
                             onClick={handleOnClickConfiguracionAgregarCarrera}
                             variant="contained"
-                            name={'Plantillas-e-mail'}
-                            startIcon={<ListIcon />}>Nueva carrera
+                            name={'Nueva-carrera'}>
+                            <AddIcon sx={{ marginRight: '5px' }} />
+                            Nueva carrera
                         </Button>
-                    </Box>
+                    </Stack>
                 </Box>
                 <Modal
                     open={seEstaAgregandoCarrera}
@@ -272,13 +289,17 @@ function SeleccionCarrera() {
                                     )}
                                 </Select>
                             </FormControl>
-                            <Box
-                                sx={{ display: 'flex', gap: '10px' }}>
+                            <Stack direction="row" spacing={1}
+                                sx={{
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleCloseModal}>Volver</Button>
                                 <Button disabled={!nuevaCarrera.id || !nuevaCarrera.plan} variant="contained" color="secondary" startIcon={<SaveIcon />} onClick={handleSaveModal}>
                                     Guardar
                                 </Button>
-                            </Box>
+                            </Stack>
                         </FormControl>
                     </Box>
                 </Modal>

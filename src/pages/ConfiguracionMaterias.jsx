@@ -1,4 +1,4 @@
-import { Box, Typography, Button, IconButton, Modal, TextField, Autocomplete } from '@mui/material';
+import { Box, Typography, Button, IconButton, Modal, TextField, Autocomplete, Stack } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import React, { useState, useEffect } from 'react';
@@ -9,10 +9,14 @@ import { getSubjectsByCareerAndPlan, getSubjectsNotRegisteredByCareer, updateSub
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { deleteSubject } from '../services/SubjectDataService';
 import ConfirmarBorrado from '../components/ConfirmarBorrado';
+import { useTheme } from '@mui/material/styles';
+
 
 
 
 function ConfiguracionMaterias() {
+
+  const theme = useTheme()
 
   const navigate = useNavigate()
   const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
@@ -29,7 +33,7 @@ function ConfiguracionMaterias() {
 
   const MATERIA_VACIA = {
     id_carrera: IdCarrera,
-    id_plan:IdPlan,
+    id_plan: IdPlan,
     id_materia: "",
     anio: "",
     campo: "",
@@ -59,30 +63,27 @@ function ConfiguracionMaterias() {
   useEffect(() => {
     const getSubjects = async (id_carrera, id_plan) => {
       const listaCampos = []
-      const subj = await getSubjectsByCareerAndPlan(id_carrera,id_plan);
+      const subj = await getSubjectsByCareerAndPlan(id_carrera, id_plan);
       if (subj.status === 200) {
         setSubjects(subj.data.subjectsByCareer);
         subj.data.subjectsByCareer.forEach(materia => {
-          if(materia.campo !== ""  && materia.campo !== undefined && !listaCampos.includes(materia.campo)){
+          if (materia.campo !== "" && materia.campo !== undefined && !listaCampos.includes(materia.campo)) {
             listaCampos.push(materia.campo)
           }
         })
       }
-      
 
-        if(listaCampos.length > 0){
-          setCamposMaterias(listaCampos)
-        }
-        else{
-          setCamposMaterias(["CB"])
-        }
-        
-      
-      
+
+      if (listaCampos.length > 0) {
+        setCamposMaterias(listaCampos)
+      }
+      else {
+        setCamposMaterias(["CB"])
+      }
 
     }
     getSubjects(IdCarrera, IdPlan)
-    
+
   }, [save, deleted])
 
 
@@ -90,13 +91,11 @@ function ConfiguracionMaterias() {
     const getMateriasSinRegistrar = async (id_carrera) => {
       const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
-      materiasData.sort((a,b) => a.nombre.localeCompare(b.nombre))
+      materiasData.sort((a, b) => a.nombre.localeCompare(b.nombre))
       setMateriasSinRegistrar(materiasData);
 
     }
     getMateriasSinRegistrar(IdCarrera)
-
-
   }, [save, deleted])
 
   const handleSaveCreate = async (materiaACrear) => {
@@ -117,22 +116,22 @@ function ConfiguracionMaterias() {
   const [openBorrado, setOpenBorrado] = React.useState(Boolean);
   const [materiaABorrar, setMateriaABorrar] = React.useState({});
 
-  const handleBorrado = (materia) =>{
-      setOpenBorrado(true);
-      setMateriaABorrar(materia);
+  const handleBorrado = (materia) => {
+    setOpenBorrado(true);
+    setMateriaABorrar(materia);
   }
 
   const handleCloseBorrado = () => {
-      setOpenBorrado(false);
-      setMateriaABorrar({});
+    setOpenBorrado(false);
+    setMateriaABorrar({});
   }
   const handleOnClickDelete = async (data) => {
     handleCloseBorrado()
     const resSubject = await deleteSubject(data);
     if (resSubject.status === 200) {
-        setDeleted();
+      setDeleted();
     } else {
-    } 
+    }
   }
   return (
     <Box
@@ -147,34 +146,30 @@ function ConfiguracionMaterias() {
         overflow: 'hidden',
       }}
     >
-      <ConfirmarBorrado openBorrado = {openBorrado} setDeleted={setDeleted} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {handleOnClickDelete} elementoAEliminar = {materiaABorrar} textoBorrado = "¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'no-wrap',
-          gap: '10px',
-          marginBottom:'16px'
-        }}
-      >
-        <Typography
-          sx={{ display: 'inline', width: 'auto' }}
-          variant="h4"
-          marginBottom={3} >
+      <ConfirmarBorrado openBorrado={openBorrado} setDeleted={setDeleted} handleCloseBorrado={handleCloseBorrado} funcionEliminar={handleOnClickDelete} elementoAEliminar={materiaABorrar} textoBorrado="¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
+      <Box sx={{
+        width: '1000px',
+        minWidth: '250px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'no-wrap',
+        gap: '10px',
+      }}>
+        <Typography sx={{ fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
           {nombreCarrera}
         </Typography>
         <IconButton
-          sx={{display: 'inline', width: 'auto', marginBottom:'12px'}}
+          sx={{ display: 'inline', width: 'auto'}}
           onClick={() => setEstaAbierto(true)}>
-          <AddCircleIcon sx={{ color: 'green', fontSize: '48px' }} />
+          <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
         </IconButton>
       </Box>
       <Box
         sx={{
           display: 'flex',
           gap: '8px',
-          backgroundColor: 'green',
+          backgroundColor: theme.palette.success.main,
           padding: '8px',
         }}
       >
@@ -187,8 +182,8 @@ function ConfiguracionMaterias() {
       </Box>
 
       {subjects?.map((item, index) => {
-        if ( !estaAbierto || (estaAbierto && index <= 15))
-        return <Materia key={item.id_materia} campos = {camposMaterias}   data={item} handleSaveEdit={handleSaveEdit} handleBorrado ={handleBorrado}/>
+        if (!estaAbierto || (estaAbierto && index <= 15))
+          return <Materia key={item.id_materia} campos={camposMaterias} data={item} handleSaveEdit={handleSaveEdit} handleBorrado={handleBorrado} />
       })}
 
       <Button
@@ -243,15 +238,15 @@ function ConfiguracionMaterias() {
               onChange={handleNuevaMateriaChange}
             />
             <Autocomplete
-                value={nuevaMateria.campo}
-                onChange={handleNuevaMateriaCampoAutocompleteChange}
-                onInputChange={handleNuevaMateriaCampoAutocompleteChange}
-                id="campo-nueva-materia"
-                options={camposMaterias}
-                disablePortal
-                disableClearable
-                freeSolo
-                renderInput={(params) => <TextField {...params} label="Campo" />}
+              value={nuevaMateria.campo}
+              onChange={handleNuevaMateriaCampoAutocompleteChange}
+              onInputChange={handleNuevaMateriaCampoAutocompleteChange}
+              id="campo-nueva-materia"
+              options={camposMaterias}
+              disablePortal
+              disableClearable
+              freeSolo
+              renderInput={(params) => <TextField {...params} label="Campo" />}
             />
             <TextField
               label="Nombre Especial"

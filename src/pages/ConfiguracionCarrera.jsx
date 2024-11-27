@@ -132,8 +132,9 @@ function ConfiguracionCarrera() {
                 marginBottom:3
             }}>
                 <Typography 
-                    variant="h4"
-                    marginBottom={1} >
+                    variant="h5"
+                    marginTop={2}
+                    marginBottom={4} >
                     {nombreCarrera}
                 </Typography>  
                 <Box sx={{}}>

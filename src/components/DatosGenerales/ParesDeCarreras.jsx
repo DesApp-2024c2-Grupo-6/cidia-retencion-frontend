@@ -89,7 +89,7 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
         const idNoDisponibles = paresCarreras.map(par => par.id);
 
         const generarIDRandom = (valorInicial) => {
-            const idGenerado =  valorInicial
+            const idGenerado = valorInicial
             return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
         }
         const CARRERA_VACIA = { id: (generarIDRandom(idNoDisponibles.length)), shortCareer: { id: "", nombre: "" }, longCareer: { id: "", nombre: "" } }
@@ -127,19 +127,23 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
 
                 }}>
 
-                    <h2 className="label">Pares carreras</h2>
+                    <Typography sx={{fontWeight: 'bold' }} variant="h6" component="h1" gutterBottom>
+                        Pares de carreras
+                    </Typography>
                     <IconButton
                         sx={{ display: 'inline', width: 'auto', marginTop: '10px' }}
                         onClick={handleAgregarPar}>
                         <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
                     </IconButton>
                     <Box>
-                        <Typography 
-                            sx={{fontSize:'small', 
-                            textAlign:'center', 
-                            marginBottom:'5px', 
-                            color:(mensajeGuardado == "Hay cambios sin guardar") ? '#f57f17' : 'red'}}
-                            >{mensajeGuardado}
+                        <Typography
+                            sx={{
+                                fontSize: 'small',
+                                textAlign: 'center',
+                                marginBottom: '5px',
+                                color: (mensajeGuardado == "Hay cambios sin guardar") ? '#f57f17' : 'red'
+                            }}
+                        >{mensajeGuardado}
                         </Typography>
                         <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
                             Guardar

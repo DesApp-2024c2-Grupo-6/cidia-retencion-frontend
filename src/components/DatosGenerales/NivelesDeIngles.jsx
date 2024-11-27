@@ -3,22 +3,22 @@ import React, { useState, useEffect } from 'react';
 import { Stack, Button, Box, IconButton, Typography, Autocomplete, TextField, Input } from '@mui/material';
 
 
-const NivelesIngles = ({materias, editarDatosGenerales, nivelesInglesData}) => {
+const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) => {
 
 
     const handleOnChange = (event, listaDeMateriasSeleccionadas) => editarDatosGenerales(listaDeMateriasSeleccionadas.map(materia => materia.id))
 
 
-    return(
+    return (
         <Box
-        sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column' },
-            alignItems: 'center',
-            bgcolor: 'background.default',
-            marginTop: 8,
-            marginBottom: 3
-        }}>
+            sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column' },
+                alignItems: 'center',
+                bgcolor: 'background.default',
+                marginTop: 8,
+                marginBottom: 3
+            }}>
             <Box sx={{
                 width: '1000px',
                 minWidth: '250px',
@@ -30,8 +30,9 @@ const NivelesIngles = ({materias, editarDatosGenerales, nivelesInglesData}) => {
                 gap: '10px'
 
             }}>
-                <h2 className="label">Niveles Inglés</h2><></>
-
+                <Typography sx={{ fontWeight: 'bold' }} variant="h6" component="h1" gutterBottom>
+                    Niveles Inglés
+                </Typography>
             </Box>
             <Box sx={{
                 display: 'flex',
@@ -42,19 +43,19 @@ const NivelesIngles = ({materias, editarDatosGenerales, nivelesInglesData}) => {
                 margin: '0 auto',
 
             }}>
-                <Stack  id = "smar" spacing={3}>
-                <Autocomplete
-                    multiple
-                    id="select-ingles"
-                    options={materias}
-                    value={materias.filter(materia => nivelesInglesData.includes(materia.id))}
-                    getOptionLabel={(option) => option.name + " #" + option.id.toString()}
-                    onChange={handleOnChange}
-                    renderInput={(params) => <TextField {...params} label="Niveles Inglés" variant="outlined" placeholder="Seleccione Materias" />}
+                <Stack id="smar" spacing={3}>
+                    <Autocomplete
+                        multiple
+                        id="select-ingles"
+                        options={materias}
+                        value={materias.filter(materia => nivelesInglesData.includes(materia.id))}
+                        getOptionLabel={(option) => option.name + " #" + option.id.toString()}
+                        onChange={handleOnChange}
+                        renderInput={(params) => <TextField {...params} label="Niveles Inglés" variant="outlined" placeholder="Seleccione Materias" />}
 
-                /> 
+                    />
                 </Stack>
-                
+
 
             </Box>
         </Box>
