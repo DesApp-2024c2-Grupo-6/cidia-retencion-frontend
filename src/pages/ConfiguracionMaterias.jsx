@@ -72,8 +72,10 @@ function ConfiguracionMaterias() {
           }
         })
       }
-
-
+      else if (subj.status === 204){
+        setSubjects([]);
+      } 
+      setDeleted(false)
       if (listaCampos.length > 0) {
         setCamposMaterias(listaCampos)
       }
@@ -93,7 +95,6 @@ function ConfiguracionMaterias() {
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
       materiasData.sort((a, b) => a.nombre.localeCompare(b.nombre))
       setMateriasSinRegistrar(materiasData);
-
     }
     getMateriasSinRegistrar(IdCarrera)
   }, [save, deleted])
@@ -129,7 +130,7 @@ function ConfiguracionMaterias() {
     handleCloseBorrado()
     const resSubject = await deleteSubject(data);
     if (resSubject.status === 200) {
-      setDeleted();
+      setDeleted(true);
     } else {
     }
   }
@@ -165,6 +166,7 @@ function ConfiguracionMaterias() {
           <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
         </IconButton>
       </Box>
+      { subjects.length > 0 ?
       <Box
         sx={{
           display: 'flex',
@@ -173,6 +175,7 @@ function ConfiguracionMaterias() {
           padding: '8px',
         }}
       >
+      
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Código Materia</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Año</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Campo</Typography>
@@ -180,8 +183,11 @@ function ConfiguracionMaterias() {
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre Especial</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
       </Box>
-
-      {subjects?.map((item, index) => {
+        :
+        <Typography sx={{textAlign:'center', marginY:'50px'}}>No hay materias registradas</Typography>
+      }
+      {
+      subjects?.map((item, index) => {
         if (!estaAbierto || (estaAbierto && index <= 15))
           return <Materia key={item.id_materia} campos={camposMaterias} data={item} handleSaveEdit={handleSaveEdit} handleBorrado={handleBorrado} />
       })}

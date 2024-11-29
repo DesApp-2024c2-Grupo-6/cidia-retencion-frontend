@@ -38,6 +38,9 @@ function SeleccionCarrera() {
     const NUEVA_CARRERA_VACIA = { id: "", plan: [], nombre: "", estado: "", planes: [] }
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
     const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
+
+    console.log(nuevaCarrera)
+
     useEffect(() => {
         setMessage({});
         const obtenerCarreras = async () => {
