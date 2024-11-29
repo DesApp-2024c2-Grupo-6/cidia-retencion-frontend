@@ -14,7 +14,10 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 
-//import Box from '@mui/material/Box';
+
+import SettingsIcon from '@mui/icons-material/Settings';
+
+
 
 function Header() {
     //Invoco Hook
@@ -44,12 +47,12 @@ function Header() {
     ];
 
     const drawerButtons = [
-        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled:false },
-        { text: 'Opción 2', onClick: handleOnClickHome, disabled:true },
-        { text: 'Opción 3', disabled:true },
-        { text: 'Opción 4', disabled:true },
-        { text: 'Opción 5', disabled:true },
-        { text: 'Opción 6', disabled:true },
+        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled: false, icon: <SettingsIcon fontSize='small' sx={{ marginRight: '5px' }} /> },
+        { text: 'Opción 2', onClick: handleOnClickHome, disabled: true },
+        { text: 'Opción 3', disabled: true },
+        { text: 'Opción 4', disabled: true },
+        { text: 'Opción 5', disabled: true },
+        { text: 'Opción 6', disabled: true },
     ];
 
     const handleDrawerToggle = () => {
@@ -69,6 +72,7 @@ function Header() {
                             <List>
                                 {drawerButtons.map((button, index) => (
                                     <ListItem button key={index} onClick={button.onClick}>
+                                        {button.icon}
                                         <ListItemText primary={button.text} />
                                     </ListItem>
                                 ))}
@@ -79,7 +83,7 @@ function Header() {
             ) : (
                 <>
 
-                    <img src={logo} alt="UNAHUR" />
+                    <img src={logo} alt="UNAHUR" style={{ width: '300px' }} />
                     <Box>
                         <Stack
                             direction="row"
@@ -92,7 +96,10 @@ function Header() {
                             {
                                 drawerButtons.map(button =>
                                     <Button sx={{ color: '#414345', fontWeight: 'bold' }}
-                                        key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>{button.text}</Button>
+                                        key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>
+                                        {button.icon}
+                                        {button.text}
+                                    </Button>
                                 )
                             }
                         </Stack>

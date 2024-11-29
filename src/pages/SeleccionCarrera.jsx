@@ -171,6 +171,13 @@ function SeleccionCarrera() {
         p: 4,
     };
 
+    const datosBotones = [
+        { name: 'Lista parrafos', onClick: handleOnClickConfiguracionParrafos, icon: <ListIcon sx={{ marginRight: '5px' }} /> },
+        { name: 'Datos generales', onClick: handleOnClickConfiguracionDatosGenerales, icon: <DataArrayIcon sx={{ marginRight: '5px' }} /> },
+        { name: 'Nueva Carrera', onClick: handleOnClickConfiguracionAgregarCarrera, icon: <AddIcon sx={{ marginRight: '5px' }} /> },
+
+    ]
+
 
     return (
         <>
@@ -223,30 +230,18 @@ function SeleccionCarrera() {
                             alignItems: "flex-start",
                             marginTop: '25px'
                         }}>
-                        <Button
-                            sx={{ padding: '10px' }}
-                            onClick={handleOnClickConfiguracionParrafos}
-                            variant="contained"
-                            name={'Plantillas-e-mail'}>
-                            <ListIcon sx={{ marginRight: '5px' }} />
-                            Lista Párrafos
-                        </Button>
-                        <Button
-                            sx={{ padding: '10px' }}
-                            onClick={handleOnClickConfiguracionDatosGenerales}
-                            variant="contained"
-                            name={'Datos-generales'}>
-                            <DataArrayIcon sx={{ marginRight: '5px' }} />
-                            Datos generales
-                        </Button>
-                        <Button
-                            sx={{ padding: '10px' }}
-                            onClick={handleOnClickConfiguracionAgregarCarrera}
-                            variant="contained"
-                            name={'Nueva-carrera'}>
-                            <AddIcon sx={{ marginRight: '5px' }} />
-                            Nueva carrera
-                        </Button>
+                        {
+                            datosBotones.map(botonData =>
+                                <Button
+                                    sx={{ padding: '10px', height: '60px' }}
+                                    onClick={botonData.onClick}
+                                    variant="contained"
+                                    name={botonData.name}>
+                                    {botonData.icon}
+                                    {botonData.name}
+                                </Button>
+                            )
+                        }
                     </Stack>
                 </Box>
                 <Modal
