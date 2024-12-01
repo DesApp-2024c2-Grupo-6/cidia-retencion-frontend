@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import FilaParDeCarreras from './FilaParDeCarreras'
 //Componentes MUI
 import { Button, Box, IconButton, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 //Iconos
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SaveIcon from '@mui/icons-material/Save';
@@ -27,6 +29,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
     */
 
     paresCarrerasData = paresCarrerasData.map((par, index) => ({ id: index, ...par }))
+
+    const theme = useTheme();
 
     const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({ id: carrera.id, nombre: carrera.nombre })))
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
@@ -139,9 +143,10 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                         <Typography
                             sx={{
                                 fontSize: 'small',
+                                fontWeight: 'bold',
                                 textAlign: 'center',
                                 marginBottom: '5px',
-                                color: (mensajeGuardado == "Hay cambios sin guardar") ? '#f57f17' : 'red'
+                                color: (mensajeGuardado == "Hay cambios sin guardar") ? theme.palette.primary.light : theme.palette.error.main
                             }}
                         >{mensajeGuardado}
                         </Typography>

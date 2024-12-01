@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../../assets/img/Logo-UNAHUR.png';
+import logo from '../../assets/img/Logo-UNAHUR-White.png';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +9,20 @@ import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+
+
+
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
 
 
 import SettingsIcon from '@mui/icons-material/Settings';
+import CodeOffIcon from '@mui/icons-material/CodeOff';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { ListItemIcon } from '@mui/material';
 
 
 
@@ -37,22 +44,14 @@ function Header() {
         if (isMobile) setDrawerOpen(false);
     }
 
-    const buttons = [
-        <Button key="Configuraciones" variant="contained" onClick={handleOnClickConfiguracion}>Configuraciones</Button>,
-        <Button key="two" variant="contained" onClick={handleOnClickHome}>opción 2</Button>,
-        <Button key="three" variant="contained">opción 3</Button>,
-        <Button key="four" variant="contained">opción 4</Button>,
-        <Button key="five" variant="contained">opción 5</Button>,
-        <Button key="six" variant="contained">opción 6</Button>,
-    ];
 
     const drawerButtons = [
-        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled: false, icon: <SettingsIcon fontSize='small' sx={{ marginRight: '5px' }} /> },
-        { text: 'Opción 2', onClick: handleOnClickHome, disabled: true },
-        { text: 'Opción 3', disabled: true },
-        { text: 'Opción 4', disabled: true },
-        { text: 'Opción 5', disabled: true },
-        { text: 'Opción 6', disabled: true },
+        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled: false, icon: <SettingsIcon/> },
+        { text: 'Opción 2', onClick: handleOnClickHome, disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 3', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 4', disabled: true, icon: <ErrorOutlineIcon/>  },
+        { text: 'Opción 5', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 6', disabled: true, icon: <ErrorOutlineIcon/> },
     ];
 
     const handleDrawerToggle = () => {
@@ -60,20 +59,20 @@ function Header() {
     };
 
     return (
-        <header>
+        <AppBar position="static" sx={{ boxShadow: 0, backgroundColor: theme.palette.primary.dark }}>
             {isMobile ? (
                 <>
                     <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
-                        <img src={logo} alt="UNAHUR" style={{ marginLeft: '30px', height: '100px' }} />
+                        <img src={logo} alt="UNAHUR" style={{ marginLeft: '30px', height: '50px' }} />
                         <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerToggle} sx={{ width: '50px', marginRight: '30px' }}>
                             <MenuIcon />
                         </IconButton>
-                        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
+                        <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle} >
                             <List>
                                 {drawerButtons.map((button, index) => (
-                                    <ListItem button key={index} onClick={button.onClick}>
+                                    <ListItem button key={index} onClick={button.onClick} sx={{color: theme.palette.primary.dark}}>
                                         {button.icon}
-                                        <ListItemText primary={button.text} />
+                                        <ListItemText primary={button.text} sx={{marginLeft:'8px'}} />
                                     </ListItem>
                                 ))}
                             </List>
@@ -81,13 +80,30 @@ function Header() {
                     </Box>
                 </>
             ) : (
-                <>
-
-                    <img src={logo} alt="UNAHUR" style={{ width: '300px' }} />
+                <Stack direction="row-reverse"
+                    spacing={2}
+                    sx={{
+                        width:'100%',
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: '10px',
+                        paddingX: '2%'
+                        
+                    }}
+                >
+                    <Box
+                        component="img"
+                        sx={{
+                            width: '250px',
+                            padding: '10px'
+                        }}
+                        alt="Logo UNAHUR"
+                        src={logo}
+                    />
                     <Box>
                         <Stack
                             direction="row"
-                            spacing={-1}
+                            spacing={0}
                             sx={{
                                 justifyContent: "flex-start",
                                 alignItems: "flex-end",
@@ -95,25 +111,22 @@ function Header() {
                         >
                             {
                                 drawerButtons.map(button =>
-                                    <Button sx={{ color: 'gray', fontWeight: 'bold' }}
+                                    <Button sx={{ color:'white', fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: '#6894a3' }, "&:hover": { backgroundColor: '#0b4c63' }}}
                                         key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>
-                                        {button.icon}
+                                        <Box>
+                                            {button.icon}
+                                        </Box>
                                         {button.text}
                                     </Button>
                                 )
                             }
                         </Stack>
                     </Box>
+                </Stack>
+            )
+            }
 
-
-                    {/*
-                    <ButtonGroup size="large" aria-label="large button group">
-                        {buttons}
-                    </ButtonGroup></>*/}
-                </>
-            )}
-
-        </header>
+        </AppBar >
     );
 }
 

@@ -52,12 +52,12 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{materiaComun.name}</Typography>
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark } }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark } }}
                         onClick={handleEditButtonClick}>
                         <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.error.main, "&:hover": { backgroundColor: theme.palette.error.dark } }}
                         onClick={handleDeleteButtonClick}>
                         <DeleteIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>

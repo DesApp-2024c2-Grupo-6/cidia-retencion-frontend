@@ -139,13 +139,13 @@ const ParagraphList = () => {
             <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '44px' }} />
           </IconButton>
           {hayParrafoIncompleto&&
-          <Typography sx={{fontSize: 'small', textAlign: 'start',marginBottom: '1px',color:'red'}}>
+          <Typography sx={{fontSize: 'small', textAlign: 'start',marginBottom: '1px',color: theme.palette.error.main}}>
             Hay plantillas con datos incompletos
           </Typography>
           }
       
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
-            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '70%' }}>
+            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '70%'  }}>
               <Paper
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}

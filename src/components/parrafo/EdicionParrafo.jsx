@@ -273,7 +273,8 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerCarreras = async () => {
             const res = await getAllCareer()
-            setCarreras(res.data.allCareers)
+            const carrerasOrdenadas = res.data.allCareers.sort((a, b) => a.careerName.localeCompare(b.careerName))
+            setCarreras(carrerasOrdenadas)
         }
         obtenerCarreras()
     }, [])
@@ -281,7 +282,8 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerMaterias = async () => {
             const res = await getAllSubjectData()
-            setMaterias(res.data.allSubjects)
+            const materiasOrdenadas = res.data.allSubjects.sort((a, b) => a.subjectName.localeCompare(b.subjectName))
+            setMaterias(materiasOrdenadas)
         }
         obtenerMaterias()
     }, [])

@@ -192,7 +192,9 @@ function SeleccionCarrera() {
             }}>
                 <Box
                     sx={{
-                        width: '650px',
+                        width: '100%',
+                        padding: '1%',
+                        maxWidth: '650px',
                         minWidth: '250px'
                     }}
                 >
@@ -214,7 +216,9 @@ function SeleccionCarrera() {
                                 width: '30px',
                                 height: '55px',
                                 display: "flex", justifyContent: "center", alignItems: "center",
-                                backgroundColor: theme.palette.primary.mainLight
+                                backgroundColor: theme.palette.primary.light,
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                                
                             }}
                             onClick={handleOnClickConfiguracionCarrera}
                             variant="contained"
@@ -234,7 +238,7 @@ function SeleccionCarrera() {
                         {
                             datosBotones.map(botonData =>
                                 <Button
-                                    sx={{ padding: '10px', height: '60px'}}
+                                    sx={{ padding: '10px', height: '60px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'}}
                                     onClick={botonData.onClick}
                                     variant="contained"
                                     name={botonData.name}>

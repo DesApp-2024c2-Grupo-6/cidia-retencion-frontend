@@ -179,9 +179,9 @@ function ConfiguracionMaterias() {
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Código Materia</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Año</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Campo</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre Completo</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre</Typography>
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Nombre Especial</Typography>
-        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
+        <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}></Typography>
       </Box>
         :
         <Typography sx={{textAlign:'center', marginY:'50px', color:'gray'}}>No hay materias registradas</Typography>
@@ -194,7 +194,7 @@ function ConfiguracionMaterias() {
 
       <Button
         onClick={handleClicBack}
-        sx={{ margin: 2 }}
+        sx={{ marginY: 4 }}
         variant='contained'
         startIcon={<ArrowCircleLeftIcon />}>
         VOLVER</Button>

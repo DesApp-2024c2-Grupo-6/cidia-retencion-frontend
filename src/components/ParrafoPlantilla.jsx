@@ -26,7 +26,7 @@ const ParrafoPlantilla = ({ text, clave, onEditClick, onDelete }) => {
           <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
         </IconButton>
         <IconButton
-          sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
+          sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.error.main, "&:hover": { backgroundColor: theme.palette.error.dark } }}
           onClick={() => onDelete(clave)}>
           <DeleteIcon sx={{ color: 'white', fontSize: '20px' }} />
         </IconButton>

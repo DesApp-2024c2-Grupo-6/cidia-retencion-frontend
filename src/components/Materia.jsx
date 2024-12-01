@@ -77,7 +77,7 @@ function Materia({ data, campos, handleSaveEdit, handleBorrado }) {
           <EditIcon sx={{ color: 'white', fontSize: '18px' }} />
         </IconButton>
         <IconButton
-          sx={{ width: '15px', height: '15px', padding: '15px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
+          sx={{ width: '15px', height: '15px', padding: '15px', backgroundColor: theme.palette.error.main, "&:hover": { backgroundColor: theme.palette.error.dark } }}
           onClick={() => handleBorrado(data)}>
           <DeleteIcon sx={{ color: 'white', fontSize: '18px' }} />
         </IconButton>
