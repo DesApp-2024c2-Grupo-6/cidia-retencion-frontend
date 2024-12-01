@@ -184,7 +184,7 @@ function ConfiguracionMaterias() {
         <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF' }}>Acciones</Typography>
       </Box>
         :
-        <Typography sx={{textAlign:'center', marginY:'50px'}}>No hay materias registradas</Typography>
+        <Typography sx={{textAlign:'center', marginY:'50px', color:'gray'}}>No hay materias registradas</Typography>
       }
       {
       subjects?.map((item, index) => {

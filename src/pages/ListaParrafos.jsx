@@ -4,6 +4,8 @@ import EdicionParrafo from '../components/ListaParrafos/EdicionParrafo';
 
 import { Button, Box, Typography, Paper, Grid, IconButton, Stack} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useTheme } from '@mui/material/styles';
+
 
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
@@ -11,6 +13,8 @@ import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, 
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+
+  const theme = useTheme()
 
   const hayParrafoIncompleto = parrafos && parrafos.some(parrafo => parrafo.key == "" || parrafo.text == "")
 
@@ -122,8 +126,8 @@ const ParagraphList = () => {
       }}
     >
       <ConfirmarBorrado openBorrado={openBorrado} handleCloseBorrado={handleCloseBorrado} funcionEliminar={eliminarParrafo} elementoAEliminar={parrafoABorrar} textoBorrado="¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
-      <Typography sx={{marginBottom:'10px'}} variant="h4" component="h1" gutterBottom >
-        Plantilla de E-mail
+      <Typography sx={{marginBottom:'10px', fontWeight: '500'}} variant="h4" component="h1" gutterBottom >
+        Plantillas de E-mail
       </Typography>
       {editIndex === null ? (
         <>
@@ -132,11 +136,11 @@ const ParagraphList = () => {
             onClick={() => agregarParrafo()}
             disabled={hayParrafoIncompleto}
           >
-            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '48px' }} />
+            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '44px' }} />
           </IconButton>
           {hayParrafoIncompleto&&
           <Typography sx={{fontSize: 'small', textAlign: 'start',marginBottom: '1px',color:'red'}}>
-            Hay parrafos con datos incompletos
+            Hay plantillas con datos incompletos
           </Typography>
           }
       

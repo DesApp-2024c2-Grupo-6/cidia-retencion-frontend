@@ -95,7 +95,7 @@ function Header() {
                         >
                             {
                                 drawerButtons.map(button =>
-                                    <Button sx={{ color: '#414345', fontWeight: 'bold' }}
+                                    <Button sx={{ color: 'gray', fontWeight: 'bold' }}
                                         key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>
                                         {button.icon}
                                         {button.text}

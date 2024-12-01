@@ -7,6 +7,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import ListIcon from '@mui/icons-material/List';
 import DataArrayIcon from '@mui/icons-material/DataArray';
 import AddIcon from '@mui/icons-material/Add';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
@@ -172,7 +173,7 @@ function SeleccionCarrera() {
     };
 
     const datosBotones = [
-        { name: 'Lista parrafos', onClick: handleOnClickConfiguracionParrafos, icon: <ListIcon sx={{ marginRight: '5px' }} /> },
+        { name: 'Plantillas e-mail', onClick: handleOnClickConfiguracionParrafos, icon: <MailOutlineIcon sx={{ marginRight: '5px' }} /> },
         { name: 'Datos generales', onClick: handleOnClickConfiguracionDatosGenerales, icon: <DataArrayIcon sx={{ marginRight: '5px' }} /> },
         { name: 'Nueva Carrera', onClick: handleOnClickConfiguracionAgregarCarrera, icon: <AddIcon sx={{ marginRight: '5px' }} /> },
 
@@ -195,8 +196,8 @@ function SeleccionCarrera() {
                         minWidth: '250px'
                     }}
                 >
-                    <Typography sx={{ textAlign: 'center', marginBottom: '30px', fontWeight: 'medium' }} variant="h5" component="h1" gutterBottom>
-                        Configuracion de carreras
+                    <Typography sx={{ textAlign: 'center', marginBottom: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
+                        Configuración de carreras
                     </Typography>
                     <Stack direction="row" spacing={0.5}>
                         <Autocomplete
@@ -233,7 +234,7 @@ function SeleccionCarrera() {
                         {
                             datosBotones.map(botonData =>
                                 <Button
-                                    sx={{ padding: '10px', height: '60px' }}
+                                    sx={{ padding: '10px', height: '60px'}}
                                     onClick={botonData.onClick}
                                     variant="contained"
                                     name={botonData.name}>
@@ -251,7 +252,7 @@ function SeleccionCarrera() {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={styleModal}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{marginLeft: '2px'}}>
                             Agregar Carrera
                         </Typography>
                         <FormControl fullWidth

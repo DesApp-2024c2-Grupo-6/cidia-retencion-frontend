@@ -4,9 +4,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import { useTheme } from '@mui/material/styles';
 
 
 function Materia({ data, campos, handleSaveEdit, handleBorrado }) {
+
+  const theme = useTheme()
 
   const style = {
     position: 'absolute',
@@ -69,14 +72,14 @@ function Materia({ data, campos, handleSaveEdit, handleBorrado }) {
       <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{data.specialSubjectName}</Typography>
       <Box sx={{ flex: 1, textAlign: 'center', padding: '8px', display: 'flex', justifyContent: 'center', gap: 1 }}>
         <IconButton
-          sx={{ width: '25px' }}
+          sx={{ width: '15px', height: '15px', padding: '15px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark } }}
           onClick={() => handleOpen(data)}>
-          <EditIcon sx={{ color: 'blue', fontSize: '18px' }} />
+          <EditIcon sx={{ color: 'white', fontSize: '18px' }} />
         </IconButton>
         <IconButton
-          sx={{ width: '25px' }}
+          sx={{ width: '15px', height: '15px', padding: '15px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
           onClick={() => handleBorrado(data)}>
-          <DeleteIcon sx={{ color: 'red', fontSize: '18px' }} />
+          <DeleteIcon sx={{ color: 'white', fontSize: '18px' }} />
         </IconButton>
       </Box>
 

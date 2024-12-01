@@ -137,7 +137,7 @@ function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatos
                 }}>
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Materia</Typography>
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Nombre para mail</Typography>
-                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Acciones</Typography>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}></Typography>
                 </Box>
                 <Box sx={{
                     width: '1000px',

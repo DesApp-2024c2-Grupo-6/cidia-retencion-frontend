@@ -4,10 +4,14 @@ import Button from '@mui/material/Button';
 import { Box, IconButton, Tooltip, Table } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from '@mui/material/Modal';
+import { useTheme } from '@mui/material/styles';
+
 
 
 
 const ConfirmarBorrado = (props) =>{
+    const theme = useTheme()
+    
     const {openBorrado,handleCloseBorrado,funcionEliminar,elementoAEliminar,textoBorrado} = props
     return(
     <Modal

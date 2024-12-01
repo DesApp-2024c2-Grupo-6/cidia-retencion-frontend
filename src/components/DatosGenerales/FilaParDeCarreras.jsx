@@ -47,16 +47,16 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
     const VerFilaParDeCarreras = () => {
         return (
             <>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{parCarreras.shortCareer.nombre}</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{parCarreras.longCareer.nombre}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{parCarreras.shortCareer.nombre}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'meidum', fontSize: 'small' }}>{parCarreras.longCareer.nombre}</Typography>
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark } }}
                         onClick={handleEditButtonClick}>
                         <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'red' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
                         onClick={handleDeleteButtonClick}>
                         <DeleteIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
@@ -94,12 +94,12 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
                 />
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main}}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark }}}
                         onClick={handleGuardarButtonClick}>
                         <SaveIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'cornflowerBlue' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark }}}
                         onClick={handleCancelarButtonClick}>
                         <ArrowBackIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>

@@ -48,16 +48,16 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
     const VerFilaMateriaComun = () => {
         return (
             <>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{materiaComun.realName}</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{materiaComun.name}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{materiaComun.realName}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{materiaComun.name}</Typography>
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark } }}
                         onClick={handleEditButtonClick}>
                         <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'red' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.danger.main, "&:hover": { backgroundColor: theme.palette.danger.dark } }}
                         onClick={handleDeleteButtonClick}>
                         <DeleteIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
@@ -97,7 +97,7 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                                 renderInput={(params) => <TextField {...params} label="" sx={{ fontSize: 'small' }} />}
                             />
                             <Input
-                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'bold', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
+                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'medium', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
                                 aria-label="Input Special name"
                                 placeholder="Ingrese el nombre especial"
                                 value={materiaEditada.name}
@@ -105,12 +105,12 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                             />
                             <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                                 <IconButton
-                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main }}
+                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark }}}
                                     onClick={handleGuardarButtonClick}>
                                     <SaveIcon sx={{ color: 'white', fontSize: '20px' }} />
                                 </IconButton>
                                 <IconButton
-                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'cornflowerBlue' }}
+                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark }}}
                                     onClick={handleCancelarButtonClick}>
                                     <ArrowBackIcon sx={{ color: 'white', fontSize: '20px' }} />
                                 </IconButton>
