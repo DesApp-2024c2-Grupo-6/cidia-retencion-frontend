@@ -6,9 +6,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import { getAllCareer } from '../../services/CareerService';
 import { getAllSubjectData } from '../../services/SubjectDataService';
 
-import SelectMultipleAR from '../SelectMultipleAR';
-
-
 
 const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondicionChange, handleCarrerasElegidasChange, checkBoxDeshabilitado }) => {
 
@@ -273,8 +270,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerCarreras = async () => {
             const res = await getAllCareer()
-            const carrerasOrdenadas = res.data.allCareers.sort((a, b) => a.careerName.localeCompare(b.careerName))
-            setCarreras(carrerasOrdenadas)
+            setCarreras(res.data.allCareers)
         }
         obtenerCarreras()
     }, [])
@@ -282,8 +278,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerMaterias = async () => {
             const res = await getAllSubjectData()
-            const materiasOrdenadas = res.data.allSubjects.sort((a, b) => a.subjectName.localeCompare(b.subjectName))
-            setMaterias(materiasOrdenadas)
+            setMaterias(res.data.allSubjects)
         }
         obtenerMaterias()
     }, [])
@@ -339,7 +334,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                 gap: 2,
                 maxWidth: '1000px',
                 width: '100%',
-                margin: '0 auto',
+                margin: '20px 0 auto',
             }}
         >
             <TextField label="Clave" value={parrafo.key} onChange={handleKeyChange} variant="outlined" fullWidth />
@@ -386,7 +381,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
             </Stack>
             <Box display="flex" justifyContent="space-evenly">
                 <Button variant="contained" color="primary" onClick={handleCancelar} startIcon={<ArrowCircleLeftIcon />}>Volver</Button>
-                <Button disabled={parrafo.key == "" || parrafo.text == ""} type="submit" variant="contained" startIcon={<SaveIcon />} color="secondary">Guardar</Button>
+                <Button disabled={parrafo.key == "" || parrafo.text == "" || parrafo.conditions.length == 0} type="submit" variant="contained" startIcon={<SaveIcon />} color="secondary">Guardar</Button>
             </Box>
         </Box>
     );

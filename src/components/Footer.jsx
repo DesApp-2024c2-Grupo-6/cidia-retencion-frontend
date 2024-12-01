@@ -11,6 +11,7 @@ function Footer() {
                     width: "100%",
                     height: 'calc(100px + 3vh)',
                     backgroundColor: '#333333',
+                    zIndex:'-11'
                 }}>
             </Box>
         </>

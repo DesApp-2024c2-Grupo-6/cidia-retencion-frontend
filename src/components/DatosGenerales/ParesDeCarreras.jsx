@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import FilaParDeCarreras from './FilaParDeCarreras'
 //Componentes MUI
 import { Button, Box, IconButton, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 //Iconos
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SaveIcon from '@mui/icons-material/Save';
@@ -27,6 +29,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
     */
 
     paresCarrerasData = paresCarrerasData.map((par, index) => ({ id: index, ...par }))
+
+    const theme = useTheme();
 
     const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({ id: carrera.id, nombre: carrera.nombre })))
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
@@ -89,7 +93,7 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
         const idNoDisponibles = paresCarreras.map(par => par.id);
 
         const generarIDRandom = (valorInicial) => {
-            const idGenerado =  valorInicial
+            const idGenerado = valorInicial
             return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
         }
         const CARRERA_VACIA = { id: (generarIDRandom(idNoDisponibles.length)), shortCareer: { id: "", nombre: "" }, longCareer: { id: "", nombre: "" } }
@@ -127,19 +131,24 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
 
                 }}>
 
-                    <h2 className="label">Pares carreras</h2>
+                    <Typography sx={{fontWeight: 'bold' }} variant="h6" component="h1" gutterBottom>
+                        Pares de carreras
+                    </Typography>
                     <IconButton
                         sx={{ display: 'inline', width: 'auto', marginTop: '10px' }}
                         onClick={handleAgregarPar}>
                         <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
                     </IconButton>
                     <Box>
-                        <Typography 
-                            sx={{fontSize:'small', 
-                            textAlign:'center', 
-                            marginBottom:'5px', 
-                            color:(mensajeGuardado == "Hay cambios sin guardar") ? '#f57f17' : 'red'}}
-                            >{mensajeGuardado}
+                        <Typography
+                            sx={{
+                                fontSize: 'small',
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                marginBottom: '5px',
+                                color: (mensajeGuardado == "Hay cambios sin guardar") ? theme.palette.primary.light : theme.palette.error.main
+                            }}
+                        >{mensajeGuardado}
                         </Typography>
                         <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
                             Guardar
@@ -157,8 +166,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                     borderBottomColor: '#dedede',
                 }}>
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Pregrado</Typography>
-                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Grado</Typography>
-                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Acciones</Typography>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small'}}>Grado</Typography>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small'}}></Typography>
                 </Box>
                 <Box sx={{
                     width: '1000px',

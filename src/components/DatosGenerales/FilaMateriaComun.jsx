@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 //Componentes MUI
 import { Button, Box, IconButton, Typography, Autocomplete, TextField, Input } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 //Iconos
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -17,6 +19,8 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
             -borrarMateriaComun(idListaABorrar) - Funcion - Funcion que borra un objeto de la lista de materias comunes
         Retorna: JSX
     */
+    const theme = useTheme()
+
     const [estaSiendoEditado, setEstaSiendoEditado] = useState(false)
 
     const [materiaComun, setMateriaComun] = useState(materiaComunData)
@@ -44,16 +48,16 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
     const VerFilaMateriaComun = () => {
         return (
             <>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{materiaComun.realName}</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>{materiaComun.name}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{materiaComun.realName}</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'medium', fontSize: 'small' }}>{materiaComun.name}</Typography>
                 <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'green' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark } }}
                         onClick={handleEditButtonClick}>
                         <EditIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
                     <IconButton
-                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'red' }}
+                        sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.error.main, "&:hover": { backgroundColor: theme.palette.error.dark } }}
                         onClick={handleDeleteButtonClick}>
                         <DeleteIcon sx={{ color: 'white', fontSize: '20px' }} />
                     </IconButton>
@@ -93,7 +97,7 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                                 renderInput={(params) => <TextField {...params} label="" sx={{ fontSize: 'small' }} />}
                             />
                             <Input
-                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'bold', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
+                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'medium', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
                                 aria-label="Input Special name"
                                 placeholder="Ingrese el nombre especial"
                                 value={materiaEditada.name}
@@ -101,12 +105,12 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                             />
                             <Box sx={{ flex: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 1 }}>
                                 <IconButton
-                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'green' }}
+                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.success.main, "&:hover": { backgroundColor: theme.palette.success.dark }}}
                                     onClick={handleGuardarButtonClick}>
                                     <SaveIcon sx={{ color: 'white', fontSize: '20px' }} />
                                 </IconButton>
                                 <IconButton
-                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: 'cornflowerBlue' }}
+                                    sx={{ width: '20px', height: '20px', padding: '17px', backgroundColor: theme.palette.primary.main, "&:hover": { backgroundColor: theme.palette.primary.dark }}}
                                     onClick={handleCancelarButtonClick}>
                                     <ArrowBackIcon sx={{ color: 'white', fontSize: '20px' }} />
                                 </IconButton>

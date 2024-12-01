@@ -26,7 +26,8 @@ import MateriasComunes from '../components/DatosGenerales/MateriasComunes';
 function FormDatosGenerales({ carrerasData, materiasData }) {
 
   const DATOS_VACIOS = { careerPairs: [], fakeSubjectIds: [], specialSubjects: [], englishLevelIds: [] };
-
+  materiasData.sort((a,b) => a.name.localeCompare(b.name))
+  carrerasData.sort((a,b) => a.nombre.localeCompare(b.nombre))
   const [datosGenerales, setDatosGenerales] = useState(DATOS_VACIOS)
   const [datosGeneralesSinEditar, setDatosGeneralesSinEditar] = useState(DATOS_VACIOS)
   const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasData)

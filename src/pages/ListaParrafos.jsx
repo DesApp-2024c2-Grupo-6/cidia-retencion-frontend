@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ParrafoPlantilla from '../components/ParrafoPlantilla';
-import EdicionParrafo from '../components/parrafo/EdicionParrafo';
+import EdicionParrafo from '../components/ListaParrafos/EdicionParrafo';
 
-import { Button, Box, Typography, Paper, Grid, IconButton } from '@mui/material';
+import { Button, Box, Typography, Paper, Grid, IconButton, Stack} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useTheme } from '@mui/material/styles';
+
 
 import ConfirmarBorrado from '../components/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '../services/ParrafosService.js';
@@ -11,6 +13,8 @@ import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, 
 const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+
+  const theme = useTheme()
 
   const hayParrafoIncompleto = parrafos && parrafos.some(parrafo => parrafo.key == "" || parrafo.text == "")
 
@@ -45,6 +49,7 @@ const ParagraphList = () => {
       //El nuevo parrafo se agrega al principio de la lista
       const nuevoParrafo = response.data.parrafosData._rawData[0];
       setParrafos([nuevoParrafo, ...parrafos])
+      setEditIndex(0)
     }
     else
       console.error('Error: No se pudo crear el parrafo', response);
@@ -121,28 +126,26 @@ const ParagraphList = () => {
       }}
     >
       <ConfirmarBorrado openBorrado={openBorrado} handleCloseBorrado={handleCloseBorrado} funcionEliminar={eliminarParrafo} elementoAEliminar={parrafoABorrar} textoBorrado="¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Plantilla de E-mail
+      <Typography sx={{marginBottom:'10px', fontWeight: '500'}} variant="h4" component="h1" gutterBottom >
+        Plantillas de E-mail
       </Typography>
       {editIndex === null ? (
         <>
           <IconButton
-            sx={{ display: 'inline', width: 'auto', marginTop: '5px' }}
+            sx={{ display: 'inline', width: 'auto'}}
             onClick={() => agregarParrafo()}
             disabled={hayParrafoIncompleto}
           >
-            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '48px' }} />
+            <AddCircleIcon color={(hayParrafoIncompleto) ? "disabled" : "success"} sx={{ fontSize: '44px' }} />
           </IconButton>
           {hayParrafoIncompleto&&
-          <Typography sx={{
-              fontSize: 'small',
-              textAlign: 'start',
-              marginBottom: '5px',
-              color:'red'
-            }}>Hay parrafos con datos incompletos</Typography>
+          <Typography sx={{fontSize: 'small', textAlign: 'start',marginBottom: '1px',color: theme.palette.error.main}}>
+            Hay plantillas con datos incompletos
+          </Typography>
           }
+      
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
-            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%' }}>
+            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '70%'  }}>
               <Paper
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}
