@@ -28,12 +28,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
         handleConfiguracionCondicionChange(CODIGO, nuevaConfiguracion)
     }
 
-    
-    const carrerasFormateadas = carrerasData.map(carrera => ({ value: carrera.careerId, label: carrera.careerName }))
-
-    const carrerasFormateadasSinRepetidos = Array.from(new Set(carrerasFormateadas.map(JSON.stringify))).map(JSON.parse)
-
-    const carrerasSeleccionadas = carrerasFormateadasSinRepetidos.filter(carrera => configuracion.id_carreras.includes(carrera.value))
+    const carrerasSeleccionadas = carrerasData.filter(carrera => configuracion.id_carreras.includes(carrera.value))
 
     return (
         <Box sx={{
@@ -59,9 +54,9 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
                         sx={{ width: '100%' }}
-                        value = {carrerasSeleccionadas}
+                        value={carrerasSeleccionadas}
                         multiple
-                        options={carrerasFormateadasSinRepetidos}
+                        options={carrerasData}
                         getOptionKey={op => op.value}
                         onChange={(event, values) => handleCarrerasEnCarreraChange(values.map(v => v.value))}
                         isOptionEqualToValue={(op1, op2) => op1.value === op2.value}
@@ -130,11 +125,18 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
         handleConfiguracionCondicionChange(CODIGO, nuevaConfiguracion)
     }
 
-    const materiasFormateadas = materiasData.map(materia => ({ value: materia.id_materia, label: materia.subjectName }))
 
-    const materiasFormateadasSinRepetidos = Array.from(new Set(materiasFormateadas.map(JSON.stringify))).map(JSON.parse)
+    const materiasSeleccionadas = materiasData.filter(materia => configuracion.id_materias.includes(materia.value))
 
-    const materiasSeleccionadas = materiasFormateadasSinRepetidos.filter(materia => configuracion.id_materias.includes(materia.value))
+    /*
+    useEffect(()=>{ 
+        const idMateriaPosibles = materiasData.map(materia => materia.value)
+        const idMateriaFiltrados = configuracion.id_materias.filter(id_materia => idMateriaPosibles.includes(id_materia))
+        const nuevaConfiguracion = { ...configuracion, id_materias: idMateriaFiltrados }
+        setConfiguracion(nuevaConfiguracion)
+        handleConfiguracionCondicionChange(CODIGO, nuevaConfiguracion)
+    }, [materiasData])
+    */
 
     return (
         <Box sx={{
@@ -160,9 +162,9 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
                         sx={{ width: '100%' }}
-                        value = {materiasSeleccionadas}
+                        value={materiasSeleccionadas}
                         multiple
-                        options={materiasFormateadasSinRepetidos}
+                        options={materiasData}
                         getOptionKey={op => op.value}
                         onChange={(event, values) => handleMateriasPendientesChange(values.map(v => v.value))}
                         isOptionEqualToValue={(op1, op2) => op1.value === op2.value}
@@ -220,6 +222,13 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
         */
 
         //Campos especificos de configuracion de cada condicion por codigo
+
+        if (!listaCodigosSeleccionados.includes("EN_CARRERA")) {
+            console.log("no esta")
+            const condicionesFiltradas = listaCodigosSeleccionados.filter(codigo => codigo != "MATERIAS_PENDIENTES" || codigo != "MATERIAS_NO_PENDIENTES")
+            console.log(condicionesFiltradas)
+        }
+
         const camposConfigCondicionPorCodigo = {
             "EN_CARRERA": {
                 id_carreras: [],
@@ -251,8 +260,6 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
             return condicionYaCargada
         });
         setParrafo({ ...parrafo, conditions: condicionesPorAgregar })
-        console.log(condicionesPorAgregar)
-        //const enCarreraEstaSeleccionado = condicionesPorAgregar.find(condicion => condicion.codigo_condicion == "EN_CARRERA")   
     };
 
     const handleConfiguracionCondicionChange = (codigo, nuevaConfig) => {
@@ -270,7 +277,11 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerCarreras = async () => {
             const res = await getAllCareer()
-            setCarreras(res.data.allCareers)
+            const carreras = res.data.allCareers.filter(carrera => carrera != undefined)
+            const carrerasOrdenadas = carreras.sort((a, b) => a.careerName.localeCompare(b.careerName))
+            const carrerasFormateadas = carrerasOrdenadas.map(carrera => ({ value: carrera.careerId, label: carrera.careerName }))
+            const carrerasFormateadasSinRepetidos = Array.from(new Set(carrerasFormateadas.map(JSON.stringify))).map(JSON.parse)
+            setCarreras(carrerasFormateadasSinRepetidos)
         }
         obtenerCarreras()
     }, [])
@@ -278,7 +289,10 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
     useEffect(() => {
         const obtenerMaterias = async () => {
             const res = await getAllSubjectData()
-            setMaterias(res.data.allSubjects)
+            const materiasOrdenadas = res.data.allSubjects.sort((a, b) => a.subjectName.localeCompare(b.subjectName))
+            const materiasFormateadas = materiasOrdenadas.map(materia => ({ value: materia.id_materia, label: materia.subjectName, id_carrera: materia.id_carrera }))
+            const materiasFormateadasSinRepetidos = Array.from(new Set(materiasFormateadas.map(JSON.stringify))).map(JSON.parse)
+            setMaterias(materiasFormateadasSinRepetidos)
         }
         obtenerMaterias()
     }, [])
@@ -323,11 +337,26 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
 
         return esIncompatible
     };
- 
+
+    const validarParrafo = () => {
+        const parrafoValidado = structuredClone(parrafo)
+        const condicionesElegidas = parrafoValidado.conditions.map(condicion => condicion.codigo_condicion)
+        const idsPosibles = materiasPosibles.map(materia => materia.value)
+        if(condicionesElegidas.includes("MATERIAS_PENDIENTES")){
+            const condicionMP = parrafoValidado.conditions.find(condicion => condicion.codigo_condicion == "MATERIAS_PENDIENTES")
+            condicionMP.config_condicion.id_materias = condicionMP.config_condicion.id_materias.filter(id => idsPosibles.includes(id))
+        }
+        if(condicionesElegidas.includes("MATERIAS_NO_PENDIENTES")){
+            const condicionMNP = parrafoValidado.conditions.find(condicion => condicion.codigo_condicion == "MATERIAS_NO_PENDIENTES")
+            condicionMNP.config_condicion.id_materias = condicionMNP.config_condicion.id_materias.filter(id => idsPosibles.includes(id))
+        }
+        editarParrafo({ ...parrafoValidado, keyanterior: KEY_ANTERIOR })
+    }
+
     return (
         <Box
             component="form"
-            onSubmit={() => editarParrafo({...parrafo, keyanterior:KEY_ANTERIOR})}
+            onSubmit={() => validarParrafo()}
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -360,7 +389,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                                 handleCarrerasElegidasChange={handleCarrerasElegidasChange}
                                 carrerasData={carreras}
                                 checkBoxDeshabilitado={codigosCondicionSeleccionados.includes("MATERIAS_PENDIENTES") || codigosCondicionSeleccionados.includes("MATERIAS_NO_PENDIENTES")}
-                                />
+                            />
                             : (condicionSeleccionada.codigo_condicion == "CANT_APROBADAS")
                                 ? <FormCantAprobadas
                                     key={condicionSeleccionada.codigo_condicion}
@@ -374,7 +403,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                                         handleConfiguracionCondicionChange={handleConfiguracionCondicionChange}
                                         materiasData={materiasPosibles}
                                     />
-                                    :<span key={condicionSeleccionada.codigo_condicion}/>
+                                    : <span key={condicionSeleccionada.codigo_condicion} />
                     )
                     }
                 </Box>
