@@ -40,7 +40,6 @@ function SeleccionCarrera() {
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
     const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
 
-    console.log(nuevaCarrera)
 
     useEffect(() => {
         setMessage({});

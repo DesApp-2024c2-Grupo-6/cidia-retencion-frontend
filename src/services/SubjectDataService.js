@@ -42,9 +42,9 @@ export const getSubjectsByCareerAndPlan = async (id_carrera,id_plan) => {
         return error;
     }
 }
-export const getSubjectsNotRegisteredByCareer = async (id_carrera) => {
+export const getSubjectsNotRegisteredByCareer = async (id_carrera, id_plan) => {
     try {
-        const response = await axios.get(`${baseURL}/materias/${id_carrera}/sin_registrar`);
+        const response = await axios.get(`${baseURL}/materias/${id_carrera}/plan/${id_plan}/sin_registrar`);
         return response;
     } catch (error) {
         return error;
