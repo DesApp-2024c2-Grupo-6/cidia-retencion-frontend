@@ -240,9 +240,11 @@ function SeleccionCarrera() {
                                     sx={{ padding: '10px', height: '60px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'}}
                                     onClick={botonData.onClick}
                                     variant="contained"
+                                    key={botonData.name}
                                     name={botonData.name}>
                                     {botonData.icon}
                                     {botonData.name}
+                                    
                                 </Button>
                             )
                         }
