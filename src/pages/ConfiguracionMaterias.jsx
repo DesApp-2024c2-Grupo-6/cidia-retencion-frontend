@@ -232,9 +232,15 @@ function ConfiguracionMaterias() {
               onChange={handleNuevaMateriaAutocompleteChange}
               disablePortal
               disableClearable
+              getOptionKey={(params) => params.id}
               freeSolo
               getOptionLabel={(materia) => materia.nombre}
               renderInput={(params) => <TextField {...params} label="Materia" />}
+            />
+            <TextField
+              label="Código Materia"
+              value={nuevaMateria.id_materia}
+              disabled
             />
             <TextField
               label="Año"
