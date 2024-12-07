@@ -40,7 +40,6 @@ function SeleccionCarrera() {
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
     const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
 
-    console.log(nuevaCarrera)
 
     useEffect(() => {
         setMessage({});
@@ -299,7 +298,7 @@ function SeleccionCarrera() {
                                 }}
                             >
                                 <Button variant="contained" startIcon={<ArrowCircleLeftIcon />} onClick={handleCloseModal}>Volver</Button>
-                                <Button disabled={!nuevaCarrera.id || !nuevaCarrera.plan} variant="contained" color="secondary" startIcon={<SaveIcon />} onClick={handleSaveModal}>
+                                <Button disabled={!nuevaCarrera.id || nuevaCarrera.plan.length == 0} variant="contained" color="secondary" startIcon={<SaveIcon />} onClick={handleSaveModal}>
                                     Guardar
                                 </Button>
                             </Stack>

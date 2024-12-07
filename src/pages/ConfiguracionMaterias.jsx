@@ -90,13 +90,13 @@ function ConfiguracionMaterias() {
 
 
   useEffect(() => {
-    const getMateriasSinRegistrar = async (id_carrera) => {
-      const materias = await getSubjectsNotRegisteredByCareer(id_carrera);
+    const getMateriasSinRegistrar = async (id_carrera,id_plan) => {
+      const materias = await getSubjectsNotRegisteredByCareer(id_carrera,id_plan);
       const materiasData = materias.data.materiasSinRegistrar.filter(materia => !materia.esUnahur)
       materiasData.sort((a, b) => a.nombre.localeCompare(b.nombre))
       setMateriasSinRegistrar(materiasData);
     }
-    getMateriasSinRegistrar(IdCarrera)
+    getMateriasSinRegistrar(IdCarrera,IdPlan)
   }, [save, deleted])
 
   const handleSaveCreate = async (materiaACrear) => {
