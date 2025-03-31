@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import DatosGenerales from "./pages/DatosGenerales";
 
 //Pages - Asistencia
+import AsistenciaCursadas from "./pages/asistencia-cursadas/AsistenciaCursadas";
 
 //Rutas - Configuracion
 const routesConfiguracion = [
@@ -41,7 +42,10 @@ const routesConfiguracion = [
 
 //Rutas - Asistencia
 const routesAsistencia = [
-
+    {
+        path: 'asistencia-cursadas',
+        element: <AsistenciaCursadas/>
+    }
 ]
 
 //Merge de todas las rutas
@@ -54,7 +58,7 @@ export function Router() {
     return (
         <Routes>
             {
-                routes.map(route => <Route path={route.path} element={route.element}/>)
+                routes.map(route => <Route key={route.path} path={route.path} element={route.element}/>)
             }
             <Route path='*' element={<Home/>}/>
         </Routes>
