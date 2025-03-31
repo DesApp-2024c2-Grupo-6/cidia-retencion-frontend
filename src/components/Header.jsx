@@ -18,11 +18,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 
-
+//Icons
+import GroupIcon from '@mui/icons-material/Group';
 import SettingsIcon from '@mui/icons-material/Settings';
-import CodeOffIcon from '@mui/icons-material/CodeOff';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { ListItemIcon } from '@mui/material';
 
 
 
@@ -33,25 +32,20 @@ function Header() {
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width:1220px)');
 
-    //funciones para navegar tendremos 2 por ahora Home y Configuracion
-    const handleOnClickHome = () => {
-        navigate('/home');
-        if (isMobile) setDrawerOpen(false);
-    }
-
-    const handleOnClickConfiguracion = () => {
-        navigate('/configuracion');
+    const handleClick = (path) => {
+        console.log("Navigate to" + path)
+        navigate(path);
         if (isMobile) setDrawerOpen(false);
     }
 
 
-    const drawerButtons = [
-        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled: false, icon: <SettingsIcon/> },
-        { text: 'Opción 2', onClick: handleOnClickHome, disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 3', disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 4', disabled: true, icon: <ErrorOutlineIcon/>  },
-        { text: 'Opción 5', disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 6', disabled: true, icon: <ErrorOutlineIcon/> },
+    const opciones = [
+        { text: 'Configuraciones', path: '/configuracion', disabled: false, icon: <SettingsIcon/> },
+        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <GroupIcon/> },
+        { text: 'Opción 3', path: '/', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 4', path: '', disabled: true, icon: <ErrorOutlineIcon/>  },
+        { text: 'Opción 5', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 6', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
     ];
 
     const handleDrawerToggle = () => {
@@ -69,10 +63,10 @@ function Header() {
                         </IconButton>
                         <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle} >
                             <List>
-                                {drawerButtons.map((button, index) => (
-                                    <ListItem button key={index} onClick={button.onClick} sx={{color: theme.palette.primary.dark}}>
-                                        {button.icon}
-                                        <ListItemText primary={button.text} sx={{marginLeft:'8px'}} />
+                                {opciones.map((opcion, index) => (
+                                    <ListItem button key={index} onClick={() => handleClick(opcion.path)} sx={{color: theme.palette.primary.dark}}>
+                                        {opcion.icon}
+                                        <ListItemText primary={opcion.text} sx={{marginLeft:'8px'}} />
                                     </ListItem>
                                 ))}
                             </List>
@@ -110,13 +104,13 @@ function Header() {
                             }}
                         >
                             {
-                                drawerButtons.map(button =>
+                                opciones.map(opcion =>
                                     <Button sx={{ color:'white', fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: '#6894a3' }, "&:hover": { backgroundColor: '#0b4c63' }}}
-                                        key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>
+                                        key={opcion.text} variant="text" onClick={() => handleClick(opcion.path)} disabled={opcion.disabled}>
                                         <Box>
-                                            {button.icon}
+                                            {opcion.icon}
                                         </Box>
-                                        {button.text}
+                                        {opcion.text}
                                     </Button>
                                 )
                             }
