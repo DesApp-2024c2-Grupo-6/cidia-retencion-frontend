@@ -161,8 +161,9 @@ function ConfiguracionCondicionCarrera() {
                     code: materias.status,
                     msg: `Se han traido todas las materias.`
                 });
+                console.log(mats)
                 const lista = mats.allSubjects.filter(c => c.id_carrera == IdCarrera).map(c => ({
-                    label: `Materia ${c.id_materia}`,
+                    label: c.subjectName,
                     value: c.id_materia
                 }));
                 setMateriasList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
@@ -726,7 +727,7 @@ function ConfiguracionCondicionCarrera() {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                             }}>
-                            <Typography variant="h4" >
+                            <Typography variant="h5" >
                                 {nombreCarrera}
                             </Typography>
                             <Tooltip title="Crear una nueva condición.">
