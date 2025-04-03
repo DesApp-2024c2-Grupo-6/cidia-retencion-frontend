@@ -25,6 +25,84 @@ const data = [
     { name: 'Semana 16', porcentajeAlumnos: 95, cantidadAlumnos: 190 },
 ];
 
+const ejemploComision = {
+    nombre:"comision1",
+    inscriptos:3,
+    semanas:[3,5,3,65,7,4,3,5,5,4,4,4,4,3,2,1]
+}
+const listaComisiones = [ejemploComision,ejemploComision,ejemploComision,ejemploComision]
+
+const Comision = ({comision}) =>{
+    return(
+        <Box
+              sx={{
+                padding:"8px",
+                gap: '8px',
+                display: 'flex',
+                '&:nth-of-type(odd)': {
+                  backgroundColor: '#f9f9f9',
+                },
+                '&:nth-of-type(even)': {
+                  backgroundColor: '#ffffff'
+                },
+              }}
+            >
+
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre}</Typography>
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.inscriptos}</Typography>
+            {ejemploComision.semanas.map(semana => {
+                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px'}}>{semana}</Typography>
+            })}
+        </Box>
+
+    )
+}
+const ListadoComisiones = () =>{
+    const theme = useTheme();
+    return(
+        <Box sx={{
+            width: '85%',    
+        }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: '8px',
+                    backgroundColor: theme.palette.success.main,
+                    padding: '8px',
+                }}
+            >
+
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Comisión</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}></Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Inscriptos</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 1</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 2</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 3</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 4</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 5</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 6</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 7</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 8</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 9</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 10</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 11</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 12</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 13</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 14</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 15</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
+            </Box>
+       
+        {listaComisiones.map( com => {
+                   return <Comision comision={com}></Comision>
+                }
+            )}
+
+    </Box>
+    )
+
+}
 const DatosMateria = () => {
     const theme = useTheme();
 
@@ -87,13 +165,20 @@ const Grafico = () => {
     )
 }
 
+
 export default function AsistenciaCursadas() {
     return (
-        <Box sx={{ minWidth: '100%' }}>
+        <Box sx={{ minWidth: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems:"center"
+         }}>
             <Typography >Asistencia a cursadas</Typography>
-            <Box>
-                Aca va lo de nacho
-            </Box>
+
+                
+                
+            <ListadoComisiones />
+            
             <Box sx={{ width: '80%', margin: 'auto' }}>
                 <Box sx={{ marginBottom: 3 }}>
                     <DatosMateria />
