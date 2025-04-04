@@ -1,10 +1,17 @@
 //MUI
-import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider } from '@mui/material';
+import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-
+import SearchIcon from '@mui/icons-material/Search';
+import SsidChartIcon from '@mui/icons-material/SsidChart';
+import { Row } from 'react-bootstrap';
 //Recharts
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+//Services
+import {getPeriodos} from '../../services/periodosLectivosService'
+import {getCurso,getAsistenciasDeCurso} from '../../services/cursosService'
+import {getAllCareerGuaraniConPlanes} from '../../services/CareerService';
+import {getSubjectsByCareer} from '../../services/SubjectDataService'
 
 const data = [
     { name: 'Semana 1', porcentajeAlumnos: 100, cantidadAlumnos: 200 },
@@ -32,6 +39,67 @@ const ejemploComision = {
 }
 const listaComisiones = [ejemploComision,ejemploComision,ejemploComision,ejemploComision]
 
+const SeleccionCursada = (props) =>{
+    const theme = useTheme();
+    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera} = props
+    return(
+        <Stack
+            direction="Row"
+            sx={{
+                width: '60%',
+                justifyContent: 'space-between',
+                mb:"2"
+        }}>
+            <Stack id="smar" sx={{ width: "25%" }} spacing={3}>
+                <Autocomplete
+                    disablePortal
+                    disableClearable
+                    sx={{ width: '100%' }}
+                    options={listaPeriodos}
+                    className={'selectPeriodoLectivo'}
+                    onChange={(event, newValue) =>{}}
+                    renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
+                />
+            </Stack>
+            <Stack id="smar" sx={{ width: "25%" }} spacing={3}>
+                <Autocomplete
+                    disablePortal
+                    disableClearable
+                    options={listaCarreras}
+                    className={'selectCarrera'}
+                    onChange={(event, newValue) =>{handleCarrera(newValue.value)}}
+                    renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
+                />
+            </Stack>
+            <Stack id="smar" sx={{ width: "25%" }} spacing={3}>
+                <Autocomplete
+                    disablePortal
+                    disableClearable
+                    options={listaMaterias}
+                    className={'selectMateria'}
+                    onChange={(event, newValue) =>{}}
+                    renderInput={(params) => <TextField {...params} label="Materia" sx={{ height: '55px' }} />}
+                />
+            </Stack>
+            
+            <Button
+            sx={{
+                width: '10%',
+                display: "flex", justifyContent: "center", alignItems: "center",
+                backgroundColor: theme.palette.primary.light,
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                color:"white"
+            }}
+            variant="contained"
+            startIcon={<SearchIcon />}
+            >Buscar
+            </Button>
+
+
+        </Stack>
+    )
+}
+
 const Comision = ({comision}) =>{
     return(
         <Box
@@ -54,6 +122,8 @@ const Comision = ({comision}) =>{
             {ejemploComision.semanas.map(semana => {
                 return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px'}}>{semana}</Typography>
             })}
+            <Button sx={{maxWidth:'2%'}} variant="outlined"><SsidChartIcon /></Button>
+            
         </Box>
 
     )
@@ -62,7 +132,7 @@ const ListadoComisiones = () =>{
     const theme = useTheme();
     return(
         <Box sx={{
-            width: '85%',    
+            width: '85%'  
         }}>
             <Box
                 sx={{
@@ -72,7 +142,6 @@ const ListadoComisiones = () =>{
                     padding: '8px',
                 }}
             >
-
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Comisión</Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}></Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Inscriptos</Typography>
@@ -92,6 +161,7 @@ const ListadoComisiones = () =>{
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 14</Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 15</Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
+                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Gráfico</Typography>
             </Box>
        
         {listaComisiones.map( com => {
@@ -133,8 +203,6 @@ const DatosMateria = () => {
                 <Typography>Comisión: </Typography>
                 <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>(759) - Comisión 2</Typography>
             </Stack>
-
-
         </Stack>
     )
 }
@@ -167,16 +235,80 @@ const Grafico = () => {
 
 
 export default function AsistenciaCursadas() {
+    const[periodosLectivos,setPeriodosLectivos] = useState([])
+    const[carreras,setCarreras] = useState([])
+    const[materias,setMaterias] = useState([])
+    const[carreraActual,setCarreraActual] = useState(1)
+    const[periodoActual,setPeriodoActual] = useState({})
+
+    useEffect(() => {
+        const obtenerPeriodosLectivos = async () => {
+            const periodos = await getPeriodos()
+            const periodosFormato = periodos.data.map(
+                p => ({
+                    label : p.nombre,
+                    value : {
+                        anio: p.anio,
+                        cuatrimestre :p.cuatrimestre,
+                        esAnual: p.esAnual,
+                        fechaFin: p.fechaFin,
+                        fechaInicio: p.fechaInicio,
+                        nombre: p.nombre,
+                        periodoId: p.periodoId
+                    }
+                })
+            )
+        setPeriodosLectivos(periodosFormato.reverse())
+        }
+        obtenerPeriodosLectivos()
+    }, [])
+    useEffect(() =>{
+        const obtenerCarrerasGuarani = async () =>{
+            const carrerasSiu = await getAllCareerGuaraniConPlanes()
+            const listaCarreras = carrerasSiu.data.map(c =>({
+                label:c.nombre,
+                value:c.id
+            }))
+              
+            
+            setCarreras(listaCarreras)
+        }
+        obtenerCarrerasGuarani()
+        
+    },[])
+    useEffect(()=>{
+        const obtenerMateriasCarrera = async () =>{
+            const listaMateriasCarrera = await getSubjectsByCareer(carreraActual)
+            console.log(listaMateriasCarrera)
+            if(listaMateriasCarrera.data != ""){
+                const materias = listaMateriasCarrera.data.subjectsByCareer.map(m =>({
+                    label:m.id_materia.toString(),
+                    value:m.id_materia
+                })
+                )
+                setMaterias(materias)
+            }
+            else{
+                setMaterias([])
+            }
+            
+        }
+        obtenerMateriasCarrera()
+    },[carreraActual])
+
+
     return (
-        <Box sx={{ minWidth: '100%',
+        <Box
+            sx={{ minWidth: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems:"center"
-         }}>
+            alignItems:"center",
+            
+         }}
+         gap={2}
+         >
             <Typography >Asistencia a cursadas</Typography>
-
-                
-                
+            <SeleccionCursada listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} handleCarrera={setCarreraActual}/>
             <ListadoComisiones />
             
             <Box sx={{ width: '80%', margin: 'auto' }}>
