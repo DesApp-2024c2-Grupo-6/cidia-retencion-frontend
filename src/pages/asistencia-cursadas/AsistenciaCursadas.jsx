@@ -9,9 +9,10 @@ import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 //Services
 import {getPeriodos} from '../../services/periodosLectivosService'
-import {getCurso,getAsistenciasDeCurso} from '../../services/cursosService'
+import {getCurso,getAsistenciasDeCurso,getCursosPorCarreraYPeriodo} from '../../services/cursosService'
 import {getAllCareerGuaraniConPlanes} from '../../services/CareerService';
-import {getSubjectsByCareer} from '../../services/SubjectDataService'
+import {getAllSubjectsByCareer} from '../../services/SubjectDataService'
+
 
 const data = [
     { name: 'Semana 1', porcentajeAlumnos: 100, cantidadAlumnos: 200 },
@@ -40,8 +41,10 @@ const ejemploComision = {
 const listaComisiones = [ejemploComision,ejemploComision,ejemploComision,ejemploComision]
 
 const SeleccionCursada = (props) =>{
+    const[materiaActual,setMateriaActual] = useState(1)
+    const[periodoActual,setPeriodoActual] = useState({})
     const theme = useTheme();
-    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera} = props
+    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera,handleComisiones} = props
     return(
         <Stack
             direction="Row"
@@ -57,7 +60,7 @@ const SeleccionCursada = (props) =>{
                     sx={{ width: '100%' }}
                     options={listaPeriodos}
                     className={'selectPeriodoLectivo'}
-                    onChange={(event, newValue) =>{}}
+                    onChange={(event, newValue) =>{setPeriodoActual(newValue.value)}}
                     renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
                 />
             </Stack>
@@ -77,7 +80,7 @@ const SeleccionCursada = (props) =>{
                     disableClearable
                     options={listaMaterias}
                     className={'selectMateria'}
-                    onChange={(event, newValue) =>{}}
+                    onChange={(event, newValue) =>{setMateriaActual(newValue.value)}}
                     renderInput={(params) => <TextField {...params} label="Materia" sx={{ height: '55px' }} />}
                 />
             </Stack>
@@ -92,6 +95,11 @@ const SeleccionCursada = (props) =>{
             }}
             variant="contained"
             startIcon={<SearchIcon />}
+            onClick={async ()=>{
+                const comisiones = await getCursosPorCarreraYPeriodo(materiaActual,periodoActual.periodoId)
+                console.log(comisiones)
+                handleComisiones(comisiones.data)
+            }}
             >Buscar
             </Button>
 
@@ -116,11 +124,11 @@ const Comision = ({comision}) =>{
               }}
             >
 
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre}</Typography>
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre_curso}</Typography>
             <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
             <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.inscriptos}</Typography>
-            {ejemploComision.semanas.map(semana => {
-                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px'}}>{semana}</Typography>
+            {comision.asistencia.map(s => {
+                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px'}}>{s.cantidadAlumnos}</Typography>
             })}
             <Button sx={{maxWidth:'2%'}} variant="outlined"><SsidChartIcon /></Button>
             
@@ -128,8 +136,9 @@ const Comision = ({comision}) =>{
 
     )
 }
-const ListadoComisiones = () =>{
+const ListadoComisiones = (props) =>{
     const theme = useTheme();
+    const {listaComisiones} = props
     return(
         <Box sx={{
             width: '85%'  
@@ -239,7 +248,7 @@ export default function AsistenciaCursadas() {
     const[carreras,setCarreras] = useState([])
     const[materias,setMaterias] = useState([])
     const[carreraActual,setCarreraActual] = useState(1)
-    const[periodoActual,setPeriodoActual] = useState({})
+    const[comisiones, setComisiones] = useState([])
 
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {
@@ -270,7 +279,6 @@ export default function AsistenciaCursadas() {
                 value:c.id
             }))
               
-            
             setCarreras(listaCarreras)
         }
         obtenerCarrerasGuarani()
@@ -278,12 +286,11 @@ export default function AsistenciaCursadas() {
     },[])
     useEffect(()=>{
         const obtenerMateriasCarrera = async () =>{
-            const listaMateriasCarrera = await getSubjectsByCareer(carreraActual)
-            console.log(listaMateriasCarrera)
+            const listaMateriasCarrera = await getAllSubjectsByCareer(carreraActual)
             if(listaMateriasCarrera.data != ""){
-                const materias = listaMateriasCarrera.data.subjectsByCareer.map(m =>({
-                    label:m.id_materia.toString(),
-                    value:m.id_materia
+                const materias = listaMateriasCarrera.data.map(m =>({
+                    label:m.nombre,
+                    value:m.id
                 })
                 )
                 setMaterias(materias)
@@ -308,8 +315,8 @@ export default function AsistenciaCursadas() {
          gap={2}
          >
             <Typography >Asistencia a cursadas</Typography>
-            <SeleccionCursada listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} handleCarrera={setCarreraActual}/>
-            <ListadoComisiones />
+            <SeleccionCursada listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} handleCarrera={setCarreraActual} handleComisiones={setComisiones}/>
+            {/*<ListadoComisiones listaComisiones={comisiones}/>*/}
             
             <Box sx={{ width: '80%', margin: 'auto' }}>
                 <Box sx={{ marginBottom: 3 }}>
