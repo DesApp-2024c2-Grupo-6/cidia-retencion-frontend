@@ -31,13 +31,13 @@ export const getAsistenciasDeCurso = async (id) => {
 };
 
 /**
- * @param {*} id Id de carrera
+ * @param {*} id Id de materia
  * @param {*} idPeriodo Id del periodo
- * @returns Array con los cursos de una carrera y periodo o vacio si id invalido
+ * @returns Array con los cursos de una materia y periodo o vacio si id invalido
  */
-export const getCursosPorCarreraYPeriodo = async (id, idPeriodo) => {
+export const getCursosPorMateriaYPeriodo = async (id, idPeriodo) => {
   try {
-    const response = await axios.get(`${baseURL}/materias/${id}/cursos/${idPeriodo}`);
+    const response = await axios.get(`${baseURL}/cursos/materia/${id}/periodo/${idPeriodo}`);
     return response;
   } catch (error) {
     return error;

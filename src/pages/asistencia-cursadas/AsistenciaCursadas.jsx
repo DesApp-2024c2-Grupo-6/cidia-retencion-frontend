@@ -4,47 +4,52 @@ import { useTheme } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import { Row } from 'react-bootstrap';
+import CircularProgress from '@mui/material/CircularProgress';
 //Recharts
 import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 //Services
 import {getPeriodos} from '../../services/periodosLectivosService'
-import {getCurso,getAsistenciasDeCurso,getCursosPorCarreraYPeriodo} from '../../services/cursosService'
+import {getCurso,getAsistenciasDeCurso,getCursosPorMateriaYPeriodo} from '../../services/cursosService'
 import {getAllCareerGuaraniConPlanes} from '../../services/CareerService';
 import {getAllSubjectsByCareer} from '../../services/SubjectDataService'
 
 
-const data = [
-    { name: 'Semana 1', porcentajeAlumnos: 100, cantidadAlumnos: 200 },
-    { name: 'Semana 2', porcentajeAlumnos: 80, cantidadAlumnos: 160 },
-    { name: 'Semana 3', porcentajeAlumnos: 90, cantidadAlumnos: 180 },
-    { name: 'Semana 4', porcentajeAlumnos: 70, cantidadAlumnos: 140 },
-    { name: 'Semana 5', porcentajeAlumnos: 60, cantidadAlumnos: 120 },
-    { name: 'Semana 6', porcentajeAlumnos: 50, cantidadAlumnos: 100 },
-    { name: 'Semana 7', porcentajeAlumnos: 85, cantidadAlumnos: 170 },
-    { name: 'Semana 8', porcentajeAlumnos: 75, cantidadAlumnos: 150 },
-    { name: 'Semana 9', porcentajeAlumnos: 65, cantidadAlumnos: 130 },
-    { name: 'Semana 10', porcentajeAlumnos: 95, cantidadAlumnos: 190 },
-    { name: 'Semana 11', porcentajeAlumnos: 80, cantidadAlumnos: 160 },
-    { name: 'Semana 12', porcentajeAlumnos: 90, cantidadAlumnos: 180 },
-    { name: 'Semana 13', porcentajeAlumnos: 70, cantidadAlumnos: 140 },
-    { name: 'Semana 14', porcentajeAlumnos: 60, cantidadAlumnos: 120 },
-    { name: 'Semana 15', porcentajeAlumnos: 85, cantidadAlumnos: 170 },
-    { name: 'Semana 16', porcentajeAlumnos: 95, cantidadAlumnos: 190 },
-];
+const comisionHolder = {
+    inscriptos_semanales:[
+        { name: 'Semana 1', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 2', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 3', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 4', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 5', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 6', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 7', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 8', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 9', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 10', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 11', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 12', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 13', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 14', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 15', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+        { name: 'Semana 16', porcentajeAlumnos: 0, cantidadAlumnos: 0 },
+    ],
 
-const ejemploComision = {
-    nombre:"comision1",
-    inscriptos:3,
-    semanas:[3,5,3,65,7,4,3,5,5,4,4,4,4,3,2,1]
 }
-const listaComisiones = [ejemploComision,ejemploComision,ejemploComision,ejemploComision]
+
 
 const SeleccionCursada = (props) =>{
-    const[materiaActual,setMateriaActual] = useState(1)
-    const[periodoActual,setPeriodoActual] = useState({})
+    const[materiaActual,setMateriaActual] = useState(0)
+    const[periodoActual,setPeriodoActual] = useState({periodoId: 0})
     const theme = useTheme();
-    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera,handleComisiones} = props
+    const buscarComisiones = async () =>{
+        setCargando(true)
+        const comisiones = await getCursosPorCarreraYPeriodo(materiaActual,periodoActual.periodoId)
+        console.log(comisiones)
+        handleComisiones(comisiones.data.cursos)
+        setCargando(false)
+    }
+    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera,handleComisiones,carreraActual, setCargando} = props
     return(
         <Stack
             direction="Row"
@@ -78,6 +83,7 @@ const SeleccionCursada = (props) =>{
                 <Autocomplete
                     disablePortal
                     disableClearable
+                    disabled={carreraActual === 0}
                     options={listaMaterias}
                     className={'selectMateria'}
                     onChange={(event, newValue) =>{setMateriaActual(newValue.value)}}
@@ -95,10 +101,9 @@ const SeleccionCursada = (props) =>{
             }}
             variant="contained"
             startIcon={<SearchIcon />}
+            disabled={materiaActual === 0 || periodoActual.periodoId === 0}
             onClick={async ()=>{
-                const comisiones = await getCursosPorCarreraYPeriodo(materiaActual,periodoActual.periodoId)
-                console.log(comisiones)
-                handleComisiones(comisiones.data)
+                buscarComisiones()
             }}
             >Buscar
             </Button>
@@ -108,37 +113,10 @@ const SeleccionCursada = (props) =>{
     )
 }
 
-const Comision = ({comision}) =>{
-    return(
-        <Box
-              sx={{
-                padding:"8px",
-                gap: '8px',
-                display: 'flex',
-                '&:nth-of-type(odd)': {
-                  backgroundColor: '#f9f9f9',
-                },
-                '&:nth-of-type(even)': {
-                  backgroundColor: '#ffffff'
-                },
-              }}
-            >
 
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre_curso}</Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.inscriptos}</Typography>
-            {comision.asistencia.map(s => {
-                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px'}}>{s.cantidadAlumnos}</Typography>
-            })}
-            <Button sx={{maxWidth:'2%'}} variant="outlined"><SsidChartIcon /></Button>
-            
-        </Box>
-
-    )
-}
 const ListadoComisiones = (props) =>{
     const theme = useTheme();
-    const {listaComisiones} = props
+    const {listaComisiones,cargando,setComisionActual} = props
     return(
         <Box sx={{
             width: '85%'  
@@ -172,9 +150,21 @@ const ListadoComisiones = (props) =>{
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Gráfico</Typography>
             </Box>
+            
+                {cargando && 
+                    <Box
+                    sx={{
+                        display: 'flex',
+                        gap: '8px',
+                        backgroundColor: "ffffff",
+                        padding: '8px',
+                    }}>
+                        <CircularProgress/>
+                    </Box>}
+                
        
         {listaComisiones.map( com => {
-                   return <Comision comision={com}></Comision>
+                   return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
                 }
             )}
 
@@ -182,9 +172,37 @@ const ListadoComisiones = (props) =>{
     )
 
 }
-const DatosMateria = () => {
-    const theme = useTheme();
+const Comision = ({comision,handleGrafica}) =>{
+    return(
+        <Box
+              sx={{
+                padding:"8px",
+                gap: '8px',
+                display: 'flex',
+                '&:nth-of-type(odd)': {
+                  backgroundColor: '#f9f9f9',
+                },
+                '&:nth-of-type(even)': {
+                  backgroundColor: '#ffffff'
+                },
+              }}
+            >
 
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre_curso}</Typography>
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
+            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.cantidad_inscriptos}</Typography>
+            {comision.inscriptos_semanales.map(s => {
+                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center'}}>{s.cantidadAlumnos}</Typography>
+            })}
+            <Button sx={{maxWidth:'2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button>
+            
+        </Box>
+
+    )
+}
+const DatosMateria = (props) => {
+    const {comision} = props
+    const theme = useTheme();
     return (
         <Stack
             divider={<Divider orientation="horizontal" flexItem />}
@@ -202,27 +220,28 @@ const DatosMateria = () => {
             }}>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
                 <Typography>Inscriptos totales: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>200</Typography>
+                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.cantidad_inscriptos}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
                 <Typography>Materia: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>Programación Estructurada</Typography>
+                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_materia}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
                 <Typography>Comisión: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>(759) - Comisión 2</Typography>
+                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_curso}</Typography>
             </Stack>
         </Stack>
     )
 }
 
-const Grafico = () => {
+const Grafico = (props) => {
+    const {datos} = props
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart
                 width={500}
                 height={300}
-                data={data}
+                data={datos}
                 margin={{
                     top: 5,
                     right: 30,
@@ -247,8 +266,10 @@ export default function AsistenciaCursadas() {
     const[periodosLectivos,setPeriodosLectivos] = useState([])
     const[carreras,setCarreras] = useState([])
     const[materias,setMaterias] = useState([])
-    const[carreraActual,setCarreraActual] = useState(1)
+    const[carreraActual,setCarreraActual] = useState(0)
     const[comisiones, setComisiones] = useState([])
+    const[comisionActual,setComisionActual] = useState([comisionHolder])
+    const[cargando, setCargando] = useState(false)
 
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {
@@ -315,15 +336,15 @@ export default function AsistenciaCursadas() {
          gap={2}
          >
             <Typography >Asistencia a cursadas</Typography>
-            <SeleccionCursada listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} handleCarrera={setCarreraActual} handleComisiones={setComisiones}/>
-            {/*<ListadoComisiones listaComisiones={comisiones}/>*/}
+            <SeleccionCursada setCargando ={setCargando}listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones}/>
+            {<ListadoComisiones listaComisiones={comisiones} cargando = {cargando} setComisionActual={setComisionActual}/>}
             
             <Box sx={{ width: '80%', margin: 'auto' }}>
                 <Box sx={{ marginBottom: 3 }}>
-                    <DatosMateria />
+                    <DatosMateria comision={comisionActual}/>
                 </Box>
                 <Box sx={{ width: '100%', height: '20rem', marginBottom: 5 }}>
-                    <Grafico />
+                    <Grafico datos={comisionActual.inscriptos_semanales}/>
                 </Box>
 
             </Box>
