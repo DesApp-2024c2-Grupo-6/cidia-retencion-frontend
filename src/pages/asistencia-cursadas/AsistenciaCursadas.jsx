@@ -13,7 +13,9 @@ import {getPeriodos} from '../../services/periodosLectivosService'
 import {getCurso,getAsistenciasDeCurso,getCursosPorMateriaYPeriodo} from '../../services/cursosService'
 import {getAllCareerGuaraniConPlanes} from '../../services/CareerService';
 import {getAllSubjectsByCareer} from '../../services/SubjectDataService'
-
+function timeout(delay) {
+    return new Promise( res => setTimeout(res, delay) );
+}
 
 const comisionHolder = {
     inscriptos_semanales:[
@@ -42,14 +44,22 @@ const SeleccionCursada = (props) =>{
     const[materiaActual,setMateriaActual] = useState(0)
     const[periodoActual,setPeriodoActual] = useState({periodoId: 0})
     const theme = useTheme();
+    const {handleComision,listaPeriodos,listaCarreras,listaMaterias,handleCarrera,handleComisiones,carreraActual,cargando, setCargando} = props
     const buscarComisiones = async () =>{
-        setCargando(true)
-        const comisiones = await getCursosPorCarreraYPeriodo(materiaActual,periodoActual.periodoId)
-        console.log(comisiones)
-        handleComisiones(comisiones.data.cursos)
-        setCargando(false)
+            handleComisiones([])
+            handleComision(comisionHolder)
+            setCargando(true)
+            const comisiones = await getCursosPorMateriaYPeriodo(materiaActual,periodoActual.periodoId)
+            await timeout(700)
+            if(comisiones.data){
+                handleComisiones(comisiones.data.cursos)
+            }
+            else{
+                handleComisiones([])
+            }
+            setCargando(false)       
     }
-    const {listaPeriodos,listaCarreras,listaMaterias,handleCarrera,handleComisiones,carreraActual, setCargando} = props
+ 
     return(
         <Stack
             direction="Row"
@@ -101,7 +111,7 @@ const SeleccionCursada = (props) =>{
             }}
             variant="contained"
             startIcon={<SearchIcon />}
-            disabled={materiaActual === 0 || periodoActual.periodoId === 0}
+            disabled={materiaActual === 0 || periodoActual.periodoId === 0 || cargando}
             onClick={async ()=>{
                 buscarComisiones()
             }}
@@ -154,7 +164,9 @@ const ListadoComisiones = (props) =>{
                 {cargando && 
                     <Box
                     sx={{
-                        display: 'flex',
+                        width:"100%",
+                        display:'flex',
+                        justifyContent: 'center',
                         gap: '8px',
                         backgroundColor: "ffffff",
                         padding: '8px',
@@ -162,9 +174,10 @@ const ListadoComisiones = (props) =>{
                         <CircularProgress/>
                     </Box>}
                 
-       
-        {listaComisiones.map( com => {
-                   return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
+            {!cargando && listaComisiones.length == 0 &&  <Box sx={{display:'flex'}} ><Typography sx={{flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center' }}>No se encontraron comisiones</Typography></Box>}
+            {listaComisiones.map( com => {
+                if(com.inscriptos_semanales.length > 0)
+                    return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
                 }
             )}
 
@@ -274,7 +287,8 @@ export default function AsistenciaCursadas() {
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {
             const periodos = await getPeriodos()
-            const periodosFormato = periodos.data.map(
+            const periodosFiltrados = periodos.data.filter(p => p.esCuatrimestre)
+            const periodosFormato = periodosFiltrados.map(
                 p => ({
                     label : p.nombre,
                     value : {
@@ -299,7 +313,7 @@ export default function AsistenciaCursadas() {
                 label:c.nombre,
                 value:c.id
             }))
-              
+            listaCarreras.sort((a, b) => a.label.localeCompare(b.label))
             setCarreras(listaCarreras)
         }
         obtenerCarrerasGuarani()
@@ -309,11 +323,13 @@ export default function AsistenciaCursadas() {
         const obtenerMateriasCarrera = async () =>{
             const listaMateriasCarrera = await getAllSubjectsByCareer(carreraActual)
             if(listaMateriasCarrera.data != ""){
-                const materias = listaMateriasCarrera.data.map(m =>({
+                const materiasFiltradas = listaMateriasCarrera.data.filter(materia => !materia.esUnahur)
+                const materias = materiasFiltradas.map(m =>({
                     label:m.nombre,
                     value:m.id
                 })
                 )
+                materias.sort((a, b) => a.label.localeCompare(b.label))
                 setMaterias(materias)
             }
             else{
@@ -336,7 +352,7 @@ export default function AsistenciaCursadas() {
          gap={2}
          >
             <Typography >Asistencia a cursadas</Typography>
-            <SeleccionCursada setCargando ={setCargando}listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones}/>
+            <SeleccionCursada handleComision={setComisionActual} cargando={cargando} setCargando ={setCargando}listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones}/>
             {<ListadoComisiones listaComisiones={comisiones} cargando = {cargando} setComisionActual={setComisionActual}/>}
             
             <Box sx={{ width: '80%', margin: 'auto' }}>
