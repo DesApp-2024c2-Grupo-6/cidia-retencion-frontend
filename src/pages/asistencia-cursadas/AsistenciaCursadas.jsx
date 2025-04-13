@@ -1,5 +1,5 @@
 //MUI
-import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider, Button } from '@mui/material';
+import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider, Button,FormGroup,FormControlLabel,Switch } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
@@ -43,8 +43,9 @@ const comisionHolder = {
 const SeleccionCursada = (props) => {
     const [materiaActual, setMateriaActual] = useState(0)
     const [periodoActual, setPeriodoActual] = useState({ periodoId: 0 })
+    const [cambioCarrera,setCambioCarrea] = useState(false)
     const theme = useTheme();
-    const { handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando } = props
+    const { handleDataComision,handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando } = props
     const buscarComisiones = async () => {
         handleComisiones([])
         handleComision(comisionHolder)
@@ -53,6 +54,16 @@ const SeleccionCursada = (props) => {
         await timeout(700)
         if (comisiones.data) {
             handleComisiones(comisiones.data.cursos)
+            const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
+            comisiones.data.cursos.forEach(curso =>{
+                if(curso.inscriptos_semanales.length > 0){
+                    dataComisiones.forEach(semana=>{
+                        semana[curso.nombre_curso] = curso.inscriptos_semanales[dataComisiones.indexOf(semana)].porcentajeAlumnos
+                    })
+                }
+                
+            })
+            handleDataComision(dataComisiones)
         }
         else {
             handleComisiones([])
@@ -72,6 +83,7 @@ const SeleccionCursada = (props) => {
             }}>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
                     disableClearable
                     sx={{ width: '100%' }}
@@ -83,17 +95,20 @@ const SeleccionCursada = (props) => {
             </Stack>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
                     disableClearable
                     options={listaCarreras}
                     className={'selectCarrera'}
-                    onChange={(event, newValue) => { handleCarrera(newValue.value) }}
+                    onChange={(event, newValue) => { setCambioCarrea(!cambioCarrera); handleCarrera(newValue.value) }}
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
                 />
             </Stack>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
+                    key={cambioCarrera}
                     disableClearable
                     disabled={carreraActual === 0}
                     options={listaMaterias}
@@ -208,7 +223,15 @@ const Comision = ({ comision, handleGrafica }) => {
             <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
             <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.cantidad_inscriptos}</Typography>
             {comision.inscriptos_semanales.map(s => {
-                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{s.cantidadAlumnos}</Typography>
+                const porcentaje = s.porcentajeAlumnos
+                let colorFondo = "#cbf5e3"
+                if(porcentaje < 75 && porcentaje >= 50){
+                    colorFondo = "#f5f5cb"
+                }
+                else if(porcentaje < 50){
+                    colorFondo ="#edb9c4"
+                }
+                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center', backgroundColor:colorFondo }}>{s.cantidadAlumnos}</Typography>
             })}
             <Button sx={{ maxWidth: '2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button>
 
@@ -251,18 +274,57 @@ const DatosMateria = (props) => {
 }
 
 const Grafico = (props) => {
-    const { datos } = props
+    const { setMostrarGraficoComision,mostrarGraficoComision,datosComision,datosComisiones,comisiones } = props
+
+    const handleChangeSwitch = (event) => {
+        setMostrarGraficoComision(event.target.checked);
+      };
     return (
         <ResponsiveContainer width="100%" height="100%">
+
+        <FormControlLabel
+          value="start"
+          checked={mostrarGraficoComision}
+          control={<Switch color="primary" />}
+          label="Comparativa Comisiones"
+          disabled={comisiones.length == 0}
+          labelPlacement="start"
+          onChange={handleChangeSwitch}
+        />
+            {!mostrarGraficoComision &&
+                <LineChart
+                    width={500}
+                    height={300}
+                    data={datosComision}
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                    }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="cantidadAlumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="porcentajeAlumnos" stroke="#82ca9d" />
+                </LineChart>
+            }
+            {mostrarGraficoComision &&
             <LineChart
                 width={500}
                 height={300}
-                data={datos}
+                data={datosComisiones}
                 margin={{
                     top: 5,
                     right: 30,
                     left: 20,
                     bottom: 5,
+                }}
+                padding={{
+
                 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -270,10 +332,13 @@ const Grafico = (props) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="cantidadAlumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="porcentajeAlumnos" stroke="#82ca9d" />
+                {comisiones.map(c=>{
+                    return <Line type="monotone" dataKey={c.nombre_curso} stroke={"#" + Math.floor(Math.random()*230*230*230).toString(16)} activeDot={{ r: 8 }} />
+                })}
             </LineChart>
-        </ResponsiveContainer>
+            }
+            
+        </ResponsiveContainer>     
     )
 }
 
@@ -284,9 +349,15 @@ export default function AsistenciaCursadas() {
     const [materias, setMaterias] = useState([])
     const [carreraActual, setCarreraActual] = useState(0)
     const [comisiones, setComisiones] = useState([])
+    const [dataComisiones,setDataComisiones] = useState([])
     const [comisionActual, setComisionActual] = useState([comisionHolder])
     const [cargando, setCargando] = useState(false)
+    const [mostrarGraficoComision,setMostrarGraficoComision] = useState(false)
 
+    const handleComisionActual = (comision)=>{
+        setComisionActual(comision)
+        setMostrarGraficoComision(false)
+    }
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {
             const periodos = await getPeriodos()
@@ -358,8 +429,8 @@ export default function AsistenciaCursadas() {
             <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
                 Asistencia a cursadas
             </Typography>
-            <SeleccionCursada handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} />
-            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={setComisionActual} />}
+            <SeleccionCursada handleDataComision = {setDataComisiones} handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} />
+            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={handleComisionActual} />}
 
             <Box sx={{ width: '90%', margin: 'auto', marginTop: '40px' }}>
                 <Box sx={{ marginBottom: 3 }}>
@@ -369,7 +440,7 @@ export default function AsistenciaCursadas() {
                     <DatosMateria comision={comisionActual} />
                 </Box>
                 <Box sx={{ width: '99%', paddingRight: '1%', height: '20rem', marginBottom: 5, marginTop:'40px' }}>
-                    <Grafico datos={comisionActual.inscriptos_semanales} />
+                    <Grafico mostrarGraficoComision={mostrarGraficoComision} setMostrarGraficoComision={setMostrarGraficoComision} datosComision={comisionActual.inscriptos_semanales} comisiones={comisiones} datosComisiones={dataComisiones}/>
                 </Box>
 
             </Box>
