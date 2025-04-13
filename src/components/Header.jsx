@@ -19,7 +19,8 @@ import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 
 //Icons
-import GroupIcon from '@mui/icons-material/Group';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
@@ -41,8 +42,8 @@ function Header() {
 
     const opciones = [
         { text: 'Configuraciones', path: '/configuracion', disabled: false, icon: <SettingsIcon/> },
-        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <GroupIcon/> },
-        { text: 'Opción 3', path: '/', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <PersonIcon/> },
+        { text: 'Cohortes', path: '/cohortes', disabled: false, icon: <PeopleAltIcon/> },
         { text: 'Opción 4', path: '', disabled: true, icon: <ErrorOutlineIcon/>  },
         { text: 'Opción 5', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
         { text: 'Opción 6', path: '', disabled: true, icon: <ErrorOutlineIcon/> },

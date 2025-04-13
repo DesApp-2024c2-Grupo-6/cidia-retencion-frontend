@@ -12,6 +12,9 @@ import DatosGenerales from "./pages/DatosGenerales";
 //Pages - Asistencia
 import AsistenciaCursadas from "./pages/asistencia-cursadas/AsistenciaCursadas";
 
+//Pages - Cohortes
+import Cohortes from "./pages/cohortes/Cohortes";
+
 //Rutas - Configuracion
 const routesConfiguracion = [
     {
@@ -48,10 +51,20 @@ const routesAsistencia = [
     }
 ]
 
+//Rutas - Cohortes
+const routesCohortes = [
+    {
+        path: 'cohortes',
+        element: <Cohortes/>
+    }
+]
+
+
 //Merge de todas las rutas
 const routes = [
     ...routesConfiguracion,
-     ...routesAsistencia
+    ...routesAsistencia,
+    ...routesCohortes,
 ]
 
 export function Router() {
