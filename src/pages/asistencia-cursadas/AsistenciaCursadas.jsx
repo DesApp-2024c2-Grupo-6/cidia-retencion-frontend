@@ -224,12 +224,12 @@ const Comision = ({ comision, handleGrafica }) => {
             <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.cantidad_inscriptos}</Typography>
             {comision.inscriptos_semanales.map(s => {
                 const porcentaje = s.porcentajeAlumnos
-                let colorFondo = "#cbf5e3"
+                let colorFondo = "#e5fae2"
                 if(porcentaje < 75 && porcentaje >= 50){
-                    colorFondo = "#f5f5cb"
+                    colorFondo = "#f7fcd2"
                 }
                 else if(porcentaje < 50){
-                    colorFondo ="#edb9c4"
+                    colorFondo ="#ffeeee"
                 }
                 return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center', backgroundColor:colorFondo }}>{s.cantidadAlumnos}</Typography>
             })}
