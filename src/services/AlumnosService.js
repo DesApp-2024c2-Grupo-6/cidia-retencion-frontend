@@ -21,7 +21,23 @@ export const getAlumnosDeCarrera = async (id) => {
  */
 export const getDatosDeAlumnos = async (alumnos) => {
   try {
-    const response = await axios.post(`${baseURL}/alumnos/statusAcademico/masivo`, alumnos);
+    const response = await axios.post(
+      `${baseURL}/alumnos/statusAcademico/masivo`,
+      alumnos
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+/**
+ * Entrada: Id de cuatrimestre
+ * Salida: Array de alumnos
+ */
+export const getAlumnosPorCuatrimestre = async (id) => {
+  try {
+    const response = await axios.get(`${baseURL}/alumnos/cuatrimestre/${id}`);
     return response;
   } catch (error) {
     return error;
