@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../assets/img/Logo-UNAHUR-White.png';
+import LogoColor from '../../assets/img/logo_unahur_2.png';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -54,7 +55,7 @@ function Header() {
     };
 
     return (
-        <AppBar position="static" sx={{ boxShadow: 0, backgroundColor: theme.palette.primary.dark }}>
+        <AppBar position="static" sx={{ boxShadow: 0, backgroundColor:"white",  borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2, boxShadow: 4 }}>
             {isMobile ? (
                 <>
                     <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
@@ -90,10 +91,10 @@ function Header() {
                         component="img"
                         sx={{
                             width: '250px',
-                            padding: '10px'
+                            padding: '0px'
                         }}
                         alt="Logo UNAHUR"
-                        src={logo}
+                        src={LogoColor}
                     />
                     <Box>
                         <Stack
@@ -106,7 +107,7 @@ function Header() {
                         >
                             {
                                 opciones.map(opcion =>
-                                    <Button sx={{ color:'white', fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: '#6894a3' }, "&:hover": { backgroundColor: '#0b4c63' }}}
+                                    <Button sx={{ color: theme.palette.disabled.dark, fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: theme.palette.disabled.main }, "&:hover": { backgroundColor: theme.palette.disabled.light, }}}
                                         key={opcion.text} variant="text" onClick={() => handleClick(opcion.path)} disabled={opcion.disabled}>
                                         <Box>
                                             {opcion.icon}

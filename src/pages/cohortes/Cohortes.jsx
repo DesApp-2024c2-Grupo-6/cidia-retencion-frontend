@@ -12,14 +12,11 @@ import usePeriodos from './usePeriodos';
 import useCarreras from './useCarreras';
 
 //Services
-import { getCohorteCarrera } from '../../services/CohortesServices';
+import { getCohorteCarrera, getCohorteMateria } from '../../services/CohortesServices';
 
 
-const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearch }) => {
+const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearch, datosBusqueda, estaBuscando }) => {
     const theme = useTheme();
-
-    const handleSubmit = () => { }
-
     return (
         <Stack
             direction="row"
@@ -35,7 +32,7 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
                 <Autocomplete
                     disablePortal
                     disableClearable
-                    sx={{ width: '100%' }}
+                    sx={{  backgroundColor:"white" }}
                     options={periodosData || []}
                     onChange={(event, option) => handleChange(option.value, "idPeriodo")}
                     renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
@@ -45,6 +42,7 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
                 <Autocomplete
                     disablePortal
                     disableClearable
+                    sx={{  backgroundColor:"white" }}
                     options={carrerasData || []}
                     onChange={(event, option) => handleChange(option.value, "idCarrera")}
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
@@ -60,7 +58,7 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
                 }}
                 variant="contained"
                 startIcon={<SearchIcon />}
-                disabled={false}
+                disabled={datosBusqueda.idPeriodo == "" || datosBusqueda.idCarrera == "" || estaBuscando}
                 onClick={() => handleSearch()}
             >Buscar
             </Button>
@@ -68,28 +66,28 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
     )
 }
 
-const CohorteCarrera = ({cohorteData}) => {
+const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
     const theme = useTheme()
 
     function formatearCuatrimestre(nombrePeriodo) {
         // "Primer Cuatrimestre 2024" => "1C - 2024"
         const texto = nombrePeriodo.toUpperCase().trim();
         let numeroCuatrimestre = '';
-      
+
         if (texto.startsWith('PRIMER CUATRIMESTRE')) {
-          numeroCuatrimestre = '1C';
+            numeroCuatrimestre = '1C';
         } else if (texto.startsWith('SEGUNDO CUATRIMESTRE')) {
-          numeroCuatrimestre = '2C';
+            numeroCuatrimestre = '2C';
         } else {
-          throw new Error('Formato no reconocido');
+            throw new Error('Formato no reconocido');
         }
-      
+
         // Extraer el año (últimos 4 caracteres si están bien formateados)
         const año = texto.slice(-4);
         if (!/^\d{4}$/.test(año)) {
-          throw new Error('Año no válido');
+            throw new Error('Año no válido');
         }
-      
+
         return `${numeroCuatrimestre} - ${año}`;
     }
 
@@ -183,30 +181,31 @@ const CohorteCarrera = ({cohorteData}) => {
 
     ]
 
-    const materiasData = [
-        {
-            "descripcion": "Introducción a la programación",
-            "cuatrimestre_1": 128,
-            "cuatrimestre_2": 128,
-            "cuatrimestre_3": 128
-        },
-        {
-            "descripcion": "Programación Esctructurada",
-            "cuatrimestre_1": 376,
-            "cuatrimestre_2": 376,
-            "cuatrimestre_3": 376
+    const materiasData = []
+    const size = cohorteData.cohortes[0].materiasData.length;
+    console.log(size)
+    for (let i = 0; i < size; i++) {
+        console.log(i)
+        const materia = {
+            "id": cohorteData.cohortes[0].materiasData[i].idMateria,
+            "descripcion": cohorteData.cohortes[0].materiasData[i].nombre,
+            "cuatrimestre_1": cohorteData.cohortes[0].materiasData[i].regularizaron,
+            "cuatrimestre_2": cohorteData.cohortes[1].materiasData[i].regularizaron,
+            "cuatrimestre_3": cohorteData.cohortes[2].materiasData[i].regularizaron,
         }
-    ]
+        console.log(materia)
+        materiasData.push(materia)
+      }
 
     return (
-        <Box sx={{ width: '60%', minWidth: 650, boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4 }}>
+        <Box sx={{ width: '60%', minWidth: 650, boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4, backgroundColor: "white" }}>
             {/*Datos de la carrera*/}
             <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
                 <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>
                     {cohorteData.nombreCarrera}
                 </Typography>
                 <Typography variant="h6" fontWeight={400} gutterBottom>
-                  {"Cohorte: "+cohorteData.nombrePeriodo}
+                    {"Cohorte: " + cohorteData.nombrePeriodo}
                 </Typography>
                 <Typography variant="h6" fontWeight={400} gutterBottom>
                     Estudiantes: <span>{cohorteData.totalAlumnos}</span>
@@ -243,7 +242,7 @@ const CohorteCarrera = ({cohorteData}) => {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Link href="#" underline='none'>
+                                    <Link sx={{ cursor: "pointer" }} underline='none' onClick={() => handleMateriaChange(materia.id)}>
                                         {materia.descripcion + " "}
                                     </Link>
                                     - Regularizaron hasta ahora
@@ -260,199 +259,186 @@ const CohorteCarrera = ({cohorteData}) => {
     )
 }
 
-const CohorteMateria = () => {
-    const theme = useTheme()
-
-    const rowsAcumulado = [
-        {
-            "periodo": "1C - 2020",
-            "regularizados": "nnn",
-            "inscriptos_1": "nnn",
-            "inscriptos_2": "nnn",
-            "inscriptos_3": "nnn",
-            "inscriptos_4": "nnn"
-        },
-        {
-            "periodo": "2C - 2020",
-            "regularizados": "nnn",
-            "inscriptos_1": "nnn",
-            "inscriptos_2": "nnn",
-            "inscriptos_3": "nnn",
-            "inscriptos_4": "nnn"
-        },
-        {
-            "periodo": "1C - 2021",
-            "regularizados": "nnn",
-            "inscriptos_1": "nnn",
-            "inscriptos_2": "nnn",
-            "inscriptos_3": "nnn",
-            "inscriptos_4": "nnn"
-        }
-    ]
-
-    const rowsCuatrimestre = [
-        {
-            "periodo": "1C - 2020",
-            "total": "nnn / mmm",
-            "inscriptos_1": "nnn / mmm",
-            "inscriptos_2": "nnn / mmm",
-            "inscriptos_3": "nnn / mmm",
-            "inscriptos_4": "nnn / mmm"
-        },
-        {
-            "periodo": "2C - 2020",
-            "total": "nnn / mmm",
-            "inscriptos_1": "nnn / mmm",
-            "inscriptos_2": "nnn / mmm",
-            "inscriptos_3": "nnn / mmm",
-            "inscriptos_4": "nnn / mmm"
-        },
-        {
-            "periodo": "1C - 2021",
-            "total": "nnn / mmm",
-            "inscriptos_1": "nnn / mmm",
-            "inscriptos_2": "nnn / mmm",
-            "inscriptos_3": "nnn / mmm",
-            "inscriptos_4": "nnn / mmm"
-        }
-    ];
-
-
-    return (
-        <Box sx={{ width: '60%', boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4 }}>
-            {/*Datos de la materia*/}
-            <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
-                <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>
-                    Introducción a la programación
-                </Typography>
-                <Typography variant="h6" fontWeight={400} gutterBottom>
-                    Cohorte: PRIMER CUATRIMESTRE 2024
-                </Typography>
-            </Box>
-            {/*Acumulado*/}
-            <Box>
-                <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
-                    <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1, color: theme.palette.primary.main }}>
-                        <Typography variant="h6" fontWeight={400} gutterBottom>
-                            Acumulado:
-                        </Typography>
-                    </Box>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow >
-                                <TableCell>Periodo</TableCell>
-                                <TableCell align="right">Regularizados</TableCell>
-                                <TableCell align="right">Inscriptos 1 vez</TableCell>
-                                <TableCell align="right">Inscriptos 2 veces</TableCell>
-                                <TableCell align="right">Inscriptos 3 veces</TableCell>
-                                <TableCell align="right">Inscriptos 4 o + veces</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rowsAcumulado.map((row) => (
-                                <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (row.es_header) ? "#FFFFFF" : "#f5f5f5" }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.periodo}
-                                    </TableCell>
-                                    <TableCell align="right">{row.regularizados}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_1}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_2}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_3}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_4}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-            {/*En el cuatrimestre*/}
-            <Box>
-                <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
-                    <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
-                        <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={400} gutterBottom>
-                            En el cuatrimestre:
-                        </Typography>
-                        <Typography variant="h6" fontWeight={400} gutterBottom>
-                            Inscriptos / Regularizarón
-                        </Typography>
-                    </Box>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow >
-                                <TableCell>Periodo</TableCell>
-                                <TableCell align="right">Total</TableCell>
-                                <TableCell align="right">1 vez</TableCell>
-                                <TableCell align="right">2 veces</TableCell>
-                                <TableCell align="right">3 veces</TableCell>
-                                <TableCell align="right">4 o + veces</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rowsCuatrimestre.map((row) => (
-                                <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (row.es_header) ? "#FFFFFF" : "#f5f5f5" }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.periodo}
-                                    </TableCell>
-                                    <TableCell align="right">{row.total}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_1}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_2}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_3}</TableCell>
-                                    <TableCell align="right">{row.inscriptos_4}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Box>
-        </Box>
-    )
-}
-
-const LoadingBox = () => {
+const LoadingBox = ({ text }) => {
 
     const theme = useTheme()
 
     return (
-        <Box sx={{ width: '60%', minWidth: 650, textAlign:'center', padding: 10, marginBottom: 4 }}>
-            <CircularProgress sx={{marginBottom:5}} size={70}/>
+        <Box sx={{ width: '60%', minWidth: 650, textAlign: 'center', padding: 10, marginBottom: 4 }}>
+            <CircularProgress sx={{ marginBottom: 5 }} size={70} />
             <Typography color={theme.palette.primary.main} fontWeight={500} variant="h6" component="h3" gutterBottom>
-                Generando analisis de datos...
+                {text}
             </Typography>
-            <Typography  fontWeight={400} variant="h8" component="h3" gutterBottom>
+            <Typography fontWeight={400} variant="h8" component="h3" gutterBottom>
                 Esta operación puede tardar
             </Typography>
         </Box>
     )
 }
 
-const NotSelectedBox = () => {
+const NotSelectedBox = ({ text }) => {
     return (
         <Box sx={{ width: '60%', minWidth: 650, padding: 10, marginBottom: 4 }}>
-            <Typography  fontWeight={400} variant="h6" color="gray" textAlign="center" component="h3" gutterBottom>
-                Seleccione los datos para buscar la cohorte
+            <Typography fontWeight={400} variant="h6" color="gray" textAlign="center" component="h3" gutterBottom>
+                {text}
             </Typography>
         </Box>
     )
 }
 
+const CohorteMateria = ({ requestData, handleBack }) => {
+    //requestData => {idCarrera: num, idPeriodo: num, idMateria: num}
+
+    const [materiaData, setMateriaData] = useState(null)
+    const [requestStatus, setRequestStatus] = useState({
+        loading: true,
+        error: null
+    })
+
+    useEffect(() => {
+        const buscarMateria = async () => {
+            setRequestStatus({ ...requestStatus, loading: true })
+            try {
+                const response = await getCohorteMateria(requestData.idCarrera, requestData.idPeriodo, requestData.idMateria);
+                setMateriaData(response.data)
+                console.log(response)
+
+            }
+            catch (err) {
+                setRequestStatus({ ...requestStatus, error: err })
+            }
+            finally {
+                setRequestStatus({ ...requestStatus, loading: false })
+            }
+        }
+        buscarMateria()
+    }, [])
+
+    const theme = useTheme()
+
+    if (requestStatus.loading) {
+        return <LoadingBox text="Generando datos de cohorte" />
+    }
+    else if (requestStatus.error) {
+        return <NotSelectedBox text="No se encontraron datos de la cohorte" />
+    }
+    else
+        return (
+            <Box sx={{padding: 2, width: '60%', backgroundColor: "white"}}>
+                <Link sx={{ cursor: "pointer", }} underline='none' onClick={() => handleBack("")}>
+                    Volver
+                </Link>
+                <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, padding: 0, marginY: 4 }}>
+                    {/*Datos de la materia*/}
+
+                    <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
+                        <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>
+                            {materiaData.nombreMateria}
+                        </Typography>
+                        <Typography variant="h6" fontWeight={400} gutterBottom>
+                            {"Cohorte: " + materiaData.nombrePeriodo}
+                        </Typography>
+                    </Box>
+                    {/*Acumulado*/}
+                    <Box>
+                        <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
+                            <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1, color: theme.palette.primary.main }}>
+                                <Typography variant="h6" fontWeight={400} gutterBottom>
+                                    Acumulado:
+                                </Typography>
+                            </Box>
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow >
+                                        <TableCell>Periodo</TableCell>
+                                        <TableCell align="right">Regularizados</TableCell>
+                                        <TableCell align="right">Inscriptos 1 vez</TableCell>
+                                        <TableCell align="right">Inscriptos 2 veces</TableCell>
+                                        <TableCell align="right">Inscriptos 3 veces</TableCell>
+                                        <TableCell align="right">Inscriptos 4 o + veces</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {materiaData.acumulado.map((periodo) => (
+                                        <TableRow
+                                            key={"acumulado" + periodo.idPeriodo}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (periodo.es_header) ? "#FFFFFF" : "#f5f5f5" }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {periodo.nombrePeriodo.toUpperCase()}
+                                            </TableCell>
+                                            <TableCell align="right">{periodo.regularizaron}</TableCell>
+                                            <TableCell align="right">{periodo.inscriptos_1}</TableCell>
+                                            <TableCell align="right">{periodo.inscriptos_2}</TableCell>
+                                            <TableCell align="right">{periodo.inscriptos_3}</TableCell>
+                                            <TableCell align="right">{periodo.inscriptos_4}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                    {/*En el cuatrimestre*/}
+                    <Box>
+                        <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
+                            <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
+                                <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={400} gutterBottom>
+                                    En el cuatrimestre:
+                                </Typography>
+                                <Typography variant="h6" fontWeight={400} gutterBottom>
+                                    Inscriptos / Regularizarón
+                                </Typography>
+                            </Box>
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow >
+                                        <TableCell>Periodo</TableCell>
+                                        <TableCell align="right">Total</TableCell>
+                                        <TableCell align="right">1 vez</TableCell>
+                                        <TableCell align="right">2 veces</TableCell>
+                                        <TableCell align="right">3 veces</TableCell>
+                                        <TableCell align="right">4 o + veces</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {materiaData.cuatrimestre.map((periodo) => (
+                                        <TableRow
+                                            key={"cuatrimestre" + periodo.idPeriodo}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (periodo.es_header) ? "#FFFFFF" : "#f5f5f5" }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {periodo.nombrePeriodo.toUpperCase()}
+                                            </TableCell>
+                                            <TableCell align="right">{`${periodo.inscriptos_total} / ${periodo.regularizaron_total}`}</TableCell>
+                                            <TableCell align="right">{`${periodo.inscriptos_1} / ${periodo.regularizaron_1}`}</TableCell>
+                                            <TableCell align="right">{`${periodo.inscriptos_2} / ${periodo.regularizaron_2}`}</TableCell>
+                                            <TableCell align="right">{`${periodo.inscriptos_3} / ${periodo.regularizaron_3}`}</TableCell>
+                                            <TableCell align="right">{`${periodo.inscriptos_4} / ${periodo.regularizaron_4}`}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                </Box>
+            </Box>
+        )
+}
+
 export default function Cohortes() {
 
+
     const periodos = usePeriodos([])
+
     const carreras = useCarreras([])
 
-    const [datosBusqueda, setDatosBusqueda] = useState({idPeriodo: "", idCarrera: "",})
+    const [datosBusqueda, setDatosBusqueda] = useState({ idPeriodo: "", idCarrera: "", idMateria: "" })
 
     const [estaBuscando, setEstaBuscando] = useState(false)
 
     const [cohorteData, setCohorteData] = useState(null)
 
-    const [requestStatus, setRequestStatus] = useState({error: null, loading: false,})
+    const [requestStatus, setRequestStatus] = useState({ error: null, loading: false, })
 
 
     const handleOpcionChange = (updatedValue, field) => {
@@ -463,15 +449,19 @@ export default function Cohortes() {
         setDatosBusqueda(newValue)
     }
 
+    const handleMateriaChange = (idMateria) => setDatosBusqueda({ ...datosBusqueda, idMateria: idMateria })
+
     const handleBusqueda = () => setEstaBuscando(true)
 
     useEffect(() => {
         const buscarCohorte = async () => {
             console.log("Iniciando busqueda...")
             console.log("Cargando...")
+            setCohorteData(null)
+            setDatosBusqueda({ ...datosBusqueda, idMateria: "" })
             setRequestStatus({ ...requestStatus, loading: true })
             try {
-                const response = await getCohorteCarrera(datosBusqueda.idPeriodo, datosBusqueda.idCarrera);
+                const response = await getCohorteCarrera(datosBusqueda.idCarrera, datosBusqueda.idPeriodo);
                 setCohorteData(response.data)
                 console.log(response)
                 console.log("Datos cargados!")
@@ -492,19 +482,23 @@ export default function Cohortes() {
 
     return (
         <Box sx={{ minWidth: '100%', display: 'flex', flexDirection: 'column', alignItems: "center", }} gap={2}>
-            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
+            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '60px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
                 Cohortes
             </Typography>
             <SelectorCarrera
-                periodosData={periodos.value}
+                periodosData={periodos.value.slice(3)}
                 carrerasData={carreras.value}
+                datosBusqueda = {datosBusqueda}
                 handleChange={handleOpcionChange}
                 handleSearch={handleBusqueda}
+                estaBuscando={estaBuscando}
             />
             {
-                (cohorteData != null) ? <CohorteCarrera cohorteData={cohorteData}/> :
-                (!requestStatus.loading && cohorteData == null) ? <NotSelectedBox/> :
-                (requestStatus.loading) && <LoadingBox/> 
+                (datosBusqueda.idMateria != "") ? <CohorteMateria requestData={datosBusqueda} handleBack={handleMateriaChange} /> :
+                    (cohorteData != null) ? <CohorteCarrera cohorteData={cohorteData} handleMateriaChange={handleMateriaChange}  /> :
+                        (!requestStatus.loading && cohorteData == null) ? <NotSelectedBox text="Seleccione los datos de la cohorte" /> :
+                            (requestStatus.loading) ? <LoadingBox text="Generando análisis de datos" /> :
+                                (requestStatus.error) && <NotSelectedBox text="No se encontraron datos de la cohorte" />
             }
         </Box>
     )
