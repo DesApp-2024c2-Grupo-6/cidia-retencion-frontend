@@ -41,7 +41,6 @@ const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) =>
                 maxWidth: '1000px',
                 width: '100%',
                 margin: '0 auto',
-
             }}>
                 <Stack id="smar" spacing={3}>
                     <Autocomplete

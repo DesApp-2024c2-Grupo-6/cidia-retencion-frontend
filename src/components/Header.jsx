@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../assets/img/Logo-UNAHUR-White.png';
+import LogoColor from '../../assets/img/logo_unahur_2.png';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -18,11 +19,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 
-
+//Icons
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
-import CodeOffIcon from '@mui/icons-material/CodeOff';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { ListItemIcon } from '@mui/material';
 
 
 
@@ -33,25 +34,20 @@ function Header() {
     const theme = useTheme();
     const isMobile = useMediaQuery('(max-width:1220px)');
 
-    //funciones para navegar tendremos 2 por ahora Home y Configuracion
-    const handleOnClickHome = () => {
-        navigate('/home');
-        if (isMobile) setDrawerOpen(false);
-    }
-
-    const handleOnClickConfiguracion = () => {
-        navigate('/configuracion');
+    const handleClick = (path) => {
+        console.log("Navigate to" + path)
+        navigate(path);
         if (isMobile) setDrawerOpen(false);
     }
 
 
-    const drawerButtons = [
-        { text: 'Configuraciones', onClick: handleOnClickConfiguracion, disabled: false, icon: <SettingsIcon/> },
-        { text: 'Opción 2', onClick: handleOnClickHome, disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 3', disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 4', disabled: true, icon: <ErrorOutlineIcon/>  },
-        { text: 'Opción 5', disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 6', disabled: true, icon: <ErrorOutlineIcon/> },
+    const opciones = [
+        { text: 'Configuraciones', path: '/configuracion', disabled: false, icon: <SettingsIcon/> },
+        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <PersonIcon/> },
+        { text: 'Cohortes', path: '/cohortes', disabled: false, icon: <PeopleAltIcon/> },
+        { text: 'Opción 4', path: '', disabled: true, icon: <ErrorOutlineIcon/>  },
+        { text: 'Opción 5', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Opción 6', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
     ];
 
     const handleDrawerToggle = () => {
@@ -59,7 +55,7 @@ function Header() {
     };
 
     return (
-        <AppBar position="static" sx={{ boxShadow: 0, backgroundColor: theme.palette.primary.dark }}>
+        <AppBar position="static" sx={{ backgroundColor:"white",  borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2}}>
             {isMobile ? (
                 <>
                     <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
@@ -69,10 +65,10 @@ function Header() {
                         </IconButton>
                         <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle} >
                             <List>
-                                {drawerButtons.map((button, index) => (
-                                    <ListItem button key={index} onClick={button.onClick} sx={{color: theme.palette.primary.dark}}>
-                                        {button.icon}
-                                        <ListItemText primary={button.text} sx={{marginLeft:'8px'}} />
+                                {opciones.map((opcion, index) => (
+                                    <ListItem button key={index} onClick={() => handleClick(opcion.path)} sx={{color: theme.palette.primary.dark}}>
+                                        {opcion.icon}
+                                        <ListItemText primary={opcion.text} sx={{marginLeft:'8px'}} />
                                     </ListItem>
                                 ))}
                             </List>
@@ -95,10 +91,10 @@ function Header() {
                         component="img"
                         sx={{
                             width: '250px',
-                            padding: '10px'
+                            padding: '0px'
                         }}
                         alt="Logo UNAHUR"
-                        src={logo}
+                        src={LogoColor}
                     />
                     <Box>
                         <Stack
@@ -110,13 +106,13 @@ function Header() {
                             }}
                         >
                             {
-                                drawerButtons.map(button =>
-                                    <Button sx={{ color:'white', fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: '#6894a3' }, "&:hover": { backgroundColor: '#0b4c63' }}}
-                                        key={button.text} variant="text" onClick={button.onClick} disabled={button.disabled}>
+                                opciones.map(opcion =>
+                                    <Button sx={{ color: theme.palette.disabled.dark, fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: theme.palette.disabled.main }, "&:hover": { backgroundColor: theme.palette.disabled.light, }}}
+                                        key={opcion.text} variant="text" onClick={() => handleClick(opcion.path)} disabled={opcion.disabled}>
                                         <Box>
-                                            {button.icon}
+                                            {opcion.icon}
                                         </Box>
-                                        {button.text}
+                                        {opcion.text}
                                     </Button>
                                 )
                             }

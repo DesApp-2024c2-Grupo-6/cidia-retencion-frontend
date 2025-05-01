@@ -79,3 +79,12 @@ export const deleteSubject = async(data) => {
         return error;
     }
 }
+
+export const getAllSubjectsByCareer = async(id_carrera) => {
+    try {
+        const response = await axios.get(`${baseURL}/materias/${id_carrera}/todas`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
