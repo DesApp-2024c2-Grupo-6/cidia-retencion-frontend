@@ -32,7 +32,7 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
                 <Autocomplete
                     disablePortal
                     disableClearable
-                    sx={{  backgroundColor:"white" }}
+                    sx={{ backgroundColor: "white" }}
                     options={periodosData || []}
                     onChange={(event, option) => handleChange(option.value, "idPeriodo")}
                     renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
@@ -42,7 +42,7 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
                 <Autocomplete
                     disablePortal
                     disableClearable
-                    sx={{  backgroundColor:"white" }}
+                    sx={{ backgroundColor: "white" }}
                     options={carrerasData || []}
                     onChange={(event, option) => handleChange(option.value, "idCarrera")}
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
@@ -195,7 +195,7 @@ const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
         }
         console.log(materia)
         materiasData.push(materia)
-      }
+    }
 
     return (
         <Box sx={{ width: '60%', minWidth: 650, boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4, backgroundColor: "white" }}>
@@ -324,16 +324,18 @@ const CohorteMateria = ({ requestData, handleBack }) => {
     }
     else
         return (
-            <Box sx={{padding: 2, width: '60%', backgroundColor: "white"}}>
+            <Box sx={{ padding: 2, width: '60%', backgroundColor: "white" }}>
                 <Link sx={{ cursor: "pointer", }} underline='none' onClick={() => handleBack("")}>
                     Volver
                 </Link>
                 <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, padding: 0, marginY: 4 }}>
                     {/*Datos de la materia*/}
-
                     <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
                         <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>
                             {materiaData.nombreMateria}
+                        </Typography>
+                        <Typography variant="h6" fontWeight={400} gutterBottom>
+                            {materiaData.nombreCarrera}
                         </Typography>
                         <Typography variant="h6" fontWeight={400} gutterBottom>
                             {"Cohorte: " + materiaData.nombrePeriodo}
@@ -343,7 +345,7 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                     <Box>
                         <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
                             <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1, color: theme.palette.primary.main }}>
-                                <Typography variant="h6" fontWeight={400} gutterBottom>
+                                <Typography variant="h6" fontWeight={600} gutterBottom>
                                     Acumulado:
                                 </Typography>
                             </Box>
@@ -382,11 +384,11 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                     <Box>
                         <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
                             <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
-                                <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={400} gutterBottom>
+                                <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={600} gutterBottom>
                                     En el cuatrimestre:
                                 </Typography>
                                 <Typography variant="h6" fontWeight={400} gutterBottom>
-                                    Inscriptos / Regularizarón
+                                    Inscriptos / Regularizaron
                                 </Typography>
                             </Box>
                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -488,14 +490,14 @@ export default function Cohortes() {
             <SelectorCarrera
                 periodosData={periodos.value.slice(3)}
                 carrerasData={carreras.value}
-                datosBusqueda = {datosBusqueda}
+                datosBusqueda={datosBusqueda}
                 handleChange={handleOpcionChange}
                 handleSearch={handleBusqueda}
                 estaBuscando={estaBuscando}
             />
             {
                 (datosBusqueda.idMateria != "") ? <CohorteMateria requestData={datosBusqueda} handleBack={handleMateriaChange} /> :
-                    (cohorteData != null) ? <CohorteCarrera cohorteData={cohorteData} handleMateriaChange={handleMateriaChange}  /> :
+                    (cohorteData != null) ? <CohorteCarrera cohorteData={cohorteData} handleMateriaChange={handleMateriaChange} /> :
                         (!requestStatus.loading && cohorteData == null) ? <NotSelectedBox text="Seleccione los datos de la cohorte" /> :
                             (requestStatus.loading) ? <LoadingBox text="Generando análisis de datos" /> :
                                 (requestStatus.error) && <NotSelectedBox text="No se encontraron datos de la cohorte" />

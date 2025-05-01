@@ -73,7 +73,7 @@ export function Router() {
             {
                 routes.map(route => <Route key={route.path} path={route.path} element={route.element}/>)
             }
-            <Route path='*' element={<Home/>}/>
+          
         </Routes>
     );
 }

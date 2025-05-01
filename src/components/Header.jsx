@@ -55,7 +55,7 @@ function Header() {
     };
 
     return (
-        <AppBar position="static" sx={{ boxShadow: 0, backgroundColor:"white",  borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2, boxShadow: 4 }}>
+        <AppBar position="static" sx={{ backgroundColor:"white",  borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2}}>
             {isMobile ? (
                 <>
                     <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
