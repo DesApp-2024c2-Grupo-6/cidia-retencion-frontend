@@ -16,6 +16,29 @@ import useCarreras from './useCarreras';
 //Services
 import { getCohorteCarrera, getCohorteMateria } from '../../services/CohortesServices';
 
+//Utils
+function formatearCuatrimestre(nombrePeriodo) {
+    // "Primer Cuatrimestre 2024" => "1C - 2024"
+    const texto = nombrePeriodo.toUpperCase().trim();
+    let numeroCuatrimestre = '';
+
+    if (texto.startsWith('PRIMER CUATRIMESTRE')) {
+        numeroCuatrimestre = '1C';
+    } else if (texto.startsWith('SEGUNDO CUATRIMESTRE')) {
+        numeroCuatrimestre = '2C';
+    } else {
+        numeroCuatrimestre = '?C'
+    }
+
+    // Extraer el año (últimos 4 caracteres si están bien formateados)
+    let año = texto.slice(-4);
+    if (!/^\d{4}$/.test(año)) {
+        año = "????"
+    }
+
+    return `${numeroCuatrimestre} - ${año}`;
+}
+
 
 const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearch, datosBusqueda, estaBuscando }) => {
     const theme = useTheme();
@@ -298,7 +321,6 @@ const NotSelectedBox = ({ text }) => {
 const CohorteMateria = ({ requestData, handleBack }) => {
     //requestData => {idCarrera: num, idPeriodo: num, idMateria: num}
 
-
     const [materiaData, setMateriaData] = useState(null)
 
     const [requestStatus, setRequestStatus] = useState({
@@ -306,9 +328,16 @@ const CohorteMateria = ({ requestData, handleBack }) => {
         error: null
     })
 
-    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState([0, 1, 2])
+    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState([])
 
-    const MAX_CUATRIMESTRES = materiaData.cohorte.length
+    let MAX_CUATRIMESTRES = 0
+
+    function mostrarMasCohortes(n) {
+        const MIN = 0
+        const MAX = (MAX_CUATRIMESTRES - 1)
+        const nuevasCohortes = cohortesSeleccionadas.map(num => num + n).filter(num => num >= MIN && num <= MAX);
+        setCohortesSeleccionadas(nuevasCohortes)
+    }
 
     useEffect(() => {
         const buscarMateria = async () => {
@@ -316,6 +345,8 @@ const CohorteMateria = ({ requestData, handleBack }) => {
             try {
                 const response = await getCohorteMateria(requestData.idCarrera, requestData.idPeriodo, requestData.idMateria);
                 setMateriaData(response.data)
+                MAX_CUATRIMESTRES = response.data.cohorte.length
+                setCohortesSeleccionadas(Array.from({ length: MAX_CUATRIMESTRES }, (_, i) => i))
                 console.log(response)
 
             }
@@ -355,14 +386,6 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                         <Typography variant="h6" fontWeight={400} gutterBottom>
                             {"Cohorte: " + materiaData.nombrePeriodo}
                         </Typography>
-                        <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end", alignItems: "center", width: '100%', }}>
-                            <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(-1)} disabled={cohortesSeleccionadas.includes(0)}>
-                                <ArrowBackIosNewIcon />
-                            </Button>
-                            <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(1)} disabled={cohortesSeleccionadas.includes((MAX_CUATRIMESTRES - 1))}>
-                                <ArrowForwardIosIcon />
-                            </Button>
-                        </Stack>
                     </Box>
                     {/*Acumulado*/}
                     <Box>
@@ -384,19 +407,16 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {materiaData.acumulado.map((periodo) => (
-                                        <TableRow
-                                            key={"acumulado" + periodo.idPeriodo}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (periodo.es_header) ? "#FFFFFF" : "#f5f5f5" }}
-                                        >
+                                    {cohortesSeleccionadas.map(cohorteIndex => (
+                                        <TableRow key={"acumulado" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
                                             <TableCell component="th" scope="row">
-                                                {periodo.nombrePeriodo.toUpperCase()}
+                                                {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
                                             </TableCell>
-                                            <TableCell align="right">{periodo.regularizaron}</TableCell>
-                                            <TableCell align="right">{periodo.inscriptos_1}</TableCell>
-                                            <TableCell align="right">{periodo.inscriptos_2}</TableCell>
-                                            <TableCell align="right">{periodo.inscriptos_3}</TableCell>
-                                            <TableCell align="right">{periodo.inscriptos_4}</TableCell>
+                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.regularizados}</TableCell>
+                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_1}</TableCell>
+                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_2}</TableCell>
+                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_3}</TableCell>
+                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_4}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -426,19 +446,16 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {materiaData.cuatrimestre.map((periodo) => (
-                                        <TableRow
-                                            key={"cuatrimestre" + periodo.idPeriodo}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (periodo.es_header) ? "#FFFFFF" : "#f5f5f5" }}
-                                        >
+                                    {cohortesSeleccionadas.map(cohorteIndex => (
+                                        <TableRow key={"cuatrimestre" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
                                             <TableCell component="th" scope="row">
-                                                {periodo.nombrePeriodo.toUpperCase()}
+                                                {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
                                             </TableCell>
-                                            <TableCell align="right">{`${periodo.inscriptos_total} / ${periodo.regularizaron_total}`}</TableCell>
-                                            <TableCell align="right">{`${periodo.inscriptos_1} / ${periodo.regularizaron_1}`}</TableCell>
-                                            <TableCell align="right">{`${periodo.inscriptos_2} / ${periodo.regularizaron_2}`}</TableCell>
-                                            <TableCell align="right">{`${periodo.inscriptos_3} / ${periodo.regularizaron_3}`}</TableCell>
-                                            <TableCell align="right">{`${periodo.inscriptos_4} / ${periodo.regularizaron_4}`}</TableCell>
+                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_total} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_total} `}</TableCell>
+                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_1} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_1} `}</TableCell>
+                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_2} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_2} `}</TableCell>
+                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_3} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_3} `}</TableCell>
+                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_4} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_4} `}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
