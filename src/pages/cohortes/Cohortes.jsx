@@ -5,6 +5,8 @@ import { useTheme } from '@mui/material/styles';
 
 //MUI - Icons
 import SearchIcon from '@mui/icons-material/Search';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useEffect, useState } from 'react';
 
 //Hooks
@@ -67,7 +69,14 @@ const SelectorCarrera = ({ periodosData, carrerasData, handleChange, handleSearc
 }
 
 const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
+
     const theme = useTheme()
+
+    const MAX_CUATRIMESTRES = cohorteData.cohortes.length
+
+    const materiasData = cohorteData.cohortes[0].materias.map(materia => ({ id: materia.idMateria, nombre: materia.nombre }))
+
+    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState([0, 1, 2]) //Indice de las cohortes que se muestran
 
     function formatearCuatrimestre(nombrePeriodo) {
         // "Primer Cuatrimestre 2024" => "1C - 2024"
@@ -79,123 +88,25 @@ const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
         } else if (texto.startsWith('SEGUNDO CUATRIMESTRE')) {
             numeroCuatrimestre = '2C';
         } else {
-            throw new Error('Formato no reconocido');
+            numeroCuatrimestre = '?C'
         }
 
         // Extraer el año (últimos 4 caracteres si están bien formateados)
-        const año = texto.slice(-4);
+        let año = texto.slice(-4);
         if (!/^\d{4}$/.test(año)) {
-            throw new Error('Año no válido');
+            año = "????"
         }
 
         return `${numeroCuatrimestre} - ${año}`;
     }
 
-    const rows = [
-        {
-            "descripcion": "Inscriptos en el cuatrimestre",
-            "cuatrimestre_1": cohorteData.cohortes[0].inscriptos.unaMateria,
-            "cuatrimestre_2": cohorteData.cohortes[1].inscriptos.unaMateria,
-            "cuatrimestre_3": cohorteData.cohortes[2].inscriptos.unaMateria,
-            "es_header": true
-        },
-        {
-            "descripcion": "a una materia o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].inscriptos.unaMateria + " / " + cohorteData.cohortes[0].inscriptos.exactamenteUna,
-            "cuatrimestre_2": cohorteData.cohortes[1].inscriptos.unaMateria + " / " + cohorteData.cohortes[1].inscriptos.exactamenteUna,
-            "cuatrimestre_3": cohorteData.cohortes[2].inscriptos.unaMateria + " / " + cohorteData.cohortes[2].inscriptos.exactamenteUna,
-        },
-        {
-            "descripcion": " a dos materias o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].inscriptos.dosMaterias + " / " + cohorteData.cohortes[0].inscriptos.exactamenteDos,
-            "cuatrimestre_2": cohorteData.cohortes[1].inscriptos.dosMaterias + " / " + cohorteData.cohortes[1].inscriptos.exactamenteDos,
-            "cuatrimestre_3": cohorteData.cohortes[2].inscriptos.dosMaterias + " / " + cohorteData.cohortes[2].inscriptos.exactamenteDos,
-        },
-        {
-            "descripcion": " a tres materias o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].inscriptos.tresMaterias + " / " + cohorteData.cohortes[0].inscriptos.exactamenteTres,
-            "cuatrimestre_2": cohorteData.cohortes[1].inscriptos.tresMaterias + " / " + cohorteData.cohortes[1].inscriptos.exactamenteTres,
-            "cuatrimestre_3": cohorteData.cohortes[2].inscriptos.tresMaterias + " / " + cohorteData.cohortes[2].inscriptos.exactamenteTres,
-        },
-        {
-            "descripcion": "a cuatro materias o más",
-            "cuatrimestre_1": cohorteData.cohortes[0].inscriptos.cuatroMateriasOMas,
-            "cuatrimestre_2": cohorteData.cohortes[1].inscriptos.cuatroMateriasOMas,
-            "cuatrimestre_3": cohorteData.cohortes[2].inscriptos.cuatroMateriasOMas,
-        },
-        {
-            "descripcion": "Regularizaron en el cuatrimestre",
-            "cuatrimestre_1": cohorteData.cohortes[0].regularizaron.unaMateria,
-            "cuatrimestre_2": cohorteData.cohortes[1].regularizaron.unaMateria,
-            "cuatrimestre_3": cohorteData.cohortes[2].regularizaron.unaMateria,
-            "es_header": true
-
-        },
-        {
-            "descripcion": "una materia o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].regularizaron.unaMateria + " / " + cohorteData.cohortes[0].regularizaron.exactamenteUna,
-            "cuatrimestre_2": cohorteData.cohortes[1].regularizaron.unaMateria + " / " + cohorteData.cohortes[1].regularizaron.exactamenteUna,
-            "cuatrimestre_3": cohorteData.cohortes[2].regularizaron.unaMateria + " / " + cohorteData.cohortes[2].regularizaron.exactamenteUna,
-        },
-        {
-            "descripcion": "dos materias o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].regularizaron.dosMaterias + " / " + cohorteData.cohortes[0].regularizaron.exactamenteDos,
-            "cuatrimestre_2": cohorteData.cohortes[1].regularizaron.dosMaterias + " / " + cohorteData.cohortes[1].regularizaron.exactamenteDos,
-            "cuatrimestre_3": cohorteData.cohortes[2].regularizaron.dosMaterias + " / " + cohorteData.cohortes[2].regularizaron.exactamenteDos,
-        },
-        {
-            "descripcion": "tres materias o más / exact.",
-            "cuatrimestre_1": cohorteData.cohortes[0].regularizaron.tresMaterias + " / " + cohorteData.cohortes[0].regularizaron.exactamenteTres,
-            "cuatrimestre_2": cohorteData.cohortes[1].regularizaron.tresMaterias + " / " + cohorteData.cohortes[1].regularizaron.exactamenteTres,
-            "cuatrimestre_3": cohorteData.cohortes[2].regularizaron.tresMaterias + " / " + cohorteData.cohortes[2].regularizaron.exactamenteTres,
-        },
-        {
-            "descripcion": "cuatro materias o más",
-            "cuatrimestre_1": cohorteData.cohortes[0].regularizaron.cuatroMateriasOMas,
-            "cuatrimestre_2": cohorteData.cohortes[1].regularizaron.cuatroMateriasOMas,
-            "cuatrimestre_3": cohorteData.cohortes[2].regularizaron.cuatroMateriasOMas,
-        },
-        {
-            "descripcion": "Siguen",
-            "cuatrimestre_1": cohorteData.cohortes[0].siguen,
-            "cuatrimestre_2": cohorteData.cohortes[1].siguen,
-            "cuatrimestre_3": cohorteData.cohortes[2].siguen,
-            "es_header": true
-        },
-        {
-            "descripcion": "Terminaron",
-            "cuatrimestre_1": cohorteData.cohortes[0].terminaron,
-            "cuatrimestre_2": cohorteData.cohortes[1].terminaron,
-            "cuatrimestre_3": cohorteData.cohortes[2].terminaron,
-            "es_header": true
-
-        },
-        {
-            "descripcion": "Abandonaron",
-            "cuatrimestre_1": cohorteData.cohortes[0].abandonaron,
-            "cuatrimestre_2": cohorteData.cohortes[1].abandonaron,
-            "cuatrimestre_3": cohorteData.cohortes[2].abandonaron,
-            "es_header": true
-
-        },
-
-    ]
-
-    const materiasData = []
-    const size = cohorteData.cohortes[0].materiasData.length;
-    console.log(size)
-    for (let i = 0; i < size; i++) {
-        console.log(i)
-        const materia = {
-            "id": cohorteData.cohortes[0].materiasData[i].idMateria,
-            "descripcion": cohorteData.cohortes[0].materiasData[i].nombre,
-            "cuatrimestre_1": cohorteData.cohortes[0].materiasData[i].regularizaron,
-            "cuatrimestre_2": cohorteData.cohortes[1].materiasData[i].regularizaron,
-            "cuatrimestre_3": cohorteData.cohortes[2].materiasData[i].regularizaron,
-        }
-        console.log(materia)
-        materiasData.push(materia)
+    function mostrarMasCohortes(n) {
+        const MIN = 0
+        const MAX = (MAX_CUATRIMESTRES - 1)
+        const nuevasCohortes = cohortesSeleccionadas.map(num => num + n).filter(num => num >= MIN && num <= MAX);
+        setCohortesSeleccionadas(nuevasCohortes)
     }
+
 
     return (
         <Box sx={{ width: '60%', minWidth: 650, boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4, backgroundColor: "white" }}>
@@ -210,6 +121,15 @@ const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
                 <Typography variant="h6" fontWeight={400} gutterBottom>
                     Estudiantes: <span>{cohorteData.totalAlumnos}</span>
                 </Typography>
+                <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end", alignItems: "center", width: '100%', }}>
+                    <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(-1)} disabled={cohortesSeleccionadas.includes(0)}>
+                        <ArrowBackIosNewIcon />
+                    </Button>
+
+                    <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(1)} disabled={cohortesSeleccionadas.includes((MAX_CUATRIMESTRES - 1))}>
+                        <ArrowForwardIosIcon />
+                    </Button>
+                </Stack>
             </Box>
             {/*Contenido*/}
             <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.primary.main, borderWidth: 3 }}>
@@ -217,41 +137,130 @@ const CohorteCarrera = ({ cohorteData, handleMateriaChange }) => {
                     <TableHead>
                         <TableRow >
                             <TableCell>Descripción</TableCell>
-                            <TableCell align="right">{formatearCuatrimestre(cohorteData.cohortes[0].nombrePeriodo)}</TableCell>
-                            <TableCell align="right">{formatearCuatrimestre(cohorteData.cohortes[1].nombrePeriodo)}</TableCell>
-                            <TableCell align="right">{formatearCuatrimestre(cohorteData.cohortes[2].nombrePeriodo)}</TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{formatearCuatrimestre(cohorteData.cohortes[cohorteIndex].nombrePeriodo)}</TableCell>)
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow
-                                key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: (row.es_header) ? "#FFFFFF" : "#f5f5f5" }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.descripcion}
-                                </TableCell>
-                                <TableCell align="right">{row.cuatrimestre_1}</TableCell>
-                                <TableCell align="right">{row.cuatrimestre_2}</TableCell>
-                                <TableCell align="right">{row.cuatrimestre_3}</TableCell>
-                            </TableRow>
-                        ))}
-                        {materiasData.map((materia) => (
-                            <TableRow
-                                key={materia.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <Link sx={{ cursor: "pointer" }} underline='none' onClick={() => handleMateriaChange(materia.id)}>
-                                        {materia.descripcion + " "}
-                                    </Link>
-                                    - Regularizaron hasta ahora
-                                </TableCell>
-                                <TableCell align="right">{materia.cuatrimestre_1}</TableCell>
-                                <TableCell align="right">{materia.cuatrimestre_2}</TableCell>
-                                <TableCell align="right">{materia.cuatrimestre_3}</TableCell>
-                            </TableRow>
-                        ))}
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                            <TableCell component="th" scope="row">
+                                Inscriptos en el cuatrimestre
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].inscriptos.total}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                A una materia o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].inscriptos.unaMateria} / ${cohorteData.cohortes[cohorteIndex].inscriptos.exactamenteUna}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                A dos materias o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].inscriptos.dosMaterias} / ${cohorteData.cohortes[cohorteIndex].inscriptos.exactamenteDos}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                A tres materias o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].inscriptos.tresMaterias} / ${cohorteData.cohortes[cohorteIndex].inscriptos.exactamenteTres}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                A cuatro materias o más
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].inscriptos.cuatroOMas}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                            <TableCell component="th" scope="row">
+                                Regularizaron en el cuatrimestre
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].regularizaron.total}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                Una materia o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].regularizaron.unaMateria} / ${cohorteData.cohortes[cohorteIndex].regularizaron.exactamenteUna}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                Dos materias o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].regularizaron.dosMaterias} / ${cohorteData.cohortes[cohorteIndex].regularizaron.exactamenteDos}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                Tres materias o más / exact
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{`${cohorteData.cohortes[cohorteIndex].regularizaron.tresMaterias} / ${cohorteData.cohortes[cohorteIndex].regularizaron.exactamenteTres}`}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f5f5f5" }}>
+                            <TableCell component="th" scope="row">
+                                Cuatro materias o más
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].regularizaron.cuatroOMas}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                            <TableCell component="th" scope="row">
+                                Siguen
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].siguen}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                            <TableCell component="th" scope="row">
+                                Abandonaron
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].abandonaron}</TableCell>)
+                            }
+                        </TableRow>
+                        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                            <TableCell component="th" scope="row">
+                                Terminaron
+                            </TableCell>
+                            {
+                                cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].terminaron}</TableCell>)
+                            }
+                        </TableRow>
+                        {
+                            materiasData.map((materia, index) => (
+                                <TableRow key={materia.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableCell component="th" scope="row">
+                                        <Link sx={{ cursor: "pointer" }} underline='none' onClick={() => handleMateriaChange(materia.id)}>
+                                            {materia.nombre + " "}
+                                        </Link>
+                                        - Regularizaron hasta ahora
+                                    </TableCell>
+                                    {
+                                        cohortesSeleccionadas.map(cohorteIndex => <TableCell align="right">{cohorteData.cohortes[cohorteIndex].materias[index].regularizaron}</TableCell>)
+                                    }
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -289,11 +298,17 @@ const NotSelectedBox = ({ text }) => {
 const CohorteMateria = ({ requestData, handleBack }) => {
     //requestData => {idCarrera: num, idPeriodo: num, idMateria: num}
 
+
     const [materiaData, setMateriaData] = useState(null)
+
     const [requestStatus, setRequestStatus] = useState({
         loading: true,
         error: null
     })
+
+    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState([0, 1, 2])
+
+    const MAX_CUATRIMESTRES = materiaData.cohorte.length
 
     useEffect(() => {
         const buscarMateria = async () => {
@@ -340,6 +355,14 @@ const CohorteMateria = ({ requestData, handleBack }) => {
                         <Typography variant="h6" fontWeight={400} gutterBottom>
                             {"Cohorte: " + materiaData.nombrePeriodo}
                         </Typography>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-end", alignItems: "center", width: '100%', }}>
+                            <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(-1)} disabled={cohortesSeleccionadas.includes(0)}>
+                                <ArrowBackIosNewIcon />
+                            </Button>
+                            <Button sx={{ width: 'auto' }} onClick={() => mostrarMasCohortes(1)} disabled={cohortesSeleccionadas.includes((MAX_CUATRIMESTRES - 1))}>
+                                <ArrowForwardIosIcon />
+                            </Button>
+                        </Stack>
                     </Box>
                     {/*Acumulado*/}
                     <Box>
