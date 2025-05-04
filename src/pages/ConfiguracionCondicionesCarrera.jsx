@@ -55,13 +55,14 @@ function ConfiguracionCondicionCarrera() {
     //Datos de la carrera seleccionada
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
+    const idPlan = useSelector((state) => state.carrera.IdPlan);
 
 
     useEffect(() => {
-        if (IdCarrera == null || IdCarrera == "") {
+        if (IdCarrera == null || IdCarrera == "" ||idPlan == null || idPlan == "") {
             navigate('/configuracion/');
         }
-    }, [IdCarrera, navigate]);
+    }, [IdCarrera,idPlan, navigate]);
 
     const [message, setMessage] = useState({ codigo: 0, msg: "" });
 
@@ -81,11 +82,10 @@ function ConfiguracionCondicionCarrera() {
                     msg: `Se han traido todas las condiciones.`
                 });
                 const lista = career.conditionsCareerData
-                    .filter(c => c.id_carrera == IdCarrera)
+                    .filter(c => c.id_carrera == IdCarrera && c.id_plan == idPlan)
                     .map((c, index) => {
                         let configCondicion;
                         let nobj = c;
-                        //console.log(nobj);
                         if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
                             configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
@@ -161,8 +161,7 @@ function ConfiguracionCondicionCarrera() {
                     code: materias.status,
                     msg: `Se han traido todas las materias.`
                 });
-                console.log(mats)
-                const lista = mats.allSubjects.filter(c => c.id_carrera == IdCarrera).map(c => ({
+                const lista = mats.allSubjects.filter(c => c.id_carrera == IdCarrera && c.id_plan === idPlan).map(c => ({
                     label: c.subjectName,
                     value: c.id_materia
                 }));
@@ -195,7 +194,7 @@ function ConfiguracionCondicionCarrera() {
                     code: materias.status,
                     msg: `Se han traido todos los campos.`
                 });
-                const lista = mats.allSubjects.filter(c => c.id_carrera === IdCarrera && c.campo != "" && c.campo !== undefined)
+                const lista = mats.allSubjects.filter(c => c.id_carrera === IdCarrera && c.id_plan === idPlan && c.campo != "" && c.campo !== undefined)
                     .map(c => ({
                         label: c.campo,
                         value: c.campo
@@ -217,7 +216,7 @@ function ConfiguracionCondicionCarrera() {
         }
         obtenerMaterias();
 
-    }, [IdCarrera]);
+    }, [IdCarrera,idPlan]);
 
     //VARIABLES PARA EL OBJETO A GUARDAR
 
@@ -237,7 +236,7 @@ function ConfiguracionCondicionCarrera() {
         setselectCarreraDisabled(!!value && value > 0);
     }
     const setearMateria = (valor) => {
-        setmateria(valor);
+        setmateria(valor.value);
         const lista = materiasList.filter((a) => parseInt(a.value) !== valor)
         setMateriasCondicionList(lista);
         setinputAnio(!!valor);
@@ -301,6 +300,7 @@ function ConfiguracionCondicionCarrera() {
         let nuevaCondicion = {
             //key: condicionesList.length,
             id_carrera: IdCarrera,
+            id_plan:idPlan,
             //anio: anio,
             //id_materia: materia,
             codigo_condicion: condicion
@@ -340,9 +340,6 @@ function ConfiguracionCondicionCarrera() {
             nuevaCondicion.config_condicion = { anio: anioCompleto, cantidad: cantidad, campos: exceptuadosSeleccionados }
         }
 
-
-
-        //console.log(nuevaCondicion);
         const postcondicion = await createConditionUse(nuevaCondicion);
 
         setearcamposSeleccionados([]);
@@ -372,7 +369,6 @@ function ConfiguracionCondicionCarrera() {
 
 
     const eliminarCondicion = async (cond) => {
-        console.log(cond)
         let condicionEliminar = {
             id_carrera: cond.obj.id_carrera,
             codigo_condicion: cond.obj.codigo_condicion,
@@ -571,7 +567,7 @@ function ConfiguracionCondicionCarrera() {
                                                 options={materiasCondicionList}
                                                 className={'autocompletecarreras'}
                                                 freeSolo
-                                                onChange={(event, newValue) => (newValue) ? setearMateriasSeleccionadas(newValue) : setearMateriasSeleccionadas("")}
+                                                onChange={(event, newValue) => (newValue) ? setearMateriasSeleccionadas(newValue.map(m => {return m.value})) : setearMateriasSeleccionadas("")}
                                                 renderInput={(params) => <TextField {...params} variant="standard" label="Seleccione materias" />}
                                             />
                                             </Box>
@@ -679,7 +675,7 @@ function ConfiguracionCondicionCarrera() {
                                                             }
                                                         }}
                                                         value = {anioCompleto}
-                                                        placeholder="Añowqe" onInput={setearAnioCompleto} />
+                                                        placeholder="Año" onInput={setearAnioCompleto} />
                                                     </FormControl>
                                                     <FormControl sx={{
                                                         width: '100%'
