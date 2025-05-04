@@ -30,7 +30,7 @@ function formatearCuatrimestre(nombrePeriodo) {
         numeroCuatrimestre = '?C'
     }
 
-    // Extraer el año (últimos 4 caracteres si están bien formateados)
+    // Extraer el año (últimos 4 caracteres)
     let año = texto.slice(-4);
     if (!/^\d{4}$/.test(año)) {
         año = "????"
