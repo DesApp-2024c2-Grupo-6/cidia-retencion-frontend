@@ -1,0 +1,158 @@
+import React, { useState } from 'react';
+
+//Componentes MUI
+import { Box, IconButton, Typography } from '@mui/material';
+//Iconos
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+//Servicios
+import FilaMateriaComun from './FilaMateriaComun.jsx';
+import ConfirmarBorrado from '@components/popups/ConfirmarBorrado.jsx'
+
+//Datos de prueba
+
+
+function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatosGenerales }) {
+    /*
+        Retorna la seccion donde se gestionan los pares de carreras
+        Parametros:
+            -paresCarrerasData - Lista de objetos - Lista que contiene los datos de las materias comunes. Propiedad specialSubject de generalAcademicData
+            -materiasGuaraniData - Lista de objetos - Lista que las materias de siu guarani.
+    */
+
+    materiasComunesData = materiasComunesData.map((materia, index) => ({ idLista: index, ...materia }))
+
+    const [materiasGuarani, setmateriasGuarani] = useState(materiasGuaraniData)
+    const [materiasComunes, setMateriasComunes] = useState(materiasComunesData)
+
+    const editarMateriaComun = (nuevaMateria) => {
+        /*
+            Edita una materia segun los parametros recibidos
+            Parametros
+                - nuevaMateria - Objeto - Nueva materia a agregar
+        */
+        const materiasEditadas = materiasComunes.map(materia => (materia.idLista == nuevaMateria.idLista) ? nuevaMateria : materia)
+        setMateriasComunes(materiasEditadas)
+
+        const materiasSinIdLista = materiasEditadas.map(materia => {
+            const nuevaMateria = { ...materia }
+            delete nuevaMateria.idLista;
+            return nuevaMateria;
+        })
+        console.log(materiasSinIdLista)
+        editarDatosGenerales(materiasSinIdLista)
+    }
+
+    const borrarMateriaComun = (idListaABorrar) => {
+        /*
+            Borra una materia segun el id dado
+            Parametros
+                - idListaABorrar - Numero - IdLista del objeto a borrar
+        */
+        const materiasRestantes = materiasComunes.filter(materia => (materia.idLista != idListaABorrar))
+        setMateriasComunes(materiasRestantes)
+        const materiasSinIdLista = materiasRestantes.map(materia => {
+            const nuevaMateria = { ...materia }
+            delete nuevaMateria.idLista;
+            return nuevaMateria;
+        })
+        editarDatosGenerales(materiasSinIdLista)
+        handleCloseBorrado()
+    }
+
+    const [openBorrado, setOpenBorrado] = React.useState(Boolean);
+    const [materiaComunABorrar, setMateriaComunABorrar] = React.useState({});
+
+    const handleBorrado = (parrafo) => {
+        setOpenBorrado(true);
+        setMateriaComunABorrar(parrafo);
+    }
+
+    const handleCloseBorrado = () => {
+        setOpenBorrado(false);
+        setParrafoABorrar({});
+    }
+
+    const handleAgregarMateriaComun = () => {
+        const idNoDisponibles = materiasComunes.map(materia => materia.idLista);
+        const generarIDRandom = (valorInicial) => {
+            const idGenerado = valorInicial
+            return (idNoDisponibles.includes(idGenerado)) ? generarIDRandom(valorInicial + 1) : idGenerado
+        }
+        const MATERIA_VACIA = { idLista: (generarIDRandom(idNoDisponibles.length)), id: "", name: "", realName: "" }
+        setMateriasComunes([MATERIA_VACIA, ...materiasComunes])
+        editarDatosGenerales([MATERIA_VACIA, ...materiasComunes])
+    }
+
+    return (
+        <>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column' },
+                alignItems: 'center',
+                bgcolor: 'background.default',
+                marginTop: 8,
+                marginBottom: 3
+            }}>
+                <ConfirmarBorrado
+                    openBorrado={openBorrado}
+                    handleCloseBorrado={handleCloseBorrado}
+                    funcionEliminar={borrarMateriaComun}
+                    elementoAEliminar={materiaComunABorrar}
+                    textoBorrado="¿Está seguro de que desea eliminar esta materia?">
+                </ConfirmarBorrado>
+                {/*Materias comunes*/}
+                <Box sx={{
+                    width: '1000px',
+                    minWidth: '250px',
+                    marginBottom: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'no-wrap',
+                    gap: '10px'
+
+                }}>
+                    <Typography sx={{ fontWeight: 'bold' }} variant="h6" component="h1" gutterBottom>
+                        Materias comunes
+                    </Typography>
+                    <IconButton
+                        sx={{ display: 'inline', width: 'auto', marginTop: '10px' }}
+                        onClick={handleAgregarMateriaComun}>
+                        <AddCircleIcon color="success" sx={{ fontSize: '48px' }} />
+                    </IconButton>
+                </Box>
+                <Box sx={{
+                    width: '1000px',
+                    minWidth: '250px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '8px',
+                    borderBottom: 'solid',
+                    borderBottomWidth: '1px',
+                    borderBottomColor: '#dedede',
+                }}>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Materia</Typography>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}>Nombre para mail</Typography>
+                    <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}></Typography>
+                </Box>
+                <Box sx={{
+                    width: '1000px',
+                    minWidth: '250px',
+                }}>
+                    {
+                        materiasComunes.map((materia) =>
+                            <FilaMateriaComun
+                                key={materia.idLista}
+                                materiaComunData={materia}
+                                materiasDisponibles={materiasGuarani}
+                                editarMateriaComun={editarMateriaComun}
+                                borrarMateriaComun={handleBorrado}
+                            />)
+                    }
+                </Box>
+            </Box>
+        </>
+    );
+}
+
+export default MateriasComunes;
