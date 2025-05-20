@@ -1,12 +1,12 @@
 //MUI
 import { Box, Typography, Link } from '@mui/material';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Divider,Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 //Components
 import CohorteLoader from './CohorteLoader';
 import CohorteNotSelected  from './CohorteNotSelected';
-
+import GraficoCohorteMateria from './GraficoCohorteMateria';
 //Hooks
 import { useEffect, useState } from 'react';
 
@@ -38,6 +38,7 @@ export default function CohorteMateria({ requestData, handleBack }){
         const nuevasCohortes = cohortesSeleccionadas.map(num => num + n).filter(num => num >= MIN && num <= MAX);
         setCohortesSeleccionadas(nuevasCohortes)
     }
+    const [estaMostrandoGrafico, setEstaMostrandoGrafico] = useState(false) //Indice de las cohortes que se muestran
 
     useEffect(() => {
         const buscarMateria = async () => {
@@ -86,82 +87,103 @@ export default function CohorteMateria({ requestData, handleBack }){
                         <Typography variant="h6" fontWeight={400} gutterBottom>
                             {"Cohorte: " + materiaData.nombrePeriodo}
                         </Typography>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-start", alignItems: "center", width: '100%', }} divider={<Divider orientation="vertical" flexItem />}>
+                            <Link disabled sx={{ cursor: "pointer" }} fontWeight={400} underline='none' onClick={() => setEstaMostrandoGrafico(false)}>
+                                {"Estadísticas"}
+                            </Link>
+                            <Link sx={{ cursor: "pointer" }} fontWeight={400} underline='none' onClick={() => setEstaMostrandoGrafico(true)}>
+                                {"Gráfico"}
+                            </Link>
+                        </Stack>
                     </Box>
-                    {/*Acumulado*/}
-                    <Box>
-                        <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1  }}>
-                            <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1, color: theme.palette.primary.main }}>
-                                <Typography variant="h6" fontWeight={600} gutterBottom>
-                                    Acumulado:
-                                </Typography>
+                    {
+                        !estaMostrandoGrafico
+                        ?
+                        <>
+                            {/*Acumulado*/}
+                            <Box>
+                                <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1  }}>
+                                    <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1, color: theme.palette.primary.main }}>
+                                        <Typography variant="h6" fontWeight={600} gutterBottom>
+                                            Acumulado:
+                                        </Typography>
+                                    </Box>
+                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow >
+                                                <TableCell>Periodo</TableCell>
+                                                <TableCell align="right">Regularizados</TableCell>
+                                                <TableCell align="right">Inscriptos 1 vez</TableCell>
+                                                <TableCell align="right">Inscriptos 2 veces</TableCell>
+                                                <TableCell align="right">Inscriptos 3 veces</TableCell>
+                                                <TableCell align="right">Inscriptos 4 o + veces</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {cohortesSeleccionadas.map(cohorteIndex => (
+                                                <TableRow key={"acumulado" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                                                    <TableCell component="th" scope="row">
+                                                        {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
+                                                    </TableCell>
+                                                    <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.regularizados}</TableCell>
+                                                    <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_1}</TableCell>
+                                                    <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_2}</TableCell>
+                                                    <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_3}</TableCell>
+                                                    <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_4}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                             </Box>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow >
-                                        <TableCell>Periodo</TableCell>
-                                        <TableCell align="right">Regularizados</TableCell>
-                                        <TableCell align="right">Inscriptos 1 vez</TableCell>
-                                        <TableCell align="right">Inscriptos 2 veces</TableCell>
-                                        <TableCell align="right">Inscriptos 3 veces</TableCell>
-                                        <TableCell align="right">Inscriptos 4 o + veces</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {cohortesSeleccionadas.map(cohorteIndex => (
-                                        <TableRow key={"acumulado" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
-                                            <TableCell component="th" scope="row">
-                                                {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
-                                            </TableCell>
-                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.regularizados}</TableCell>
-                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_1}</TableCell>
-                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_2}</TableCell>
-                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_3}</TableCell>
-                                            <TableCell align="right">{materiaData.cohorte[cohorteIndex].acumulado.inscriptos_4}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                    {/*En el cuatrimestre*/}
-                    <Box>
-                        <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1  }}>
-                            <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
-                                <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={600} gutterBottom>
-                                    En el cuatrimestre:
-                                </Typography>
-                                <Typography variant="h6" fontWeight={400} gutterBottom>
-                                    Inscriptos / Regularizaron
-                                </Typography>
+                            {/*En el cuatrimestre*/}
+                            <Box>
+                                <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1  }}>
+                                    <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
+                                        <Typography variant="h6" sx={{ color: theme.palette.primary.main }} fontWeight={600} gutterBottom>
+                                            En el cuatrimestre:
+                                        </Typography>
+                                        <Typography variant="h6" fontWeight={400} gutterBottom>
+                                            Inscriptos / Regularizaron
+                                        </Typography>
+                                    </Box>
+                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow >
+                                                <TableCell>Periodo</TableCell>
+                                                <TableCell align="right">Total</TableCell>
+                                                <TableCell align="right">1 vez</TableCell>
+                                                <TableCell align="right">2 veces</TableCell>
+                                                <TableCell align="right">3 veces</TableCell>
+                                                <TableCell align="right">4 o + veces</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {cohortesSeleccionadas.map(cohorteIndex => (
+                                                <TableRow key={"cuatrimestre" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+                                                    <TableCell component="th" scope="row">
+                                                        {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
+                                                    </TableCell>
+                                                    <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_total} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_total} `}</TableCell>
+                                                    <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_1} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_1} `}</TableCell>
+                                                    <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_2} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_2} `}</TableCell>
+                                                    <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_3} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_3} `}</TableCell>
+                                                    <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_4} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_4} `}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                             </Box>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow >
-                                        <TableCell>Periodo</TableCell>
-                                        <TableCell align="right">Total</TableCell>
-                                        <TableCell align="right">1 vez</TableCell>
-                                        <TableCell align="right">2 veces</TableCell>
-                                        <TableCell align="right">3 veces</TableCell>
-                                        <TableCell align="right">4 o + veces</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {cohortesSeleccionadas.map(cohorteIndex => (
-                                        <TableRow key={"cuatrimestre" + materiaData.cohorte[cohorteIndex].idPeriodo} sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
-                                            <TableCell component="th" scope="row">
-                                                {materiaData.cohorte[cohorteIndex].nombrePeriodo.toUpperCase()}
-                                            </TableCell>
-                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_total} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_total} `}</TableCell>
-                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_1} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_1} `}</TableCell>
-                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_2} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_2} `}</TableCell>
-                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_3} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_3} `}</TableCell>
-                                            <TableCell align="right">{`${materiaData.cohorte[cohorteIndex].cuatrimestre.inscriptos_4} / ${materiaData.cohorte[cohorteIndex].cuatrimestre.regularizados_4} `}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
+                        </>
+                        :
+                        <GraficoCohorteMateria
+                            materiaData={materiaData}
+                        />
+
+                    }
+                    
+                   
                 </Box>
             </Box>
         )
