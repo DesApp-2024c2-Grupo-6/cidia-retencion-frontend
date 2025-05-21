@@ -7,7 +7,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 //Recharts
 import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
 //Services
 import { getPeriodos } from '@services/PeriodosService'
 import { getCursosPorMateriaYPeriodo } from '@services/CursosService'
@@ -294,7 +293,7 @@ const Grafico = (props) => {
           onChange={handleChangeSwitch}
         />
             {!mostrarGraficoComision &&
-                <LineChart
+                <LineChart id="grafico1"
                     width={500}
                     height={300}
                     data={datosComision}
@@ -310,12 +309,12 @@ const Grafico = (props) => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="cantidadAlumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="porcentajeAlumnos" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="porcentajeAlumnos" name="Porcentaje de asistencia" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="cantidadAlumnos" name="Cantidad de Alumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
             }
             {mostrarGraficoComision &&
-            <LineChart
+            <LineChart id="grafico2"
                 width={500}
                 height={300}
                 data={datosComisiones}
@@ -359,6 +358,8 @@ export default function AsistenciaCursadas() {
     const handleComisionActual = (comision)=>{
         setComisionActual(comision)
         setMostrarGraficoComision(false)
+        document.getElementById("grafico1")?.scrollIntoView({behavior:"smooth"})
+        document.getElementById("grafico2")?.scrollIntoView({behavior:"smooth"})
     }
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {

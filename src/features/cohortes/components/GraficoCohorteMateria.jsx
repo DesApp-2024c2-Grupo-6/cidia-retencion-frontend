@@ -32,8 +32,8 @@ export default function GraficoCohorteCarrera({ materiaData}){
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="regularizados" name="Alumnos Regularizados" stroke="#22bb22" activeDot={{ r: 8 }} />
                 <Line type="monotone" dataKey="intentosCursada" name="Cantidad de intentos" stroke="#2222dd" />
+                <Line type="monotone" dataKey="regularizados" name="Alumnos Regularizados" stroke="#22bb22" activeDot={{ r: 8 }} />
             </LineChart>
         </ResponsiveContainer>)
 }
