@@ -18,6 +18,10 @@ import ConfirmarBorrado from '@components/popups/ConfirmarBorrado';
 import { useTheme } from '@mui/material/styles';
 
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
+
 function ConfiguracionMaterias() {
 
   const theme = useTheme()
@@ -29,6 +33,9 @@ function ConfiguracionMaterias() {
   const [subjects, setSubjects] = useState([]);
   const [save, setSave] = useState(false);
   const [deleted, setDeleted] = useState(false);
+
+  //Hooks
+  const { showAlert } = useAlert()
 
   //Modal para agregar una materia
   const [materiasSinRegistrar, setMateriasSinRegistrar] = useState([])
@@ -105,6 +112,7 @@ function ConfiguracionMaterias() {
 
   const handleSaveCreate = async (materiaACrear) => {
     const materiaCreada = await createSubject(materiaACrear);
+    showAlert('¡Materia registrada!', 'success')
     setEstaAbierto(false)
     setNuevaMateria(MATERIA_VACIA)
     setSave(!save);
@@ -112,6 +120,8 @@ function ConfiguracionMaterias() {
 
   const handleSaveEdit = async (editedData) => {
     const upSubject = await updateSubject(editedData);
+    showAlert('¡Materia Actualizada!', 'info')
+
     setSave(!save);
   };
   const handleClicBack = () => {
@@ -135,6 +145,7 @@ function ConfiguracionMaterias() {
     const resSubject = await deleteSubject(data);
     if (resSubject.status === 200) {
       setDeleted(true);
+      showAlert('¡Materia eliminada!', 'error')
     } else {
     }
   }

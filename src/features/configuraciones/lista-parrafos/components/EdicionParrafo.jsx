@@ -6,6 +6,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import { getAllCareer } from '@services/CareerService';
 import { getAllSubjectData } from '@services/SubjectDataService';
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
+
 
 const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondicionChange, handleCarrerasElegidasChange, checkBoxDeshabilitado }) => {
 
@@ -185,6 +189,8 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
 const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
 
     const KEY_ANTERIOR = parrafoData.key
+
+    const {showAlert} = useAlert()
 
     const [parrafo, setParrafo] = useState(parrafoData)
 

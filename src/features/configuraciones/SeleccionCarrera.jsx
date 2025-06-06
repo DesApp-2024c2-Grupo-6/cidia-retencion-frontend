@@ -18,10 +18,8 @@ import { addCarrera } from '@redux/carreraSlice';
 import { saveCareer, getCarrerasConPlan, getAllCareerGuaraniConPlanes } from '@services/CareerService';
 import { useNavigate } from 'react-router-dom';
 
-//Services
-
-
-//Datos de prueba
+//Context
+import { useAlert } from '@context/AlertProvider';
 
 
 function SeleccionCarrera() {
@@ -39,7 +37,9 @@ function SeleccionCarrera() {
     const [nuevaCarrera, setNuevaCarrera] = useState(NUEVA_CARRERA_VACIA);
     const [listadoCarrerasPlanes, SetListadoCarrerasPlanes] = useState([])
 
-
+    //Hooks
+    const { showAlert } = useAlert()
+    
     useEffect(() => {
         setMessage({});
         const obtenerCarreras = async () => {
@@ -150,9 +150,11 @@ function SeleccionCarrera() {
             }));
             setConfigButton(nuevaCarrera.id)
             navigate('/configuracion/carrera')
+            showAlert('¡Carrera registrada!', 'success')
         }
         else {
             console.log("Error")
+            showAlert('Error: La carrera no se pudo registrar', 'error')
         }
         setSeEstaAgregandoCarrera(false)
         setNuevaCarrera(NUEVA_CARRERA_VACIA)
@@ -257,7 +259,7 @@ function SeleccionCarrera() {
                 >
                     <Box sx={styleModal}>
                         <Typography id="modal-modal-title" variant="h6" component="h2" sx={{marginLeft: '2px'}}>
-                            Agregar Carrera
+                            Registrar Carrera
                         </Typography>
                         <FormControl fullWidth
                             component="form"

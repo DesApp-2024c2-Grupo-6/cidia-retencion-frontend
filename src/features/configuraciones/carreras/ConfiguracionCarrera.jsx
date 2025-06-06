@@ -16,12 +16,18 @@ import PanelConfiguradorGral from './components/PanelConfiguradorGral'
 import MateriasEspeciales from './components/MateriasEspeciales';
 import { updateOneCareer, getCarreraConPlan } from '@services/CareerService';
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
 function ConfiguracionCarrera() {
     //recupero el store
     const { IdCarrera, nombreCarrera, IdPlan } = useSelector((state) => state.carrera);
     const [isEdit, setIsEdit] = useState(false);
     const [carrera, setCarrera] = useState({}); 
     const [message, setMessage] = useState({codigo: 0, msg:""});
+
+    //Hooks
+    const { showAlert } = useAlert()
 
     const toggleEdit = async() => {
         setIsEdit((prevState) => !prevState); 
@@ -34,6 +40,8 @@ function ConfiguracionCarrera() {
                     code: upCareer.status,
                     msg: `Carrera ID ${upCareer.data.updateCareer.careerId} actualizada correctamente`
                 })
+
+                showAlert('¡Carrera actualizada!', 'success')
                 
             } else{
                 setMessage({

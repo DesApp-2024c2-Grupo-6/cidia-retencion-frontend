@@ -1,19 +1,15 @@
 import './App.css'
 import Header from '../layouts/Header'
 import Footer from '../layouts/Footer'
-import theme from '../styles/CustomTheme'
 import { Router } from './Router';
-import { Box } from "@mui/material";
-import { ThemeProvider } from '@mui/material/styles';
-
-
+import { Box, Button } from "@mui/material";
+import { useAlert } from '@context/AlertProvider';
 
 function App() {
 
     return (
         <>
             <Box className="app-container">
-                <ThemeProvider theme={theme}>
                     <Header />
                     <Box component="main" className="main-content" sx={{
                         zIndex: 10,
@@ -26,7 +22,6 @@ function App() {
                         <Router />
                     </Box >
                     <Footer />
-                </ThemeProvider>
             </Box >
         </>
     )

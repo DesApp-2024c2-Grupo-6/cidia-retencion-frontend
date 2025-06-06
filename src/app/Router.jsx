@@ -46,7 +46,7 @@ const routesConfiguracion = [
 const routesAsistencia = [
     {
         path: 'asistencia-cursadas',
-        element: <AsistenciaCursadas/>
+        element: <AsistenciaCursadas />
     }
 ]
 
@@ -54,7 +54,7 @@ const routesAsistencia = [
 const routesCohortes = [
     {
         path: 'cohortes',
-        element: <Cohortes/>
+        element: <Cohortes />
     }
 ]
 
@@ -68,11 +68,13 @@ const routes = [
 
 export function Router() {
     return (
+
         <Routes>
             {
-                routes.map(route => <Route key={route.path} path={route.path} element={route.element}/>)
+                routes.map(route => <Route key={route.path} path={route.path} element={route.element} />)
             }
-          
+
         </Routes>
+
     );
 }

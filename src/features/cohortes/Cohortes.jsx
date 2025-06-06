@@ -1,5 +1,5 @@
 //MUI
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 //Hooks
 import { useEffect, useState } from 'react';
@@ -15,7 +15,9 @@ import CohorteCarrera from './components/CohorteCarrera';
 import CohorteLoader from './components/CohorteLoader';
 import CohorteMateria from './components/CohorteMateria';
 import CohorteNotSelected from './components/CohorteNotSelected';
-import GraficoCohorteCarrera from './components/GraficoCohorteCarrera';
+
+//Context
+import { useAlert } from '@context/AlertProvider';
 
 export default function Cohortes() {
 
@@ -30,6 +32,8 @@ export default function Cohortes() {
     const [cohorteData, setCohorteData] = useState(null)
 
     const [requestStatus, setRequestStatus] = useState({ error: null, loading: false, })
+
+    const { showAlert } = useAlert()
 
 
     const handleOpcionChange = (updatedValue, field) => {
@@ -54,15 +58,14 @@ export default function Cohortes() {
             try {
                 const response = await getCohorteCarrera(datosBusqueda.idCarrera, datosBusqueda.idPeriodo);
                 setCohorteData(response.data)
-                console.log(response)
-                console.log("Datos cargados!")
+                showAlert('Datos de la cohorte generados', 'info')
             }
             catch (err) {
                 setRequestStatus({ ...requestStatus, error: err })
-                console.log("Error:" + err)
+                showAlert('Error: No se pudieron generar los datos de la cohorte', 'info')
+
             } finally {
                 setRequestStatus({ ...requestStatus, loading: false })
-                console.log("Se termino de cargar")
                 setEstaBuscando(false)
             }
         }
