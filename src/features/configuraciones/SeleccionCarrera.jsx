@@ -186,7 +186,6 @@ function SeleccionCarrera() {
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
                 marginTop: 8,
                 marginBottom: 4
             }}>
@@ -207,6 +206,7 @@ function SeleccionCarrera() {
                             disableClearable
                             options={carreras}
                             className={'selectcarreras'}
+                            sx={{backgroundColor: 'white'}}
                             freeSolo
                             onChange={(event, newValue) => (newValue) ? handleSelect(newValue.value) : handleSelect({ v: "", l: "" })}
                             renderInput={(params) => <TextField {...params} label="Carreras" sx={{ height: '55px' }} />}

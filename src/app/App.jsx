@@ -16,7 +16,7 @@ function App() {
                         minHeight: "100dvh",
                         height: "auto",
                         backgroundColor: "white",
-                        backgroundImage: "radial-gradient(#f0f2f5 1px, transparent 1px)",
+                        backgroundImage: "radial-gradient(#ededed 1px, transparent 1px)",
                         backgroundSize: "16px 16px"
                     }}>
                         <Router />

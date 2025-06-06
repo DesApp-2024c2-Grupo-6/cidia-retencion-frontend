@@ -24,6 +24,8 @@ const CustomTooltip = ({ active, payload, label, totalAlumnos }) => {
 
   const theme = useTheme()
 
+  const totalRegularizados = (payload) =>  payload.reduce((acumulador, item) => {return acumulador + item.value}, 0);
+
   const colors = {
     una: theme.palette.snow.light,
     dos: theme.palette.snow.main,
@@ -48,7 +50,7 @@ const CustomTooltip = ({ active, payload, label, totalAlumnos }) => {
             </p>
           );
         })}
-        <p style={{ color: theme.palette.primary.main }}>Cantidad estudiantes: {totalAlumnos}</p>
+        <p style={{ color: theme.palette.primary.main }}>Total regularizados: {totalRegularizados(payload)}</p>
       </div>
     );
   }

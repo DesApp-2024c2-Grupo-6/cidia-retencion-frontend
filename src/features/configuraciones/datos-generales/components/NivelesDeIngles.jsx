@@ -15,7 +15,6 @@ const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) =>
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
                 marginTop: 8,
                 marginBottom: 3
             }}>

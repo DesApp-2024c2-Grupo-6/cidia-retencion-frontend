@@ -128,10 +128,12 @@ const ParagraphList = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        bgcolor: 'background.default',
+        padding: '20px',
+        width:'100%',
+        maxWidth: 1000,
+        margin:'auto',
         marginTop: 3,
         marginBottom: 3,
-        padding: '20px',
       }}
     >
       <ConfirmarBorrado openBorrado={openBorrado} handleCloseBorrado={handleCloseBorrado} funcionEliminar={eliminarParrafo} elementoAEliminar={parrafoABorrar} textoBorrado="¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
@@ -154,7 +156,7 @@ const ParagraphList = () => {
           }
       
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
-            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '70%'  }}>
+            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%', maxWidth: 1000  }}>
               <Paper
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}

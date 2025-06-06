@@ -71,11 +71,11 @@ export default function CohorteMateria({ requestData, handleBack }){
     }
     else
         return (
-            <Box sx={{ padding: 2, width: '60%', backgroundColor: "white" }}>
+            <Box sx={{ padding: 2, width: '100%' }}>
                 <Link sx={{ cursor: "pointer", }} underline='none' onClick={() => handleBack("")}>
                     Volver
                 </Link>
-                <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, padding: 0, marginY: 4 }}>
+                <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, padding: 0, marginY: 4,  backgroundColor: "white" }}>
                     {/*Datos de la materia*/}
                     <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
                         <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>
@@ -87,7 +87,7 @@ export default function CohorteMateria({ requestData, handleBack }){
                         <Typography variant="h6" fontWeight={400} gutterBottom>
                             {"Cohorte: " + materiaData.nombrePeriodo}
                         </Typography>
-                        <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-start", alignItems: "center", width: '100%', }} divider={<Divider orientation="vertical" flexItem />}>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "flex-start", alignItems: "center", width: '100%', marginTop: 2 }} divider={<Divider orientation="vertical" flexItem />}>
                             <Link disabled sx={{ cursor: "pointer" }} fontWeight={400} underline='none' onClick={() => setEstaMostrandoGrafico(false)}>
                                 {"Estadísticas"}
                             </Link>

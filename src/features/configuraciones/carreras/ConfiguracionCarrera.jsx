@@ -137,7 +137,6 @@ function ConfiguracionCarrera() {
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
                 justifyContent: 'center',
                 marginTop: 3,
                 marginBottom:3
