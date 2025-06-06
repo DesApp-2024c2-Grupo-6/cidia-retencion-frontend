@@ -87,14 +87,14 @@ const SeleccionCursada = (props) => {
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
                     disableClearable
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', backgroundColor: 'white' }}
                     options={listaPeriodos}
                     className={'selectPeriodoLectivo'}
                     onChange={(event, newValue) => { setPeriodoActual(newValue.value) }}
                     renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
                 />
             </Stack>
-            <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
+            <Stack id="smar" sx={{ width: "30%" ,backgroundColor: 'white' }} spacing={3}>
                 <Autocomplete
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
@@ -105,7 +105,7 @@ const SeleccionCursada = (props) => {
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
                 />
             </Stack>
-            <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
+            <Stack id="smar" sx={{ width: "30%", backgroundColor: 'white'  }} spacing={3}>
                 <Autocomplete
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
@@ -255,18 +255,19 @@ const DatosMateria = (props) => {
                 justifyContent: 'space-between',
                 border: 'solid',
                 borderWidth: '1px',
-                borderColor: '#dedede',
-                verticalAlign: 'center'
+                borderColor: theme.palette.success.light,
+                verticalAlign: 'center',
+                backgroundColor: 'white' 
             }}>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Inscriptos totales: </Typography>
                 <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.cantidad_inscriptos}</Typography>
             </Stack>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Materia: </Typography>
                 <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_materia}</Typography>
             </Stack>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Comisión: </Typography>
                 <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_curso}</Typography>
             </Stack>

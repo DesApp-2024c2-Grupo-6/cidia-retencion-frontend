@@ -7,7 +7,7 @@ export default function CohorteLoader({ text }){
     const theme = useTheme()
 
     return (
-        <Box sx={{ width: '60%', minWidth: 650, textAlign: 'center', padding: 10, marginBottom: 4 }}>
+        <Box sx={{ width: '100%', textAlign: 'center', padding: 10, marginBottom: 4 }}>
             <CircularProgress sx={{ marginBottom: 5 }} size={70} />
             <Typography color={theme.palette.primary.main} fontWeight={500} variant="h6" component="h3" gutterBottom>
                 {text}

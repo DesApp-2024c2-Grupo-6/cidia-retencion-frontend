@@ -43,7 +43,7 @@ const EstaditicasCohorteCarrera = ({ cohorteData, handleMateriaChange, cohortesS
 
     return (
         <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ width: '100%' }} aria-label="simple table">
                 <TableHead>
                     <TableRow >
                         <TableCell>Descripción</TableCell>
@@ -199,7 +199,7 @@ export default function CohorteCarrera({ cohorteData, handleMateriaChange }) {
 
 
     return (
-        <Box sx={{ width: '60%', minWidth: 650, boxShadow: 3, borderRadius: 2, padding: 0, marginBottom: 4, backgroundColor: "white" }}>
+        <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
             {/*Datos de la carrera*/}
             <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
                 <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>

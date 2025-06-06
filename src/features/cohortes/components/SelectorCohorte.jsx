@@ -15,8 +15,8 @@ export default function SelectorCohorte({ periodosData, carrerasData, handleChan
                 justifyContent: "center",
                 alignItems: "stretch",
                 marginBottom: 2,
-                width: "60%",
-                minWidth: 650
+                width: "100%",
+                flexWrap: 'wrap'
             }}>
             <Stack id="smar" sx={{ width: "30%", }} spacing={3}>
                 <Autocomplete

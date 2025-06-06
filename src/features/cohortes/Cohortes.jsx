@@ -76,7 +76,7 @@ export default function Cohortes() {
 
     return (
         <>
-            <Box sx={{ minWidth: '100%', display: 'flex', flexDirection: 'column', alignItems: "center", }} gap={2}>
+            <Box sx={{ width: '100%', maxWidth:'1000px', margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: "center", }} gap={2}>
                 <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '60px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
                     Cohortes
                 </Typography>
