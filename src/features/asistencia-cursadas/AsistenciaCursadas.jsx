@@ -39,14 +39,28 @@ const comisionHolder = {
     ],
 
 }
+const AsistenciaLoader = ({ text }) => {
+
+    const theme = useTheme()
+
+    return (
+        <Box sx={{ width: '100%', textAlign: 'center', padding: 10, marginBottom: 4 }}>
+            <CircularProgress sx={{ marginBottom: 5 }} size={70} />
+            <Typography color={theme.palette.primary.main} fontWeight={500} variant="h6" component="h3" gutterBottom>
+                {text}
+            </Typography>
+
+        </Box>
+    )
+}
 
 
 const SeleccionCursada = (props) => {
     const [materiaActual, setMateriaActual] = useState(0)
     const [periodoActual, setPeriodoActual] = useState({ periodoId: 0 })
-    const [cambioCarrera,setCambioCarrea] = useState(false)
+    const [cambioCarrera,setCambioCarrera] = useState(false)
     const theme = useTheme();
-    const { handleDataComision,handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando } = props
+    const { handleDataComision,handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando, handleMensaje } = props
     const buscarComisiones = async () => {
         handleComisiones([])
         handleComision(comisionHolder)
@@ -54,6 +68,7 @@ const SeleccionCursada = (props) => {
         const comisiones = await getCursosPorMateriaYPeriodo(materiaActual, periodoActual.periodoId)
         await timeout(700)
         if (comisiones.data) {
+            handleMensaje("Seleccione un periodo y una materia.")
             handleComisiones(comisiones.data.cursos)
             const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
             comisiones.data.cursos.forEach(curso =>{
@@ -68,6 +83,7 @@ const SeleccionCursada = (props) => {
         }
         else {
             handleComisiones([])
+            handleMensaje("No se encontraron comisiones.")
         }
         setCargando(false)
     }
@@ -101,7 +117,7 @@ const SeleccionCursada = (props) => {
                     disableClearable
                     options={listaCarreras}
                     className={'selectCarrera'}
-                    onChange={(event, newValue) => { setCambioCarrea(!cambioCarrera); handleCarrera(newValue.value) }}
+                    onChange={(event, newValue) => { setCambioCarrera(!cambioCarrera); handleCarrera(newValue.value) }}
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
                 />
             </Stack>
@@ -143,11 +159,14 @@ const SeleccionCursada = (props) => {
 
 const ListadoComisiones = (props) => {
     const theme = useTheme();
-    const { listaComisiones, cargando, setComisionActual } = props
+    const { listaComisiones, cargando, setComisionActual, textoMensaje } = props
     return (
         <Box sx={{
             width: '85%'
         }}>
+            {cargando && <AsistenciaLoader text="Buscando asistencia..."></AsistenciaLoader>}
+            {!cargando && listaComisiones.length != 0 &&
+            <>
             <Box
                 sx={{
                     display: 'flex',
@@ -177,29 +196,21 @@ const ListadoComisiones = (props) => {
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
                 <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Gráfico</Typography>
             </Box>
-
-            {cargando &&
-                <Box
-                    sx={{
-                        width: "100%",
-                        display: 'flex',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        backgroundColor: "ffffff",
-                        padding: '8px',
-                    }}>
-                    <CircularProgress />
-                </Box>}
-
-            {!cargando && listaComisiones.length == 0 && <Box sx={{ display: 'flex' }} ><Typography sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5 }}>No se encontraron comisiones</Typography></Box>}
-            {
             
+            
+
+            
+            {
                 listaComisiones.map(com => {
                 if (com.inscriptos_semanales.length > 0)
                     return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
             }
             )}
-
+        </>}
+        {!cargando && listaComisiones.length <= 0 &&
+        <>
+            <Box sx={{ display: 'flex' }} ><Typography sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5 }}>{textoMensaje}</Typography></Box>
+        </>}
         </Box>
     )
 
@@ -355,6 +366,7 @@ export default function AsistenciaCursadas() {
     const [comisionActual, setComisionActual] = useState([comisionHolder])
     const [cargando, setCargando] = useState(false)
     const [mostrarGraficoComision,setMostrarGraficoComision] = useState(false)
+    const [textoMensaje,setTextoMensaje] = useState("Seleccione un periodo y una materia")
 
     const handleComisionActual = (comision)=>{
         setComisionActual(comision)
@@ -430,12 +442,13 @@ export default function AsistenciaCursadas() {
             }}
             gap={2}
         >
-            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
+            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '60px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
                 Asistencia a cursadas
             </Typography>
-            <SeleccionCursada handleDataComision = {setDataComisiones} handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} />
-            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={handleComisionActual} />}
+            <SeleccionCursada handleDataComision = {setDataComisiones} handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} handleMensaje={setTextoMensaje} />
+            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={handleComisionActual} textoMensaje={textoMensaje} />}
 
+            {!cargando && comisiones.length != 0 &&
             <Box sx={{ width: '90%', margin: 'auto', marginTop: '40px' }}>
                 <Box sx={{ marginBottom: 3 }}>
                 <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
@@ -447,7 +460,7 @@ export default function AsistenciaCursadas() {
                     <Grafico mostrarGraficoComision={mostrarGraficoComision} setMostrarGraficoComision={setMostrarGraficoComision} datosComision={comisionActual.inscriptos_semanales} comisiones={comisiones} datosComisiones={dataComisiones}/>
                 </Box>
 
-            </Box>
+            </Box>}
         </Box>
 
     )

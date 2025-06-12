@@ -8,10 +8,13 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 //Utils
 import { formatearCuatrimestre } from '../utils/utlis';
-
-
+  
 export default function GraficoCohorteCarrera({ materiaData}){
-
+    const theme = useTheme()
+    const colors = {
+        intentos: theme.palette.snow.dark,
+        regularizados: theme.palette.ice.dark,
+    }
     const data = materiaData.cohorte.map(cohorte => ({ name: formatearCuatrimestre(cohorte.nombrePeriodo), regularizados:cohorte.acumulado.regularizados, intentosCursada:cohorte.acumulado.intentosCursada}))
     return(
         
@@ -32,8 +35,8 @@ export default function GraficoCohorteCarrera({ materiaData}){
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="intentosCursada" name="Cantidad de intentos" stroke="#2222dd" />
-                <Line type="monotone" dataKey="regularizados" name="Alumnos Regularizados" stroke="#22bb22" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="intentosCursada" name="Cantidad de intentos" stroke={colors.intentos} />
+                <Line type="monotone" dataKey="regularizados" name="Alumnos Regularizados" stroke={colors.regularizados} activeDot={{ r: 8 }} />
             </LineChart>
         </ResponsiveContainer>)
 }
