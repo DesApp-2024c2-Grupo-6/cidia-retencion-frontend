@@ -1,5 +1,6 @@
 //MUI
 import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider, Button,FormGroup,FormControlLabel,Switch } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
@@ -12,7 +13,8 @@ import { getPeriodos } from '@services/PeriodosService'
 import { getCursosPorMateriaYPeriodo } from '@services/CursosService'
 import { getAllCareerGuaraniConPlanes } from '@services/CareerService';
 import { getAllSubjectsByCareer } from '@services/SubjectDataService'
-
+//Context
+import { useAlert } from '@context/AlertProvider';
 
 function timeout(delay) {
     return new Promise(res => setTimeout(res, delay));
@@ -40,9 +42,7 @@ const comisionHolder = {
 
 }
 const AsistenciaLoader = ({ text }) => {
-
     const theme = useTheme()
-
     return (
         <Box sx={{ width: '100%', textAlign: 'center', padding: 10, marginBottom: 4 }}>
             <CircularProgress sx={{ marginBottom: 5 }} size={70} />
@@ -51,11 +51,14 @@ const AsistenciaLoader = ({ text }) => {
             </Typography>
 
         </Box>
-    )
+   )
+}
+function range(size, startAt = 0) {
+    return [...Array(size).keys()].map(i => i + startAt);
 }
 
-
 const SeleccionCursada = (props) => {
+    const { showAlert } = useAlert()
     const [materiaActual, setMateriaActual] = useState(0)
     const [periodoActual, setPeriodoActual] = useState({ periodoId: 0 })
     const [cambioCarrera,setCambioCarrera] = useState(false)
@@ -64,28 +67,43 @@ const SeleccionCursada = (props) => {
     const buscarComisiones = async () => {
         handleComisiones([])
         handleComision(comisionHolder)
-        setCargando(true)
-        const comisiones = await getCursosPorMateriaYPeriodo(materiaActual, periodoActual.periodoId)
-        await timeout(700)
-        if (comisiones.data) {
-            handleMensaje("Seleccione un periodo y una materia.")
-            handleComisiones(comisiones.data.cursos)
-            const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
-            comisiones.data.cursos.forEach(curso =>{
-                if(curso.inscriptos_semanales.length > 0){
-                    dataComisiones.forEach(semana=>{
-                        semana[curso.nombre_curso] = curso.inscriptos_semanales[dataComisiones.indexOf(semana)].porcentajeAlumnos
-                    })
-                }
-                
-            })
-            handleDataComision(dataComisiones)
+        try{
+            setCargando(true)
+            
+            const comisiones = await getCursosPorMateriaYPeriodo(materiaActual, periodoActual.periodoId)
+            await timeout(700)
+
+            if (comisiones.data) {
+
+                handleMensaje("Seleccione un periodo y una materia.")
+                handleComisiones(comisiones.data.cursos)
+                const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
+                comisiones.data.cursos.forEach(curso =>{
+                    if(curso.inscriptos_semanales.length > 0){
+                        dataComisiones.forEach(semana=>{
+                            semana[curso.nombre_curso] = curso.inscriptos_semanales[dataComisiones.indexOf(semana)].porcentajeAlumnos
+                        })
+                    }
+                    
+                })
+                handleDataComision(dataComisiones)
+                showAlert('Datos de asistencia cargados con éxito', 'success')
+            }
+            else {
+                handleComisiones([])
+                showAlert('No se encontraron datos de asistencia en el periodo seleccionado', 'info')
+                handleMensaje("No se encontraron comisiones.")
+            }
         }
-        else {
-            handleComisiones([])
-            handleMensaje("No se encontraron comisiones.")
+        catch{
+                setRequestStatus({ ...requestStatus, error: err })
+                showAlert('Error: No se pudieron generar los datos de asistencia del periodo', 'info')
         }
-        setCargando(false)
+        finally{
+            setCargando(false)
+        }
+        
+       
     }
 
     return (
@@ -166,50 +184,36 @@ const ListadoComisiones = (props) => {
         }}>
             {cargando && <AsistenciaLoader text="Buscando asistencia..."></AsistenciaLoader>}
             {!cargando && listaComisiones.length != 0 &&
-            <>
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: '8px',
-                    backgroundColor: theme.palette.success.main,
-                    padding: '8px',
-                }}
-            >
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Comisión</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}></Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Inscriptos</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 1</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 2</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 3</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 4</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 5</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 6</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 7</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 8</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 9</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 10</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 11</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 12</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 13</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 14</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 15</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Gráfico</Typography>
-            </Box>
-            
-            
+ 
+                    <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
+                    {/*Datos de la carrera*/}
+                    <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1 ,width: '100%'}}>
+                        <Table sx={{ width: '100%' }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="left">Comisión</TableCell>
+                                    <TableCell align="center">Inscriptos</TableCell>
+                                    {
+                                        range(16,1).map(num => {return <TableCell align="right">{"Sem." + num}</TableCell>})
+                                    }
+                                    <TableCell align="left">Gráfico</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    listaComisiones.map(com => {
+                                    if (com.inscriptos_semanales.length > 0)
+                                        return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
+                                }
+                                )}
 
-            
-            {
-                listaComisiones.map(com => {
-                if (com.inscriptos_semanales.length > 0)
-                    return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
-            }
-            )}
-        </>}
+                            </TableBody>
+                    </Table>
+                    </TableContainer>
+                </Box>}
         {!cargando && listaComisiones.length <= 0 &&
         <>
-            <Box sx={{ display: 'flex' }} ><Typography sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5 }}>{textoMensaje}</Typography></Box>
+            <Box sx={{ display: 'flex' }} ><Typography fontWeight={400} variant="h6" color="gray" textAlign="center" component="h3" gutterBottom sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5  }}>{textoMensaje}</Typography></Box>
         </>}
         </Box>
     )
@@ -217,23 +221,9 @@ const ListadoComisiones = (props) => {
 }
 const Comision = ({ comision, handleGrafica }) => {
     return (
-        <Box
-            sx={{
-                padding: "8px",
-                gap: '8px',
-                display: 'flex',
-                '&:nth-of-type(odd)': {
-                    backgroundColor: '#f9f9f9',
-                },
-                '&:nth-of-type(even)': {
-                    backgroundColor: '#ffffff'
-                },
-            }}
-        >
-
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre_curso}</Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.cantidad_inscriptos}</Typography>
+        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
+            <TableCell align="left">{comision.nombre_curso}</TableCell>
+            <TableCell align="center">{comision.cantidad_inscriptos}</TableCell>
             {comision.inscriptos_semanales.map(s => {
                 const porcentaje = s.porcentajeAlumnos
                 let colorFondo = "#e5fae2"
@@ -243,11 +233,10 @@ const Comision = ({ comision, handleGrafica }) => {
                 else if(porcentaje < 50){
                     colorFondo ="#ffeeee"
                 }
-                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center', backgroundColor:colorFondo }}>{s.cantidadAlumnos}</Typography>
+                return <TableCell align="center" sx={{backgroundColor:colorFondo}}>{s.cantidadAlumnos}</TableCell>
             })}
-            <Button sx={{ maxWidth: '2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button>
-
-        </Box>
+            <TableCell align="left"><Button sx={{ maxWidth: '2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
+        </TableRow>
 
     )
 }
@@ -456,7 +445,7 @@ export default function AsistenciaCursadas() {
             </Typography>
                     <DatosMateria comision={comisionActual} />
                 </Box>
-                <Box sx={{ width: '99%', paddingRight: '1%', height: '20rem', marginBottom: 5, marginTop:'40px' }}>
+                <Box sx={{ width: '99%', paddingRight: '1%', height: '20rem', marginBottom: "120px", marginTop:'40px' }}>
                     <Grafico mostrarGraficoComision={mostrarGraficoComision} setMostrarGraficoComision={setMostrarGraficoComision} datosComision={comisionActual.inscriptos_semanales} comisiones={comisiones} datosComisiones={dataComisiones}/>
                 </Box>
 
