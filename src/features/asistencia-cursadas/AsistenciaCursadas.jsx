@@ -180,23 +180,23 @@ const ListadoComisiones = (props) => {
     const { listaComisiones, cargando, setComisionActual, textoMensaje } = props
     return (
         <Box sx={{
-            width: '85%'
+            width: '80%'
         }}>
             {cargando && <AsistenciaLoader text="Buscando asistencia..."></AsistenciaLoader>}
             {!cargando && listaComisiones.length != 0 &&
  
                     <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
                     {/*Datos de la carrera*/}
-                    <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1 ,width: '100%'}}>
-                        <Table sx={{ width: '100%' }} aria-label="simple table">
+                    <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1}}>
+                        <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="left">Comisión</TableCell>
                                     <TableCell align="center">Inscriptos</TableCell>
                                     {
-                                        range(16,1).map(num => {return <TableCell align="right">{"Sem." + num}</TableCell>})
+                                        range(16,1).map(num => {return <TableCell sx={{"white-space": "nowrap"}}>{"Sem." + num}</TableCell>})
                                     }
-                                    <TableCell align="left">Gráfico</TableCell>
+                                    <TableCell sx={{maxWidth:"2%"}} align="left">Gráfico</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -208,7 +208,7 @@ const ListadoComisiones = (props) => {
                                 )}
 
                             </TableBody>
-                    </Table>
+                        </Table>
                     </TableContainer>
                 </Box>}
         {!cargando && listaComisiones.length <= 0 &&
@@ -222,8 +222,8 @@ const ListadoComisiones = (props) => {
 const Comision = ({ comision, handleGrafica }) => {
     return (
         <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
-            <TableCell align="left">{comision.nombre_curso}</TableCell>
-            <TableCell align="center">{comision.cantidad_inscriptos}</TableCell>
+            <TableCell align="left"><Typography>{comision.nombre_curso}</Typography></TableCell>
+            <TableCell align="center"><Typography>{comision.cantidad_inscriptos}</Typography></TableCell>
             {comision.inscriptos_semanales.map(s => {
                 const porcentaje = s.porcentajeAlumnos
                 let colorFondo = "#e5fae2"
@@ -233,9 +233,9 @@ const Comision = ({ comision, handleGrafica }) => {
                 else if(porcentaje < 50){
                     colorFondo ="#ffeeee"
                 }
-                return <TableCell align="center" sx={{backgroundColor:colorFondo}}>{s.cantidadAlumnos}</TableCell>
+                return <TableCell align="center" sx={{backgroundColor:colorFondo}}><Typography>{s.cantidadAlumnos}</Typography></TableCell>
             })}
-            <TableCell align="left"><Button sx={{ maxWidth: '2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
+            <TableCell align="center"><Button sx={{maxWidth:"2%"}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
         </TableRow>
 
     )

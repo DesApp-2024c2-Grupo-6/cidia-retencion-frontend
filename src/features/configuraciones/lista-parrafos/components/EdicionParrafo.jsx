@@ -372,9 +372,9 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                 margin: '20px 0 auto',
             }}
         >
-            <TextField label="Clave" value={parrafo.key} onChange={handleKeyChange} variant="outlined" fullWidth />
-            <TextField label="Texto" value={parrafo.text.join('\n')} onChange={handleTextChange} variant="outlined" fullWidth multiline rows={4} />
-            <Stack id='smar' sx={{}}>
+            <TextField label="Clave" sx={{ backgroundColor: 'white' }} value={parrafo.key} onChange={handleKeyChange} variant="outlined" fullWidth />
+            <TextField label="Texto" sx={{ backgroundColor: 'white' }} value={parrafo.text.join('\n')} onChange={handleTextChange} variant="outlined" fullWidth multiline rows={4} />
+            <Stack id='smar'>
                 <Autocomplete
                     multiple
                     id="condiciones-select"
@@ -382,7 +382,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                     value={codigosCondicionSeleccionados}
                     onChange={handleCondicionesChange}
                     renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, backgroundColor: 'white' }}
                     getOptionDisabled={getCodigosDeshabilitados}
                 />
                 <Box sx={{ mt: 2, width: '100%' }}>
