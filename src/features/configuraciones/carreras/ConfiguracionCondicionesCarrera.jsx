@@ -469,7 +469,7 @@ function ConfiguracionCondicionCarrera() {
                 }}>
                 <Box
                     sx={{
-                        maxWidth: '750px',
+                        maxWidth: '750px'
                     }}>
                     <Box
                         sx={{
@@ -745,7 +745,7 @@ function ConfiguracionCondicionCarrera() {
                             bgcolor: 'background.default',
 
                         }}>
-                            <TableContainer component={Paper} sx={{ maxHeight: '450px', border: '1px #E4E4E4 solid' }} >
+                            <TableContainer component={Paper} sx={{ width:"100%", maxWidth:"800px",maxHeight: '450px', border: '1px #E4E4E4 solid' }} >
                                 <Table stickyHeader aria-label="simple table">
                                     <TableHead>
                                         <TableRow sx={{ backgroundColor: '' }}>
@@ -779,7 +779,7 @@ function ConfiguracionCondicionCarrera() {
                                                         <TableCell component="th" scope="row" align="center">
                                                             {row.anio}
                                                         </TableCell>
-                                                        <TableCell align="center">{typeof row.materia === 'number'? materiasList.find(materia => materia.value == row.materia).label : row.materia}</TableCell>
+                                                        <TableCell align="center">{typeof row.materia === 'number' && materiasList.length > 0 ? materiasList.find(materia => materia.value == row.materia).label : row.materia}</TableCell>
                                                         <TableCell align="center">{row.codigo_condicion}</TableCell>
                                                         <TableCell align="center">
                                                             {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
