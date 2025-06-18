@@ -36,7 +36,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex',backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -57,7 +57,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%',backgroundColor: 'white' }}
                         value={carrerasSeleccionadas}
                         multiple
                         options={carrerasData}
@@ -91,7 +91,7 @@ const FormCantAprobadas = ({ condicionData, handleConfiguracionCondicionChange }
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex',backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -104,7 +104,7 @@ const FormCantAprobadas = ({ condicionData, handleConfiguracionCondicionChange }
                     <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{CODIGO}</Typography>
                 </Box>
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} />
+                    <TextField sx={{backgroundColor: 'white'}} type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} />
                 </Box>
             </Box>
         </Box>
@@ -144,7 +144,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex', backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -165,7 +165,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%',backgroundColor: 'white' }}
                         value={materiasSeleccionadas}
                         multiple
                         options={materiasData}
@@ -178,7 +178,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                     />
                 </Box>
                 <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} sx={{ width: '100%' }} />
+                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} sx={{ width: '100%',backgroundColor: 'white' }} />
                 </Box>
             </Box>
         </Box>

@@ -85,7 +85,7 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                     : (
                         <>{/*EditarFilaMateriaComun -> Teniamos problemas si lo renderizamos en su propio hook como hicimos mas arriba*/}
                             <Autocomplete
-                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'bold', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
+                                sx={{ flex: 1, backgroundColor:"white", textAlign: 'center', margin: 'auto', fontWeight: 'bold', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
                                 disablePortal
                                 disableClearable
                                 options={materiasDisponibles}
@@ -97,7 +97,7 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
                                 renderInput={(params) => <TextField {...params} label="" sx={{ fontSize: 'small' }} />}
                             />
                             <Input
-                                sx={{ flex: 1, textAlign: 'center', margin: 'auto', fontWeight: 'medium', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
+                                sx={{ flex: 1, backgroundColor:"white", textAlign: 'center', margin: 'auto', fontWeight: 'medium', fontSize: 'small', "& .MuiInputBase-root": { height: "30px" }, paddingLeft: "4px" }}
                                 aria-label="Input Special name"
                                 placeholder="Ingrese el nombre especial"
                                 value={materiaEditada.name}

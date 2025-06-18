@@ -43,6 +43,7 @@ const MateriasFake = ({ materias, editarDatosGenerales, materiasFakeData }) => {
                 <Stack id="smar" spacing={3}>
                     <Autocomplete
                         multiple
+                        sx={{backgroundColor:"white"}}
                         id="select-fake"
                         options={materias}
                         value={materias.filter(materia => materiasFakeData.includes(materia.id))}

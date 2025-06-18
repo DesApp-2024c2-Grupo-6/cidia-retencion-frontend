@@ -191,7 +191,7 @@ const ListadoComisiones = (props) => {
                     <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
                     {/*Datos de la carrera*/}
                     <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1}}>
-                        <Table aria-label="simple table">
+                        <Table sx={{ minWidth: 1200 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="left">Comisión</TableCell>

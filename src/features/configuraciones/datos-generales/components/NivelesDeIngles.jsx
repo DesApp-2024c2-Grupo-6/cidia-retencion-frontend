@@ -44,6 +44,7 @@ const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) =>
                 <Stack id="smar" spacing={3}>
                     <Autocomplete
                         multiple
+                        sx={{backgroundColor:"white"}}
                         id="select-ingles"
                         options={materias}
                         value={materias.filter(materia => nivelesInglesData.includes(materia.id))}

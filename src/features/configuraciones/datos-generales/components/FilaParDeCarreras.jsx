@@ -69,7 +69,7 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
         return (
             <>
                 <Autocomplete
-                    sx={{ flex: 1, textAlign: 'center',margin:'auto', fontWeight: 'bold', fontSize: 'small',  "& .MuiInputBase-root": { height: "30px"}, paddingLeft:"4px" }}
+                    sx={{ flex: 1, backgroundColor:"white", textAlign: 'center',margin:'auto', fontWeight: 'bold', fontSize: 'small',  "& .MuiInputBase-root": { height: "30px"}, paddingLeft:"4px" }}
                     disablePortal
                     disableClearable
                     options={carrerasDisponibles}
@@ -81,7 +81,7 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
                     renderInput={(params) => <TextField {...params} label="" sx={{fontSize:'small'}}  />}
                 />
                 <Autocomplete
-                    sx={{ flex: 1, textAlign: 'center', margin:'auto', fontWeight: 'bold', fontSize: 'small',  "& .MuiInputBase-root": { height: "30px" }, paddingLeft:"4px" }}
+                    sx={{ flex: 1, backgroundColor:"white", textAlign: 'center', margin:'auto', fontWeight: 'bold', fontSize: 'small',  "& .MuiInputBase-root": { height: "30px" }, paddingLeft:"4px" }}
                     disablePortal
                     disableClearable
                     value={parCarrerasEditadas.longCareer}
