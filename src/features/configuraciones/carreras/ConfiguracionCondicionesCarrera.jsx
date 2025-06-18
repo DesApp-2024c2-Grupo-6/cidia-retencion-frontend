@@ -58,7 +58,7 @@ function ConfiguracionCondicionCarrera() {
     const IdCarrera = useSelector((state) => state.carrera.IdCarrera);
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
     const idPlan = useSelector((state) => state.carrera.IdPlan);
-
+    const [materiasList, setMateriasList] = useState([]);
 
     useEffect(() => {
         if (IdCarrera == null || IdCarrera == "" ||idPlan == null || idPlan == "") {
@@ -88,8 +88,13 @@ function ConfiguracionCondicionCarrera() {
                     .map((c, index) => {
                         let configCondicion;
                         let nobj = c;
-                        if (c.codigo_condicion === "MATERIAS-ESPECIFICAS") {
-                            configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? m : m + " - ").join("");
+                        let nombreMateria;
+                        if(c.id_materia && materiasList.length > 0){
+                            let materia = materiasList.find(m => m.value == c.id_materia)
+                            nombreMateria = materia.label
+                        }
+                        if (c.codigo_condicion === "MATERIAS-ESPECIFICAS" && materiasList.length > 0) {
+                            configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? materiasList.find(materia => materia.value == m).label : materiasList.find(materia => materia.value == m).label + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
                             configCondicion = `Año: ${c.config_condicion.anio} ${c.config_condicion.salvo_cantidad != null ? "- Cantidad: " + c.config_condicion.salvo_cantidad : ""} `;
                         } else if (c.codigo_condicion === "CAMPOS-COMPLETOS") {
@@ -101,9 +106,8 @@ function ConfiguracionCondicionCarrera() {
                         } else {
                             configCondicion = "-";
                         }
-                        return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion, nobj);
+                        return createData(index, c.id_carrera, c.anio ?? "-", c.id_materia ?? "-", c.codigo_condicion ?? "-", configCondicion, nobj,nombreMateria ?? c.id_materia ?? "-");
                     });
-
                 setCondicionesList(lista);
             } else {
                 setMessage({
@@ -113,7 +117,7 @@ function ConfiguracionCondicionCarrera() {
             }
         }
         obtenerCondicionesSugestionUse();
-    }, [actualizarTablaCondiciones]);
+    }, [actualizarTablaCondiciones,materiasList]);
 
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
 
@@ -149,7 +153,7 @@ function ConfiguracionCondicionCarrera() {
 
     }, [])
 
-    const [materiasList, setMateriasList] = useState([]);
+
     const [materiasCondicionList, setMateriasCondicionList] = useState([]);
 
     //Traer todas las materias desde la API
@@ -465,7 +469,7 @@ function ConfiguracionCondicionCarrera() {
                 }}>
                 <Box
                     sx={{
-                        maxWidth: '500px',
+                        maxWidth: '750px',
                     }}>
                     <Box
                         sx={{
@@ -741,7 +745,7 @@ function ConfiguracionCondicionCarrera() {
                             bgcolor: 'background.default',
 
                         }}>
-                            <TableContainer component={Paper} sx={{ maxHeight: '350px', border: '1px #E4E4E4 solid' }} >
+                            <TableContainer component={Paper} sx={{ maxHeight: '450px', border: '1px #E4E4E4 solid' }} >
                                 <Table stickyHeader aria-label="simple table">
                                     <TableHead>
                                         <TableRow sx={{ backgroundColor: '' }}>
@@ -775,7 +779,7 @@ function ConfiguracionCondicionCarrera() {
                                                         <TableCell component="th" scope="row" align="center">
                                                             {row.anio}
                                                         </TableCell>
-                                                        <TableCell align="center">{row.materia}</TableCell>
+                                                        <TableCell align="center">{typeof row.materia === 'number'? materiasList.find(materia => materia.value == row.materia).label : row.materia}</TableCell>
                                                         <TableCell align="center">{row.codigo_condicion}</TableCell>
                                                         <TableCell align="center">
                                                             {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
