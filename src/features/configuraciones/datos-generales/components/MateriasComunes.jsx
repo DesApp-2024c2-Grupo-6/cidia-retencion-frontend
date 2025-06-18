@@ -90,7 +90,9 @@ function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatos
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
                 marginTop: 8,
-                marginBottom: 3
+                marginBottom: 3,
+                width: '100%',
+                padding: 2,
             }}>
                 <ConfirmarBorrado
                     openBorrado={openBorrado}
@@ -101,8 +103,8 @@ function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatos
                 </ConfirmarBorrado>
                 {/*Materias comunes*/}
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     marginBottom: '10px',
                     display: 'flex',
                     alignItems: 'center',
@@ -121,8 +123,8 @@ function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatos
                     </IconButton>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '8px',
@@ -135,8 +137,8 @@ function MateriasComunes({ materiasComunesData, materiasGuaraniData, editarDatos
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small' }}></Typography>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                 }}>
                     {
                         materiasComunes.map((materia) =>

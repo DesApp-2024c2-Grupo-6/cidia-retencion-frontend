@@ -112,7 +112,10 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
                 marginTop: 8,
-                marginBottom: 3
+                marginBottom: 3,
+                width: '100%',
+                padding: 2,
+
             }}>
                 <ConfirmarBorrado
                     openBorrado={openBorrado}
@@ -123,8 +126,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                 </ConfirmarBorrado>
                 {/*Pares de carreras*/}
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     marginBottom: '10px',
                     display: 'flex',
                     alignItems: 'center',
@@ -159,8 +162,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                     </Box>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '8px',
@@ -173,8 +176,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small'}}></Typography>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                 }}>
                     {
                         paresCarreras.map((parCarreras) =>

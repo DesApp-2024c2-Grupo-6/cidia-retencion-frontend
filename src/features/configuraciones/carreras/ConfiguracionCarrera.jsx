@@ -135,6 +135,7 @@ function ConfiguracionCarrera() {
             <Box sx={{
 
                 display: 'flex',
+                width: '100%',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -151,7 +152,7 @@ function ConfiguracionCarrera() {
                 <Box
                     sx={{display: 'flex', flexDirection: 'column'}}>
                     <Box
-                        sx={{display: 'flex'}}>
+                        sx={{display: 'flex', width: '100%', maxWidth:1000, flexDirection:{xs: 'row', md: 'columm'}}}>
                         <MateriasEspeciales 
                             isEdit={isEdit}
                             title={"MATERIAS UNAHUR"} 
@@ -185,7 +186,8 @@ function ConfiguracionCarrera() {
                             sx={
                                 {
                                     display: 'flex',
-                                    justifyContent: 'space-between',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'center',
                                     gap: '20px', 
                                     margin: '15px 15px 15px 15px', 
                                     boxShadow: 'none'

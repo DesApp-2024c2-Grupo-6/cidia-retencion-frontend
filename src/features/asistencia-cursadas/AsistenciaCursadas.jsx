@@ -114,8 +114,9 @@ const SeleccionCursada = (props) => {
                 justifyContent: "space-between",
                 alignItems: "stretch",
                 marginBottom: 2,
-                width:"75%",
-                margin:'auto'
+                padding: 2,
+                width:{sm:"100%",  md:'75%'},
+                margin:'auto',
             }}>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
@@ -156,8 +157,7 @@ const SeleccionCursada = (props) => {
 
             <Button
                 sx={{
-                    width: '15%',
-                    
+                    width: 'auto',
                     display: "flex", justifyContent: "center", alignItems: "center",
                     backgroundColor: theme.palette.primary.main,
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -267,15 +267,15 @@ const DatosMateria = (props) => {
             }}>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Inscriptos totales: </Typography>
-                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.cantidad_inscriptos || "No hay comisión seleccionada"}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.cantidad_inscriptos || "No hay comisión seleccionada"}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Materia: </Typography>
-                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.nombre_materia || "No hay comisión seleccionada"}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.nombre_materia || "No hay comisión seleccionada"}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Comisión: </Typography>
-                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.nombre_curso || "No hay comisión seleccionada"}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.nombre_curso || "No hay comisión seleccionada"}</Typography>
             </Stack>
         </Stack>
     )

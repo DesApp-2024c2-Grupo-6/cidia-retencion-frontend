@@ -68,8 +68,7 @@ function FilaMateriaComun({ materiaComunData, materiasDisponibles, editarMateria
 
     return (
         <Box sx={{
-            width: '1000px',
-            minWidth: '250px',
+            width: '100%',
             display: 'flex',
             gap: '10px',
             justifyContent: 'space-between',

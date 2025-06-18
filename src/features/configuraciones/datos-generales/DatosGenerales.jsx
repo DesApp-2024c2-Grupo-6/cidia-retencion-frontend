@@ -16,6 +16,7 @@ import { getGeneralAcademicData, updateGeneralAcademicData } from '@services/Gen
 
 //Utils
 import { isEqual } from 'lodash';
+import { Box } from '@mui/material';
 
 
 function FormDatosGenerales({ carrerasData, materiasData }) {
@@ -25,7 +26,6 @@ function FormDatosGenerales({ carrerasData, materiasData }) {
   carrerasData.sort((a,b) => a.nombre.localeCompare(b.nombre))
   const [datosGenerales, setDatosGenerales] = useState(DATOS_VACIOS)
   const [datosGeneralesSinEditar, setDatosGeneralesSinEditar] = useState(DATOS_VACIOS)
-  const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasData)
   const [estanLosDatosCargados, setEstanLosDatosCargados] = useState(false)
   const [seGuardaronLosDatos, setSeGuardaronLosDatos] = useState(false)
 
@@ -98,7 +98,7 @@ function FormDatosGenerales({ carrerasData, materiasData }) {
   }
 
   return (
-    <>
+    <Box sx={{width: '100%', maxWidth: 1200, margin:'auto'}}>
       {estanLosDatosCargados &&
         <ParesDeCarreras
           paresCarrerasData={datosGenerales.careerPairs}
@@ -132,7 +132,7 @@ function FormDatosGenerales({ carrerasData, materiasData }) {
         />
       }
 
-    </>
+    </Box>
   );
 }
 

@@ -157,6 +157,7 @@ function ConfiguracionMaterias() {
         width: '100%',
         maxWidth: '1000px',
         margin: 'auto',
+        padding: 2,
         marginTop: 3,
         borderRadius: '4px',
         overflow: 'hidden',
@@ -164,8 +165,8 @@ function ConfiguracionMaterias() {
     >
       <ConfirmarBorrado openBorrado={openBorrado} setDeleted={setDeleted} handleCloseBorrado={handleCloseBorrado} funcionEliminar={handleOnClickDelete} elementoAEliminar={materiaABorrar} textoBorrado="¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
       <Box sx={{
-        width: '1000px',
-        minWidth: '250px',
+        width: '100%',
+        maxWidth: '1000px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

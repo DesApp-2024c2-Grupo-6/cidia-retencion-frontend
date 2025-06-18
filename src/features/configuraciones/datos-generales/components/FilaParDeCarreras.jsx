@@ -109,9 +109,10 @@ function FilaParDeCarreras({ parDeCarrerasData, carrerasDisponibles, editarParDe
     }
     return (
         <Box sx={{
-            width: '1000px',
-            minWidth: '250px',
+            width: '100%',
+            padding: 1,
             display: 'flex',
+            flexWrap: 'wrap',
             gap:'10px',
             justifyContent: 'space-between',
             borderBottom: 'solid',
