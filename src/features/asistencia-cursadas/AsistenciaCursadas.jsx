@@ -247,6 +247,7 @@ const Comision = ({ comision, handleGrafica }) => {
 }
 const DatosMateria = (props) => {
     const { comision } = props
+
     const theme = useTheme();
     return (
         <Stack
@@ -266,15 +267,15 @@ const DatosMateria = (props) => {
             }}>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Inscriptos totales: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.cantidad_inscriptos}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.cantidad_inscriptos || "No hay comisión seleccionada"}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Materia: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_materia}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.nombre_materia || "No hay comisión seleccionada"}</Typography>
             </Stack>
             <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Comisión: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_curso}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.success.main, fontWeight: 500 }}>{comision.nombre_curso || "No hay comisión seleccionada"}</Typography>
             </Stack>
         </Stack>
     )
