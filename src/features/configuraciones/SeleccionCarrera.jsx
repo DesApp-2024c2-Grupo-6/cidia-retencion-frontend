@@ -259,7 +259,7 @@ function SeleccionCarrera() {
                 >
                     <Box sx={styleModal}>
                         <Typography id="modal-modal-title" variant="h6" component="h2" sx={{marginLeft: '2px'}}>
-                            Registrar Carrera
+                            Registrar carrera por plan de estudio
                         </Typography>
                         <FormControl fullWidth
                             component="form"
