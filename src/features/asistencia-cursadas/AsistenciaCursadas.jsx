@@ -114,7 +114,8 @@ const SeleccionCursada = (props) => {
                 justifyContent: "space-between",
                 alignItems: "stretch",
                 marginBottom: 2,
-                width:"85%"
+                width:"75%",
+                margin:'auto'
             }}>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
@@ -180,7 +181,9 @@ const ListadoComisiones = (props) => {
     const { listaComisiones, cargando, setComisionActual, textoMensaje } = props
     return (
         <Box sx={{
-            width: '80%'
+            width: '90%',
+            margin:'auto',
+            marginTop: 5
         }}>
             {cargando && <AsistenciaLoader text="Buscando asistencia..."></AsistenciaLoader>}
             {!cargando && listaComisiones.length != 0 &&
@@ -196,7 +199,7 @@ const ListadoComisiones = (props) => {
                                     {
                                         range(16,1).map(num => {return <TableCell sx={{"white-space": "nowrap"}}>{"Sem." + num}</TableCell>})
                                     }
-                                    <TableCell sx={{maxWidth:"2%"}} align="left">Gráfico</TableCell>
+                                    <TableCell align="center">Gráfico</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -220,10 +223,12 @@ const ListadoComisiones = (props) => {
 
 }
 const Comision = ({ comision, handleGrafica }) => {
+    const theme = useTheme();
+
     return (
-        <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#FFFFFF" }}>
-            <TableCell align="left"><Typography>{comision.nombre_curso}</Typography></TableCell>
-            <TableCell align="center"><Typography>{comision.cantidad_inscriptos}</Typography></TableCell>
+        <TableRow sx={{ '&:last-child td, &:last-child th': {}, backgroundColor: "#FFFFFF" }}>
+            <TableCell align="left" sx={{borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{comision.nombre_curso}</Typography></TableCell>
+            <TableCell align="center" sx={{borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{comision.cantidad_inscriptos}</Typography></TableCell>
             {comision.inscriptos_semanales.map(s => {
                 const porcentaje = s.porcentajeAlumnos
                 let colorFondo = "#e5fae2"
@@ -233,9 +238,9 @@ const Comision = ({ comision, handleGrafica }) => {
                 else if(porcentaje < 50){
                     colorFondo ="#ffeeee"
                 }
-                return <TableCell align="center" sx={{backgroundColor:colorFondo}}><Typography>{s.cantidadAlumnos}</Typography></TableCell>
+                return <TableCell align="center" sx={{backgroundColor:colorFondo, borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{s.cantidadAlumnos}</Typography></TableCell>
             })}
-            <TableCell align="center"><Button sx={{maxWidth:"2%"}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
+            <TableCell align="center"><Button sx={{width: 'auto'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
         </TableRow>
 
     )
@@ -255,7 +260,7 @@ const DatosMateria = (props) => {
                 justifyContent: 'space-between',
                 border: 'solid',
                 borderWidth: '1px',
-                borderColor: theme.palette.success.light,
+                borderColor: theme.palette.disabled.main,
                 verticalAlign: 'center',
                 backgroundColor: 'white' 
             }}>
@@ -423,11 +428,8 @@ export default function AsistenciaCursadas() {
     return (
         <Box
             sx={{
-                minWidth: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: "center",
-
+                width: '100%',
+                margin: 'auto'
             }}
             gap={2}
         >
