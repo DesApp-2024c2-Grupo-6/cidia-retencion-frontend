@@ -31,6 +31,7 @@ import { getAllSuggestionConditionUse, createConditionUse, deleteConditionUse } 
 import { getAllSubjectData } from '@services/SubjectDataService';
 import ConfirmarBorrado from '@components/popups/ConfirmarBorrado';
 
+import { useAlert } from '@context/AlertProvider';
 
 function createData(key, id, anio, materia, codigo_condicion, config_condicion, obj) {
     return { key, id, anio, materia, codigo_condicion, config_condicion, obj };
@@ -59,7 +60,7 @@ function ConfiguracionCondicionCarrera() {
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
     const idPlan = useSelector((state) => state.carrera.IdPlan);
     const [materiasList, setMateriasList] = useState([]);
-
+    const { showAlert } = useAlert()
     useEffect(() => {
         if (IdCarrera == null || IdCarrera == "" ||idPlan == null || idPlan == "") {
             navigate('/configuracion/');
@@ -364,6 +365,7 @@ function ConfiguracionCondicionCarrera() {
                 code: postcondicion.status,
                 msg: `Condicion ID ${postcondicion.data.id_carrera} creada correctamente.`
             })
+            showAlert('¡Condición registrada!', 'success')
 
         } else {
             setMessage({
@@ -413,6 +415,7 @@ function ConfiguracionCondicionCarrera() {
                 code: deletecondicion.status,
                 msg: `Se ha eliminado la condición correctamente.`
             })
+            showAlert('Condición eliminada.', 'error')
 
         } else {
             setMessage({
