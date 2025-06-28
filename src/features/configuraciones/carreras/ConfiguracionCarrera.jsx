@@ -16,12 +16,18 @@ import PanelConfiguradorGral from './components/PanelConfiguradorGral'
 import MateriasEspeciales from './components/MateriasEspeciales';
 import { updateOneCareer, getCarreraConPlan } from '@services/CareerService';
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
 function ConfiguracionCarrera() {
     //recupero el store
     const { IdCarrera, nombreCarrera, IdPlan } = useSelector((state) => state.carrera);
     const [isEdit, setIsEdit] = useState(false);
     const [carrera, setCarrera] = useState({}); 
     const [message, setMessage] = useState({codigo: 0, msg:""});
+
+    //Hooks
+    const { showAlert } = useAlert()
 
     const toggleEdit = async() => {
         setIsEdit((prevState) => !prevState); 
@@ -34,6 +40,8 @@ function ConfiguracionCarrera() {
                     code: upCareer.status,
                     msg: `Carrera ID ${upCareer.data.updateCareer.careerId} actualizada correctamente`
                 })
+
+                showAlert('¡Carrera actualizada!', 'success')
                 
             } else{
                 setMessage({
@@ -127,9 +135,9 @@ function ConfiguracionCarrera() {
             <Box sx={{
 
                 display: 'flex',
+                width: '100%',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
                 justifyContent: 'center',
                 marginTop: 3,
                 marginBottom:3
@@ -144,7 +152,7 @@ function ConfiguracionCarrera() {
                 <Box
                     sx={{display: 'flex', flexDirection: 'column'}}>
                     <Box
-                        sx={{display: 'flex'}}>
+                        sx={{display: 'flex', width: '100%', maxWidth:1000, flexDirection:{xs: 'row', md: 'columm'}}}>
                         <MateriasEspeciales 
                             isEdit={isEdit}
                             title={"MATERIAS UNAHUR"} 
@@ -178,7 +186,8 @@ function ConfiguracionCarrera() {
                             sx={
                                 {
                                     display: 'flex',
-                                    justifyContent: 'space-between',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'center',
                                     gap: '20px', 
                                     margin: '15px 15px 15px 15px', 
                                     boxShadow: 'none'

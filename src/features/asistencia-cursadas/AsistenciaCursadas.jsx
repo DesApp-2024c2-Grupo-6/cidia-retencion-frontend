@@ -1,5 +1,6 @@
 //MUI
 import { Box, Autocomplete, TextField, Modal, Typography, Select, MenuItem, FormControl, InputLabel, Stack, Divider, Button,FormGroup,FormControlLabel,Switch } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
@@ -7,13 +8,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 //Recharts
 import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
 //Services
 import { getPeriodos } from '@services/PeriodosService'
 import { getCursosPorMateriaYPeriodo } from '@services/CursosService'
 import { getAllCareerGuaraniConPlanes } from '@services/CareerService';
 import { getAllSubjectsByCareer } from '@services/SubjectDataService'
-
+//Context
+import { useAlert } from '@context/AlertProvider';
 
 function timeout(delay) {
     return new Promise(res => setTimeout(res, delay));
@@ -40,37 +41,69 @@ const comisionHolder = {
     ],
 
 }
+const AsistenciaLoader = ({ text }) => {
+    const theme = useTheme()
+    return (
+        <Box sx={{ width: '100%', textAlign: 'center', padding: 10, marginBottom: 4 }}>
+            <CircularProgress sx={{ marginBottom: 5 }} size={70} />
+            <Typography color={theme.palette.primary.main} fontWeight={500} variant="h6" component="h3" gutterBottom>
+                {text}
+            </Typography>
 
+        </Box>
+   )
+}
+function range(size, startAt = 0) {
+    return [...Array(size).keys()].map(i => i + startAt);
+}
 
 const SeleccionCursada = (props) => {
+    const { showAlert } = useAlert()
     const [materiaActual, setMateriaActual] = useState(0)
     const [periodoActual, setPeriodoActual] = useState({ periodoId: 0 })
-    const [cambioCarrera,setCambioCarrea] = useState(false)
+    const [cambioCarrera,setCambioCarrera] = useState(false)
     const theme = useTheme();
-    const { handleDataComision,handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando } = props
+    const { handleDataComision,handleComision, listaPeriodos, listaCarreras, listaMaterias, handleCarrera, handleComisiones, carreraActual, cargando, setCargando, handleMensaje } = props
     const buscarComisiones = async () => {
         handleComisiones([])
         handleComision(comisionHolder)
-        setCargando(true)
-        const comisiones = await getCursosPorMateriaYPeriodo(materiaActual, periodoActual.periodoId)
-        await timeout(700)
-        if (comisiones.data) {
-            handleComisiones(comisiones.data.cursos)
-            const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
-            comisiones.data.cursos.forEach(curso =>{
-                if(curso.inscriptos_semanales.length > 0){
-                    dataComisiones.forEach(semana=>{
-                        semana[curso.nombre_curso] = curso.inscriptos_semanales[dataComisiones.indexOf(semana)].porcentajeAlumnos
-                    })
-                }
-                
-            })
-            handleDataComision(dataComisiones)
+        try{
+            setCargando(true)
+            
+            const comisiones = await getCursosPorMateriaYPeriodo(materiaActual, periodoActual.periodoId)
+            await timeout(700)
+
+            if (comisiones.data) {
+
+                handleMensaje("Seleccione un periodo y una materia.")
+                handleComisiones(comisiones.data.cursos)
+                const dataComisiones =[{name: 'Semana 1'},{name: 'Semana 2'},{name: 'Semana 3'},{name: 'Semana 4'},{name: 'Semana 5'},{name: 'Semana 6'},{name: 'Semana 7'},{name: 'Semana 8'},{name: 'Semana 9'},{name: 'Semana 10'},{name: 'Semana 11'},{name: 'Semana 12'},{name: 'Semana 13'},{name: 'Semana 14'},{name: 'Semana 15'},{name: 'Semana 16'}]
+                comisiones.data.cursos.forEach(curso =>{
+                    if(curso.inscriptos_semanales.length > 0){
+                        dataComisiones.forEach(semana=>{
+                            semana[curso.nombre_curso] = curso.inscriptos_semanales[dataComisiones.indexOf(semana)].porcentajeAlumnos
+                        })
+                    }
+                    
+                })
+                handleDataComision(dataComisiones)
+                showAlert('Datos de asistencia cargados con éxito', 'success')
+            }
+            else {
+                handleComisiones([])
+                showAlert('No se encontraron datos de asistencia en el periodo seleccionado', 'info')
+                handleMensaje("No se encontraron comisiones.")
+            }
         }
-        else {
-            handleComisiones([])
+        catch{
+                setRequestStatus({ ...requestStatus, error: err })
+                showAlert('Error: No se pudieron generar los datos de asistencia del periodo', 'info')
         }
-        setCargando(false)
+        finally{
+            setCargando(false)
+        }
+        
+       
     }
 
     return (
@@ -81,32 +114,34 @@ const SeleccionCursada = (props) => {
                 justifyContent: "space-between",
                 alignItems: "stretch",
                 marginBottom: 2,
-                width:"85%"
+                padding: 2,
+                width:{sm:"100%",  md:'75%'},
+                margin:'auto',
             }}>
             <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
                 <Autocomplete
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
                     disableClearable
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', backgroundColor: 'white' }}
                     options={listaPeriodos}
                     className={'selectPeriodoLectivo'}
                     onChange={(event, newValue) => { setPeriodoActual(newValue.value) }}
                     renderInput={(params) => <TextField {...params} label="Periodo" sx={{ height: '55px' }} />}
                 />
             </Stack>
-            <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
+            <Stack id="smar" sx={{ width: "30%" ,backgroundColor: 'white' }} spacing={3}>
                 <Autocomplete
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
                     disableClearable
                     options={listaCarreras}
                     className={'selectCarrera'}
-                    onChange={(event, newValue) => { setCambioCarrea(!cambioCarrera); handleCarrera(newValue.value) }}
+                    onChange={(event, newValue) => { setCambioCarrera(!cambioCarrera); handleCarrera(newValue.value) }}
                     renderInput={(params) => <TextField {...params} label="Carrera" sx={{ height: '55px' }} />}
                 />
             </Stack>
-            <Stack id="smar" sx={{ width: "30%" }} spacing={3}>
+            <Stack id="smar" sx={{ width: "30%", backgroundColor: 'white'  }} spacing={3}>
                 <Autocomplete
                     isOptionEqualToValue={(option, value) => option.id === value.id}
                     disablePortal
@@ -122,8 +157,7 @@ const SeleccionCursada = (props) => {
 
             <Button
                 sx={{
-                    width: '15%',
-                    
+                    width: 'auto',
                     display: "flex", justifyContent: "center", alignItems: "center",
                     backgroundColor: theme.palette.primary.main,
                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -144,86 +178,57 @@ const SeleccionCursada = (props) => {
 
 const ListadoComisiones = (props) => {
     const theme = useTheme();
-    const { listaComisiones, cargando, setComisionActual } = props
+    const { listaComisiones, cargando, setComisionActual, textoMensaje } = props
     return (
         <Box sx={{
-            width: '85%'
+            width: '90%',
+            margin:'auto',
+            marginTop: 5
         }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: '8px',
-                    backgroundColor: theme.palette.success.main,
-                    padding: '8px',
-                }}
-            >
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Comisión</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}></Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Inscriptos</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 1</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 2</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 3</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 4</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 5</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 6</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 7</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 8</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 9</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 10</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 11</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 12</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 13</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 14</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 15</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Sem. 16</Typography>
-                <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', color: '#FFFFFF', alignContent: 'center' }}>Gráfico</Typography>
-            </Box>
+            {cargando && <AsistenciaLoader text="Buscando asistencia..."></AsistenciaLoader>}
+            {!cargando && listaComisiones.length != 0 &&
+ 
+                    <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
+                    {/*Datos de la carrera*/}
+                    <TableContainer component={Paper} sx={{ padding: 0, borderRadius: 0, borderTop: 1, borderColor: theme.palette.disabled.main, borderWidth: 1}}>
+                        <Table sx={{ minWidth: 1200 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="left">Comisión</TableCell>
+                                    <TableCell align="center">Inscriptos</TableCell>
+                                    {
+                                        range(16,1).map(num => {return <TableCell sx={{"white-space": "nowrap"}}>{"Sem." + num}</TableCell>})
+                                    }
+                                    <TableCell align="center">Gráfico</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    listaComisiones.map(com => {
+                                    if (com.inscriptos_semanales.length > 0)
+                                        return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
+                                }
+                                )}
 
-            {cargando &&
-                <Box
-                    sx={{
-                        width: "100%",
-                        display: 'flex',
-                        justifyContent: 'center',
-                        gap: '8px',
-                        backgroundColor: "ffffff",
-                        padding: '8px',
-                    }}>
-                    <CircularProgress />
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </Box>}
-
-            {!cargando && listaComisiones.length == 0 && <Box sx={{ display: 'flex' }} ><Typography sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5 }}>No se encontraron comisiones</Typography></Box>}
-            {
-            
-                listaComisiones.map(com => {
-                if (com.inscriptos_semanales.length > 0)
-                    return <Comision comision={com} handleGrafica={setComisionActual}></Comision>
-            }
-            )}
-
+        {!cargando && listaComisiones.length <= 0 &&
+        <>
+            <Box sx={{ display: 'flex' }} ><Typography fontWeight={400} variant="h6" color="gray" textAlign="center" component="h3" gutterBottom sx={{ flex: 1, textAlign: 'center', color: '#777777', alignContent: 'center', padding: 5  }}>{textoMensaje}</Typography></Box>
+        </>}
         </Box>
     )
 
 }
 const Comision = ({ comision, handleGrafica }) => {
-    return (
-        <Box
-            sx={{
-                padding: "8px",
-                gap: '8px',
-                display: 'flex',
-                '&:nth-of-type(odd)': {
-                    backgroundColor: '#f9f9f9',
-                },
-                '&:nth-of-type(even)': {
-                    backgroundColor: '#ffffff'
-                },
-            }}
-        >
+    const theme = useTheme();
 
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.nombre_curso}</Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}></Typography>
-            <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center' }}>{comision.cantidad_inscriptos}</Typography>
+    return (
+        <TableRow sx={{ '&:last-child td, &:last-child th': {}, backgroundColor: "#FFFFFF" }}>
+            <TableCell align="left" sx={{borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{comision.nombre_curso}</Typography></TableCell>
+            <TableCell align="center" sx={{borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{comision.cantidad_inscriptos}</Typography></TableCell>
             {comision.inscriptos_semanales.map(s => {
                 const porcentaje = s.porcentajeAlumnos
                 let colorFondo = "#e5fae2"
@@ -233,16 +238,16 @@ const Comision = ({ comision, handleGrafica }) => {
                 else if(porcentaje < 50){
                     colorFondo ="#ffeeee"
                 }
-                return <Typography sx={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '12px', alignContent: 'center', backgroundColor:colorFondo }}>{s.cantidadAlumnos}</Typography>
+                return <TableCell align="center" sx={{backgroundColor:colorFondo, borderRight: 1, borderColor: theme.palette.disabled.main}}><Typography>{s.cantidadAlumnos}</Typography></TableCell>
             })}
-            <Button sx={{ maxWidth: '2%'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button>
-
-        </Box>
+            <TableCell align="center"><Button sx={{width: 'auto'}} variant="outlined" onClick={() => handleGrafica(comision)}><SsidChartIcon /></Button></TableCell>
+        </TableRow>
 
     )
 }
 const DatosMateria = (props) => {
     const { comision } = props
+
     const theme = useTheme();
     return (
         <Stack
@@ -256,20 +261,21 @@ const DatosMateria = (props) => {
                 justifyContent: 'space-between',
                 border: 'solid',
                 borderWidth: '1px',
-                borderColor: '#dedede',
-                verticalAlign: 'center'
+                borderColor: theme.palette.disabled.main,
+                verticalAlign: 'center',
+                backgroundColor: 'white' 
             }}>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Inscriptos totales: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.cantidad_inscriptos}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.cantidad_inscriptos || "No hay comisión seleccionada"}</Typography>
             </Stack>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Materia: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_materia}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.nombre_materia || "No hay comisión seleccionada"}</Typography>
             </Stack>
-            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 1 }}>
+            <Stack direction="row" spacing={0} sx={{ justifyContent: "space-between", alignItems: "center", padding: 2 }}>
                 <Typography>Comisión: </Typography>
-                <Typography sx={{ color: theme.palette.success.light, fontWeight: 500 }}>{comision.nombre_curso}</Typography>
+                <Typography sx={{ color: (!comision.id_curso) ? theme.palette.disabled.dark : theme.palette.primary.main, fontWeight: 500 }}>{comision.nombre_curso || "No hay comisión seleccionada"}</Typography>
             </Stack>
         </Stack>
     )
@@ -294,7 +300,7 @@ const Grafico = (props) => {
           onChange={handleChangeSwitch}
         />
             {!mostrarGraficoComision &&
-                <LineChart
+                <LineChart id="grafico1"
                     width={500}
                     height={300}
                     data={datosComision}
@@ -310,12 +316,12 @@ const Grafico = (props) => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="cantidadAlumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="porcentajeAlumnos" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="porcentajeAlumnos" name="Porcentaje de asistencia" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="cantidadAlumnos" name="Cantidad de Alumnos" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
             }
             {mostrarGraficoComision &&
-            <LineChart
+            <LineChart id="grafico2"
                 width={500}
                 height={300}
                 data={datosComisiones}
@@ -355,10 +361,13 @@ export default function AsistenciaCursadas() {
     const [comisionActual, setComisionActual] = useState([comisionHolder])
     const [cargando, setCargando] = useState(false)
     const [mostrarGraficoComision,setMostrarGraficoComision] = useState(false)
+    const [textoMensaje,setTextoMensaje] = useState("Seleccione un periodo y una materia")
 
     const handleComisionActual = (comision)=>{
         setComisionActual(comision)
         setMostrarGraficoComision(false)
+        document.getElementById("grafico1")?.scrollIntoView({behavior:"smooth"})
+        document.getElementById("grafico2")?.scrollIntoView({behavior:"smooth"})
     }
     useEffect(() => {
         const obtenerPeriodosLectivos = async () => {
@@ -420,20 +429,18 @@ export default function AsistenciaCursadas() {
     return (
         <Box
             sx={{
-                minWidth: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: "center",
-
+                width: '100%',
+                margin: 'auto'
             }}
             gap={2}
         >
-            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
+            <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '60px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
                 Asistencia a cursadas
             </Typography>
-            <SeleccionCursada handleDataComision = {setDataComisiones} handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} />
-            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={handleComisionActual} />}
+            <SeleccionCursada handleDataComision = {setDataComisiones} handleComision={setComisionActual} cargando={cargando} setCargando={setCargando} listaPeriodos={periodosLectivos} listaCarreras={carreras} listaMaterias={materias} carreraActual={carreraActual} handleCarrera={setCarreraActual} handleComisiones={setComisiones} handleMensaje={setTextoMensaje} />
+            {<ListadoComisiones listaComisiones={comisiones} cargando={cargando} setComisionActual={handleComisionActual} textoMensaje={textoMensaje} />}
 
+            {!cargando && comisiones.length != 0 &&
             <Box sx={{ width: '90%', margin: 'auto', marginTop: '40px' }}>
                 <Box sx={{ marginBottom: 3 }}>
                 <Typography sx={{ textAlign: 'center', marginBottom: '30px', marginTop: '30px', fontWeight: '500' }} variant="h5" component="h1" gutterBottom>
@@ -441,11 +448,11 @@ export default function AsistenciaCursadas() {
             </Typography>
                     <DatosMateria comision={comisionActual} />
                 </Box>
-                <Box sx={{ width: '99%', paddingRight: '1%', height: '20rem', marginBottom: 5, marginTop:'40px' }}>
+                <Box sx={{ width: '99%', paddingRight: '1%', height: '20rem', marginBottom: "120px", marginTop:'40px' }}>
                     <Grafico mostrarGraficoComision={mostrarGraficoComision} setMostrarGraficoComision={setMostrarGraficoComision} datosComision={comisionActual.inscriptos_semanales} comisiones={comisiones} datosComisiones={dataComisiones}/>
                 </Box>
 
-            </Box>
+            </Box>}
         </Box>
 
     )

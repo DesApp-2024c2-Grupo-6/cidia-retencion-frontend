@@ -1,32 +1,27 @@
 import './App.css'
 import Header from '../layouts/Header'
 import Footer from '../layouts/Footer'
-import theme from '../styles/CustomTheme'
 import { Router } from './Router';
-import { Box } from "@mui/material";
-import { ThemeProvider } from '@mui/material/styles';
-
-
+import { Box, Button } from "@mui/material";
+import { useAlert } from '@context/AlertProvider';
 
 function App() {
 
     return (
         <>
             <Box className="app-container">
-                <ThemeProvider theme={theme}>
                     <Header />
                     <Box component="main" className="main-content" sx={{
                         zIndex: 10,
                         minHeight: "100dvh",
                         height: "auto",
                         backgroundColor: "white",
-                        backgroundImage: "radial-gradient(#f0f2f5 1px, transparent 1px)",
+                        backgroundImage: "radial-gradient(#ededed 1px, transparent 1px)",
                         backgroundSize: "16px 16px"
                     }}>
                         <Router />
                     </Box >
                     <Footer />
-                </ThemeProvider>
             </Box >
         </>
     )

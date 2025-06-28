@@ -6,6 +6,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import { getAllCareer } from '@services/CareerService';
 import { getAllSubjectData } from '@services/SubjectDataService';
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
+
 
 const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondicionChange, handleCarrerasElegidasChange, checkBoxDeshabilitado }) => {
 
@@ -32,7 +36,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex',backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -53,7 +57,7 @@ const FormEnCarrera = ({ condicionData, carrerasData, handleConfiguracionCondici
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%',backgroundColor: 'white' }}
                         value={carrerasSeleccionadas}
                         multiple
                         options={carrerasData}
@@ -87,7 +91,7 @@ const FormCantAprobadas = ({ condicionData, handleConfiguracionCondicionChange }
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex',backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -100,7 +104,7 @@ const FormCantAprobadas = ({ condicionData, handleConfiguracionCondicionChange }
                     <Typography variant="body1" sx={{ overflow: 'hidden', textAlign: 'center', justifyContent: 'center', textOverflow: 'ellipsis' }}>{CODIGO}</Typography>
                 </Box>
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} />
+                    <TextField sx={{backgroundColor: 'white'}} type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} />
                 </Box>
             </Box>
         </Box>
@@ -140,7 +144,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
+            display: 'flex', backgroundColor: 'white', flexDirection: 'column', gap: 1, marginBottom: 2, padding: 1, border: '1px solid lightgray', borderRadius: 2, '&:hover': {
                 borderColor: 'black',
             },
         }}>
@@ -161,7 +165,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                 </Box>
                 <Box sx={{ width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Autocomplete
-                        sx={{ width: '100%' }}
+                        sx={{ width: '100%',backgroundColor: 'white' }}
                         value={materiasSeleccionadas}
                         multiple
                         options={materiasData}
@@ -174,7 +178,7 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
                     />
                 </Box>
                 <Box sx={{ width: '10%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} sx={{ width: '100%' }} />
+                    <TextField type="number" value={configuracion.cantidad} variant="outlined" onChange={handleCantidadChange} sx={{ width: '100%',backgroundColor: 'white' }} />
                 </Box>
             </Box>
         </Box>
@@ -185,6 +189,8 @@ const FormMateriasPendientes = ({ condicionData, materiasData, handleConfiguraci
 const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
 
     const KEY_ANTERIOR = parrafoData.key
+
+    const {showAlert} = useAlert()
 
     const [parrafo, setParrafo] = useState(parrafoData)
 
@@ -366,9 +372,9 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                 margin: '20px 0 auto',
             }}
         >
-            <TextField label="Clave" value={parrafo.key} onChange={handleKeyChange} variant="outlined" fullWidth />
-            <TextField label="Texto" value={parrafo.text.join('\n')} onChange={handleTextChange} variant="outlined" fullWidth multiline rows={4} />
-            <Stack id='smar' sx={{}}>
+            <TextField label="Clave" sx={{ backgroundColor: 'white' }} value={parrafo.key} onChange={handleKeyChange} variant="outlined" fullWidth />
+            <TextField label="Texto" sx={{ backgroundColor: 'white' }} value={parrafo.text.join('\n')} onChange={handleTextChange} variant="outlined" fullWidth multiline rows={4} />
+            <Stack id='smar'>
                 <Autocomplete
                     multiple
                     id="condiciones-select"
@@ -376,7 +382,7 @@ const EdicionParrafo = ({ parrafoData, editarParrafo, handleCancelar }) => {
                     value={codigosCondicionSeleccionados}
                     onChange={handleCondicionesChange}
                     renderInput={(params) => <TextField {...params} label="Condiciones" variant="outlined" placeholder="Selecciona condiciones" />}
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, backgroundColor: 'white' }}
                     getOptionDisabled={getCodigosDeshabilitados}
                 />
                 <Box sx={{ mt: 2, width: '100%' }}>

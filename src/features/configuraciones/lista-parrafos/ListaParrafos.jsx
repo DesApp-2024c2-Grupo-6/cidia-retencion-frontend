@@ -7,6 +7,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useTheme } from '@mui/material/styles';
 
 
+//Context
+import { useAlert } from '@context/AlertProvider';
+
+
 import ConfirmarBorrado from '@components/popups/ConfirmarBorrado.jsx';
 import { getAllParrafos, updateOneParrafo, updateAllParrafos, deleteOneParrafo, createParrafo } from '@services/ParrafosService.js';
 
@@ -14,7 +18,9 @@ const ParagraphList = () => {
   const [parrafos, setParrafos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
 
+  //Hooks
   const theme = useTheme()
+  const { showAlert } = useAlert()
 
   const hayParrafoIncompleto = parrafos && parrafos.some(parrafo => parrafo.key == "" || parrafo.text == "")
 
@@ -72,8 +78,11 @@ const ParagraphList = () => {
 
       if (response.status === 200) {
         setParrafos(parrafos.filter(parrafo => parrafo.key !== key));
+        showAlert('¡Párrafo eliminado!', 'error')
       } else {
         console.error('Error al eliminar el párrafo:', response.statusText);
+        showAlert('Error: El parrafo no se pudo eliminar', 'error')
+
       }
     } catch (error) {
       console.error('Error al eliminar el párrafo:', error);
@@ -119,10 +128,12 @@ const ParagraphList = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        bgcolor: 'background.default',
+        padding: '20px',
+        width:'100%',
+        maxWidth: 1000,
+        margin:'auto',
         marginTop: 3,
         marginBottom: 3,
-        padding: '20px',
       }}
     >
       <ConfirmarBorrado openBorrado={openBorrado} handleCloseBorrado={handleCloseBorrado} funcionEliminar={eliminarParrafo} elementoAEliminar={parrafoABorrar} textoBorrado="¿Está seguro de que desea eliminar este párrafo?"></ConfirmarBorrado>
@@ -145,7 +156,7 @@ const ParagraphList = () => {
           }
       
           {Array.isArray(parrafos) && parrafos.map((paragraph, index) => (
-            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '70%'  }}>
+            <Grid item xs={12} key={index} sx={{ marginTop: '16px', width: '100%', maxWidth: 1000  }}>
               <Paper
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}

@@ -14,7 +14,7 @@ export default function PanelConfiguradorGral(
     const handleInputChange_2 = (e) => {handleUpdateCarrerMinimunSubject(e.target.value.replace(/[^0-9]/g, ''))}
     const handleInputChange_3 = (e) => {handleUpdateCarrerName(e.target.value)}
     return(
-        <Box className='container-config'>
+        <Box className='container-config' sx={{backgroundColor: 'white'}}>
             <Box
                 className='container-config-item'>
                 <FormLabel

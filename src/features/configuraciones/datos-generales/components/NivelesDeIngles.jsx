@@ -15,13 +15,14 @@ const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) =>
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
+                margin: 'auto',
                 marginTop: 8,
-                marginBottom: 3
+                marginBottom: 3,
+                padding: 2
             }}>
             <Box sx={{
-                width: '1000px',
-                minWidth: '250px',
+                width: '100%',
+                maxWidth: 1000,
                 marginBottom: '10px',
                 display: 'flex',
                 alignItems: 'center',
@@ -45,6 +46,7 @@ const NivelesIngles = ({ materias, editarDatosGenerales, nivelesInglesData }) =>
                 <Stack id="smar" spacing={3}>
                     <Autocomplete
                         multiple
+                        sx={{backgroundColor:"white"}}
                         id="select-ingles"
                         options={materias}
                         value={materias.filter(materia => nivelesInglesData.includes(materia.id))}

@@ -60,7 +60,7 @@ export default function MateriasEspeciales (
     useEffect( () => {setRenderSubjects([...array])}, [array])
 
     return(
-        <Box className='card-materia' sx={{minWidth:'466.5px'}}>
+        <Box className='card-materia' sx={{width:'100%', maxWidth:'460', backgroundColor: 'white'}}>
             <ConfirmarBorrado openBorrado = {openBorrado} handleCloseBorrado = {handleCloseBorrado} funcionEliminar = {handleOnDeleteRow} elementoAEliminar = {materiaEspecialABorrar} textoBorrado = "¿Está seguro de que desea eliminar esta Materia?"     ></ConfirmarBorrado>
             <h5 className="card-materia-title">{title}</h5>
                 <div className="card-materia-item">

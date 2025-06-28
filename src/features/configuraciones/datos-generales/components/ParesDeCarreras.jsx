@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import FilaParDeCarreras from './FilaParDeCarreras.jsx'
 //Componentes MUI
 import { Button, Box, IconButton, Typography } from '@mui/material';
@@ -11,7 +11,8 @@ import SaveIcon from '@mui/icons-material/Save';
 //Servicios
 import ConfirmarBorrado from '@components/popups/ConfirmarBorrado.jsx'
 
-//Datos de prueba
+//Context
+import { useAlert } from '@context/AlertProvider';
 
 function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGenerales, guardarDatosGenerales, sePuedeGuardar, mensajeGuardado }) {
     /*
@@ -29,10 +30,10 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
 
     const theme = useTheme();
 
+    const { showAlert } = useAlert()
+
     const [carrerasGuarani, setCarrerasGuarani] = useState(carrerasGuaraniData.map(carrera => ({ id: carrera.id, nombre: carrera.nombre })))
     const [paresCarreras, setParesCarreras] = useState(paresCarrerasData)
-
-    const [seAgregoParNuevo, setSeAgregoParNuevo] = useState(false)
 
     const editarParDeCarreras = (nuevoPar) => {
         /*
@@ -98,15 +99,23 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
         editarDatosGenerales([CARRERA_VACIA, ...paresCarreras])
     }
 
+    const handleGuardarDatosGenerales = () => {
+        showAlert('Datos generales guardados!', 'success')
+        guardarDatosGenerales()
+    }
+    
+
     return (
         <>
             <Box sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column' },
                 alignItems: 'center',
-                bgcolor: 'background.default',
                 marginTop: 8,
-                marginBottom: 3
+                marginBottom: 3,
+                width: '100%',
+                padding: 2,
+
             }}>
                 <ConfirmarBorrado
                     openBorrado={openBorrado}
@@ -117,8 +126,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                 </ConfirmarBorrado>
                 {/*Pares de carreras*/}
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     marginBottom: '10px',
                     display: 'flex',
                     alignItems: 'center',
@@ -147,14 +156,14 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                             }}
                         >{mensajeGuardado}
                         </Typography>
-                        <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={guardarDatosGenerales}>
+                        <Button disabled={!sePuedeGuardar} variant="contained" color="success" startIcon={<SaveIcon />} onClick={handleGuardarDatosGenerales}>
                             Guardar
                         </Button>
                     </Box>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '8px',
@@ -167,8 +176,8 @@ function ParesDeCarreras({ paresCarrerasData, carrerasGuaraniData, editarDatosGe
                     <Typography sx={{ flex: 1, textAlign: 'center', fontWeight: 'bold', fontSize: 'small'}}></Typography>
                 </Box>
                 <Box sx={{
-                    width: '1000px',
-                    minWidth: '250px',
+                    width: '100%',
+                    maxWidth: 1000,
                 }}>
                     {
                         paresCarreras.map((parCarreras) =>

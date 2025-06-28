@@ -27,7 +27,6 @@ export const getAllSubjectsGuarani = async () => {
 export const getSubjectsByCareer = async (id_carrera) => {
     try {
         const response = await axios.get(`${baseURL}/materias/${id_carrera}`);
-        console.log(`${baseURL}/materias/${id_carrera}`)
         return response;
     } catch (error) {
         return error;
@@ -36,7 +35,7 @@ export const getSubjectsByCareer = async (id_carrera) => {
 
 export const getSubjectsByCareerAndPlan = async (id_carrera,id_plan) => {
     try {
-        const response = await axios.get(`${baseURL}/materias/${id_carrera}/idCareer/${id_plan}/plan`);
+        const response = await axios.get(`${baseURL}/materias/career/${id_carrera}/plan/${id_plan}`);
         return response;
     } catch (error) {
         return error;
@@ -44,7 +43,7 @@ export const getSubjectsByCareerAndPlan = async (id_carrera,id_plan) => {
 }
 export const getSubjectsNotRegisteredByCareer = async (id_carrera, id_plan) => {
     try {
-        const response = await axios.get(`${baseURL}/materias/${id_carrera}/plan/${id_plan}/sin_registrar`);
+        const response = await axios.get(`${baseURL}/materias/career/${id_carrera}/plan/${id_plan}/sin_registrar`);
         return response;
     } catch (error) {
         return error;

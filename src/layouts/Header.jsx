@@ -41,12 +41,12 @@ function Header() {
 
 
     const opciones = [
-        { text: 'Configuraciones', path: '/configuracion', disabled: false, icon: <SettingsIcon/> },
-        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <PersonIcon/> },
-        { text: 'Cohortes', path: '/cohortes', disabled: false, icon: <PeopleAltIcon/> },
-        { text: 'Opción 4', path: '', disabled: true, icon: <ErrorOutlineIcon/>  },
-        { text: 'Opción 5', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
-        { text: 'Opción 6', path: '', disabled: true, icon: <ErrorOutlineIcon/> },
+        { text: 'Configuraciones', path: '/configuracion', disabled: false, icon: <SettingsIcon /> },
+        { text: 'Asistencia', path: '/asistencia-cursadas', disabled: false, icon: <PersonIcon /> },
+        { text: 'Cohortes', path: '/cohortes', disabled: false, icon: <PeopleAltIcon /> },
+        { text: 'Opción 4', path: '', disabled: true, icon: <ErrorOutlineIcon /> },
+        { text: 'Opción 5', path: '', disabled: true, icon: <ErrorOutlineIcon /> },
+        { text: 'Opción 6', path: '', disabled: true, icon: <ErrorOutlineIcon /> },
     ];
 
     const handleDrawerToggle = () => {
@@ -54,22 +54,27 @@ function Header() {
     };
 
     return (
-        <AppBar position="static" sx={{ backgroundColor:"white",  borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2}}>
+        <AppBar position="static" sx={{ backgroundColor: "white", borderBottom: 1, borderColor: theme.palette.disabled.light, borderWidth: 2 }}>
             {isMobile ? (
                 <>
                     <Box sx={{ width: '100%', height: '100px' }} display="flex" alignItems="center" justifyContent="space-between" >
-                        <img src={logo} alt="UNAHUR" style={{ marginLeft: '30px', height: '50px' }} />
-                        <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerToggle} sx={{ width: '50px', marginRight: '30px' }}>
+                        <img src={LogoColor} alt="UNAHUR" style={{ marginLeft: '30px', height: '50px' }} />
+                        <IconButton edge="end" color={theme.palette.disabled.main} aria-label="menu" onClick={handleDrawerToggle} sx={{ width: '60px', marginRight: '30px' }}>
                             <MenuIcon />
                         </IconButton>
                         <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle} >
-                            <List>
-                                {opciones.map((opcion, index) => (
-                                    <ListItem button key={index} onClick={() => handleClick(opcion.path)} sx={{color: theme.palette.primary.dark}}>
-                                        {opcion.icon}
-                                        <ListItemText primary={opcion.text} sx={{marginLeft:'8px'}} />
-                                    </ListItem>
-                                ))}
+                            <List sx={{padding: 2}}>
+                                {
+                                    opciones.map(opcion =>
+                                        <Button sx={{ marginBottom: 4, color: theme.palette.disabled.dark, fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize: 'small', maxWidth: '160px', "&:disabled": { color: theme.palette.disabled.main }, "&:hover": { backgroundColor: theme.palette.disabled.light, } }}
+                                            key={opcion.text} variant="text" onClick={() => handleClick(opcion.path)} disabled={opcion.disabled}>
+                                            <Box>
+                                                {opcion.icon}
+                                            </Box>
+                                            {opcion.text}
+                                        </Button>
+                                    )
+                                }
                             </List>
                         </Drawer>
                     </Box>
@@ -78,12 +83,12 @@ function Header() {
                 <Stack direction="row-reverse"
                     spacing={2}
                     sx={{
-                        width:'100%',
+                        width: '100%',
                         justifyContent: "space-between",
                         alignItems: "center",
                         padding: '10px',
                         paddingX: '2%'
-                        
+
                     }}
                 >
                     <Box
@@ -106,7 +111,7 @@ function Header() {
                         >
                             {
                                 opciones.map(opcion =>
-                                    <Button sx={{ color: theme.palette.disabled.dark, fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize:'small', maxWidth:'160px', "&:disabled": { color: theme.palette.disabled.main }, "&:hover": { backgroundColor: theme.palette.disabled.light, }}}
+                                    <Button sx={{ color: theme.palette.disabled.dark, fontWeight: 'bold', display: 'flex', flexDirection: 'column', fontSize: 'small', maxWidth: '160px', "&:disabled": { color: theme.palette.disabled.main }, "&:hover": { backgroundColor: theme.palette.disabled.light, } }}
                                         key={opcion.text} variant="text" onClick={() => handleClick(opcion.path)} disabled={opcion.disabled}>
                                         <Box>
                                             {opcion.icon}
