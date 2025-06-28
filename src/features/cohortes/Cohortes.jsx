@@ -44,7 +44,10 @@ export default function Cohortes() {
         setDatosBusqueda(newValue)
     }
 
-    const handleMateriaChange = (idMateria) => setDatosBusqueda({ ...datosBusqueda, idMateria: idMateria })
+    const handleMateriaChange = (idMateria) => {
+        setDatosBusqueda({ ...datosBusqueda, idMateria: idMateria })
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     const handleBusqueda = () => setEstaBuscando(true)
 

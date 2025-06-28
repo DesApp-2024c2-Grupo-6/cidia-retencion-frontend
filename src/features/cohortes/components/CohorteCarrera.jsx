@@ -185,7 +185,19 @@ export default function CohorteCarrera({ cohorteData, handleMateriaChange }) {
 
     const materiasData = cohorteData.cohortes[0].materias.map(materia => ({ id: materia.idMateria, nombre: materia.nombre }))
 
-    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState([0, 1, 2]) //Indice de las cohortes que se muestran
+    const indexCohortesSeleccionadas = () => {
+
+        const lista = [];
+        const max = Math.min(MAX_CUATRIMESTRES, 3); // Limita el máximo a 999
+
+        for (let i = 0; i < max; i++) 
+            lista.push(i)
+        
+
+        return lista;
+    }
+
+    const [cohortesSeleccionadas, setCohortesSeleccionadas] = useState(indexCohortesSeleccionadas()) //Indice de las cohortes que se muestran
 
     const [estaMostrandoGrafico, setEstaMostrandoGrafico] = useState(false) //Indice de las cohortes que se muestran
 
@@ -199,7 +211,7 @@ export default function CohorteCarrera({ cohorteData, handleMateriaChange }) {
 
 
     return (
-        <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1,  marginBottom: 4, backgroundColor: "white" }}>
+        <Box sx={{ width: '100%', boxShadow: 3, borderRadius: 2, margin: 1, marginBottom: 4, backgroundColor: "white" }}>
             {/*Datos de la carrera*/}
             <Box sx={{ textAlign: 'left', fontWeight: 300, padding: 3, paddingBottom: 1 }}>
                 <Typography color={theme.palette.primary.main} fontWeight={600} variant="h5" component="h3" gutterBottom>

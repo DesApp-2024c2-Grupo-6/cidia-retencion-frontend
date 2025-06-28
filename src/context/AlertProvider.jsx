@@ -1,8 +1,14 @@
 import React, { createContext, useContext, useState } from 'react';
-import { IconButton, Snackbar, Alert } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { useTheme } from '@mui/material/styles';
 
+//MUI
+import { IconButton, Snackbar, Alert } from '@mui/material';
+
+//Icons
+import CloseIcon from '@mui/icons-material/Close';
+
+//Hooks
+
+import { useTheme } from '@mui/material/styles';
 
 
 const AlertContext = createContext(); // este es el único contexto válido
@@ -44,10 +50,10 @@ export const AlertProvider = ({ children }) => {
         onClose={handleClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleClose} severity={alertOptions.severity} sx={{ width: '100%', paddingX: 4, paddingY: 2}}
+        <Alert onClose={handleClose}  severity={alertOptions.severity} sx={{ width: '100%', paddingX: 4, paddingY: 2, fontSize: 14, textAlign:'center'}}
           action={
             <IconButton
-              sx={{width: 10}}
+              sx={{width: 60}}
               size="small"
               aria-label="close"
               onClick={handleClose}
