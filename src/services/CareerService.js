@@ -1,8 +1,7 @@
 
 import axios from 'axios';
 
-const baseURL = 'http://localhost:3001/api'
-const guaraniURL = 'http://localhost:4000'
+const baseURL = 'https://cidia-retencion-backend.onrender.com/api'
 
 
 /**

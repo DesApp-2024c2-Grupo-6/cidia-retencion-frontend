@@ -41,5 +41,8 @@
   "description": "La organización de este repo se creó usando Vite (https://vitejs.dev/). Integra los siguientes packages (además de React, claro):\r - Material UI.\r - Redux (usado a título demostrativo en un solo componente).\r - React Router.\r - Axios.",
   "main": "vite.config.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.27.3"
+  }
 }
