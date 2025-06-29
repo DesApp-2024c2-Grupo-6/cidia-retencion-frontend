@@ -1,0 +1,234 @@
+import React , { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { Box , Button, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import BuildIcon from '@mui/icons-material/Build';
+import ListIcon from '@mui/icons-material/List';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+
+
+import '@styles/ConfiguracionCarreras.css';
+import PanelConfiguradorGral from './components/PanelConfiguradorGral'
+import MateriasEspeciales from './components/MateriasEspeciales';
+import { updateOneCareer, getCarreraConPlan } from '@services/CareerService';
+
+//Context
+import { useAlert } from '@context/AlertProvider';
+
+function ConfiguracionCarrera() {
+    //recupero el store
+    const { IdCarrera, nombreCarrera, IdPlan } = useSelector((state) => state.carrera);
+    const [isEdit, setIsEdit] = useState(false);
+    const [carrera, setCarrera] = useState({}); 
+    const [message, setMessage] = useState({codigo: 0, msg:""});
+
+    //Hooks
+    const { showAlert } = useAlert()
+
+    const toggleEdit = async() => {
+        setIsEdit((prevState) => !prevState); 
+        setMessage({})
+        if(isEdit){
+            const upCareer = await updateOneCareer(carrera);
+
+            if(upCareer.status === 200){
+                setMessage({
+                    code: upCareer.status,
+                    msg: `Carrera ID ${upCareer.data.updateCareer.careerId} actualizada correctamente`
+                })
+
+                showAlert('¡Carrera actualizada!', 'success')
+                
+            } else{
+                setMessage({
+                    code: upCareer.status,
+                    msg: upCareer.statusText})
+            }
+        }
+      }
+
+    const navigate = useNavigate();
+
+    const handleOnClickCondiciones = () => {
+        navigate('/configuracion/condiciones')
+    }
+
+    const handleOnClickConfiguracionMaterias = () =>{
+        navigate('/configuracion/materias');
+    }
+
+    useEffect(() => {
+        if (IdCarrera !== undefined && IdCarrera != "" && IdPlan !== undefined && IdPlan != ""){
+            setMessage({})
+            const obtenerCarrera = async() => {
+                const carr = await getCarreraConPlan(IdCarrera,IdPlan);
+                if(carr.status === 200){
+                    console.log(carr.data)
+                    const career = carr.data.carrera;
+                    setMessage({
+                        code: carr.status,
+                        msg: `Datos de carrera ${career.careerId} obtenidos`
+                    })
+                setCarrera(career);
+                }else{
+                    setMessage({
+                        code: carr.status,
+                        msg: carr.statusText})
+                } 
+            }
+            obtenerCarrera();
+        }   
+        else {
+            navigate('/configuracion')
+        }
+        
+    }, [])
+
+    const handleUpdateCarrerRegularSuggest = (newValue) => {
+        const updatedCarrer = {...carrera};
+        updatedCarrer.suggestionThresholdRegularizedSubjects = newValue;
+        setCarrera(updatedCarrer);
+    }
+    const handleUpdateCarrerMinimunSubject = (newValue) => {
+        const updatedCarrer = {...carrera};
+        updatedCarrer.minimumSubjectsRecommended = newValue
+        setCarrera(updatedCarrer);
+    }
+    const handleUpdateCarrerName = (newValue) => {
+        const updatedCarrer = {...carrera};
+        updatedCarrer.specialCareerName = newValue;
+        setCarrera(updatedCarrer);
+    }
+
+    const handleUpdateYear = (index,newValue) => {
+        let updateCarrer = {...carrera};
+        if(index === 0){
+            updateCarrer.unahurSubjects = newValue
+        }else if(index === 1){
+            updateCarrer.englishLevels = newValue
+        }
+        setCarrera(updateCarrer)
+    }
+
+    const handleUpdateCampo = (index, newValue) => {
+        let updateCarrer = {...carrera};
+        if(index === 0){
+            updateCarrer.unahurSubjects = newValue
+        }else if(index === 1){
+            updateCarrer.englishLevels = newValue
+        }
+        setCarrera(updateCarrer)
+    }
+
+    const volver = () => {
+        navigate('/configuracion');
+    }
+
+
+
+    return (
+        <>
+            <Box sx={{
+
+                display: 'flex',
+                width: '100%',
+                flexDirection: { xs: 'column' },
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: 3,
+                marginBottom:3
+            }}>
+                <Typography 
+                    variant="h5"
+                    marginTop={2}
+                    marginBottom={4} >
+                    {nombreCarrera}
+                </Typography>  
+                <Box sx={{}}>
+                <Box
+                    sx={{display: 'flex', flexDirection: 'column'}}>
+                    <Box
+                        sx={{display: 'flex', width: '100%', maxWidth:1000, flexDirection:{xs: 'row', md: 'columm'}}}>
+                        <MateriasEspeciales 
+                            isEdit={isEdit}
+                            title={"MATERIAS UNAHUR"} 
+                            array={carrera.unahurSubjects ? carrera.unahurSubjects : []}
+                            handleUpdateYear={(newValue) => handleUpdateYear(0,newValue)}
+                            handleUpdateCampo={(newValue) => handleUpdateCampo(0,newValue)}
+                            
+                            />
+                            
+                        <MateriasEspeciales 
+                            isEdit={isEdit} 
+                            title={"NIVELES INGLES"} 
+                            array={carrera.englishLevels ? carrera.englishLevels : []}
+                            handleUpdateYear={(newValue) => handleUpdateYear(1,newValue)}
+                            handleUpdateCampo={(newValue) => handleUpdateCampo(1,newValue)}
+                            
+                            /> 
+                    </Box>
+                    <PanelConfiguradorGral 
+                        isEdit={isEdit}
+                        suggestionThresholdRegularizedSubjects={carrera.suggestionThresholdRegularizedSubjects ? carrera.suggestionThresholdRegularizedSubjects : ""}
+                        minimumSubjectsRecommended={carrera.minimumSubjectsRecommended ? carrera.minimumSubjectsRecommended : ""}
+                        specialCarrerName={carrera.specialCareerName ? carrera.specialCareerName : ""}
+                        handleUpdateCarrerRegularSuggest={handleUpdateCarrerRegularSuggest}
+                        handleUpdateCarrerMinimunSubject={handleUpdateCarrerMinimunSubject}
+                        handleUpdateCarrerName={handleUpdateCarrerName}
+                    />
+                    </Box>
+                        <Box 
+                            variant='contained'
+                            sx={
+                                {
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'center',
+                                    gap: '20px', 
+                                    margin: '15px 15px 15px 15px', 
+                                    boxShadow: 'none'
+                                }}>
+                        <Button
+                            variant="contained"
+                            onClick={ volver }
+                                startIcon={<ArrowCircleLeftIcon />}>
+                            VOLVER</Button>  
+                        <Button
+                            variant="contained"
+                                startIcon={isEdit ? <SaveIcon /> : <EditIcon />}
+                                color={isEdit ? "secondary" : "primary"}
+                                onClick={toggleEdit}>{isEdit ? 'GUARDAR':'EDITAR'}</Button>  
+                        <Button
+                            variant="contained"
+                            color={"primary"}
+                                startIcon={<BuildIcon />}
+                                onClick={ handleOnClickCondiciones }
+                                >CONDICIONES</Button>  
+                        <Button
+                            variant="contained"
+                                startIcon={<ListIcon />}
+                                onClick={handleOnClickConfiguracionMaterias}
+                                >MATERIAS</Button>  
+                        </Box>
+                    
+                </Box>
+
+                <Alert
+                    severity={message.code === 200 ? 'success': (message.code === 204 ? 'error':'')}
+                    variant='outlined'
+                    sx={{m:1}}
+                    >
+                        {message.msg}
+                </Alert>
+                
+
+            </Box>
+        </>
+    );
+}
+
+export default ConfiguracionCarrera;
