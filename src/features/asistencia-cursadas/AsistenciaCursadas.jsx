@@ -10,7 +10,7 @@ import React, { PureComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 //Services
 import { getPeriodos } from '@services/PeriodosService'
-import { getCursosPorMateriaYPeriodo } from '@services/CursosService'
+import { getCursosPorMateriaYPeriodo } from '@services/cursosService'
 import { getAllCareerGuaraniConPlanes } from '@services/CareerService';
 import { getAllSubjectsByCareer } from '@services/SubjectDataService'
 //Context
