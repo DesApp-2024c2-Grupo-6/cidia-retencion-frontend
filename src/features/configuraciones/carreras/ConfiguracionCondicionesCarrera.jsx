@@ -28,7 +28,7 @@ import {Autocomplete, TextField} from '@mui/material';
 import SelectComponent from '@components/inputs/SelectR';
 import { getAllSuggestionCondition } from '@services/RegistrationSuggestionConditionService';
 import { getAllSuggestionConditionUse, createConditionUse, deleteConditionUse } from '@services/RegistrationSuggestionConditionUseService';
-import { getAllSubjectData } from '@services/SubjectDataService';
+import { getAllSubjectData, getAllSubjectsGuarani } from '@services/SubjectDataService';
 import ConfirmarBorrado from '@components/popups/ConfirmarBorrado';
 
 import { useAlert } from '@context/AlertProvider';
@@ -60,6 +60,7 @@ function ConfiguracionCondicionCarrera() {
     const nombreCarrera = useSelector((state) => state.carrera.nombreCarrera);
     const idPlan = useSelector((state) => state.carrera.IdPlan);
     const [materiasList, setMateriasList] = useState([]);
+    const [nombresMaterias, setNombresMaterias] = useState([]);
     const { showAlert } = useAlert()
     useEffect(() => {
         if (IdCarrera == null || IdCarrera == "" ||idPlan == null || idPlan == "") {
@@ -91,11 +92,11 @@ function ConfiguracionCondicionCarrera() {
                         let nobj = c;
                         let nombreMateria;
                         if(c.id_materia && materiasList.length > 0){
-                            let materia = materiasList.find(m => m.value == c.id_materia)
+                            let materia = nombresMaterias.find(m => m.value == c.id_materia)
                             nombreMateria = materia.label
                         }
                         if (c.codigo_condicion === "MATERIAS-ESPECIFICAS" && materiasList.length > 0) {
-                            configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? materiasList.find(materia => materia.value == m).label : materiasList.find(materia => materia.value == m).label + " - ").join("");
+                            configCondicion = "Materias:- " + c.config_condicion.materias.map((m, idx) => idx === c.config_condicion.materias.length - 1 ? nombresMaterias.find(materia => materia.value == m).label : nombresMaterias.find(materia => materia.value == m).label + " - ").join("");
                         } else if (c.codigo_condicion === "ANIOS-COMPLETOS") {
                             configCondicion = `Año: ${c.config_condicion.anio} ${c.config_condicion.salvo_cantidad != null ? "- Cantidad: " + c.config_condicion.salvo_cantidad : ""} `;
                         } else if (c.codigo_condicion === "CAMPOS-COMPLETOS") {
@@ -122,6 +123,27 @@ function ConfiguracionCondicionCarrera() {
 
     const [tiposCondicionList, setTiposCondicionList] = useState([]);
 
+
+    useEffect(() => {
+         setMessage({});
+        const obtenerNombresMaterias = async () =>{
+            const materias = await getAllSubjectsGuarani();  
+            if (materias.status === 200) {
+                const lista = materias.data.materiasSiu.map(m => ({
+                    label : m.name,
+                    value : m.id
+                }))
+                setNombresMaterias(lista)
+            }
+            else {
+                setMessage({
+                    code: materias.status,
+                    msg: materias.statusText
+            })
+        }
+    }
+    obtenerNombresMaterias()
+    },[])
     //Traer una lista de todos los tipos de condiciones posibles desde la API
     useEffect(() => {
 
@@ -155,6 +177,7 @@ function ConfiguracionCondicionCarrera() {
     }, [])
 
 
+
     const [materiasCondicionList, setMateriasCondicionList] = useState([]);
 
     //Traer todas las materias desde la API
@@ -173,6 +196,7 @@ function ConfiguracionCondicionCarrera() {
                     value: c.id_materia
                 }));
                 setMateriasList(lista.sort((a, b) => (a.value > b.value ? 1 : a.value < b.value ? -1 : 0)));
+
             } else {
                 setMessage({
                     code: materias.status,
@@ -782,7 +806,7 @@ function ConfiguracionCondicionCarrera() {
                                                         <TableCell component="th" scope="row" align="center">
                                                             {row.anio}
                                                         </TableCell>
-                                                        <TableCell align="center">{typeof row.materia === 'number' && materiasList.length > 0 ? materiasList.find(materia => materia.value == row.materia).label : row.materia}</TableCell>
+                                                        <TableCell align="center">{typeof row.materia === 'number' && nombresMaterias.length  > 0 ? nombresMaterias.find(materia => materia.value == row.materia).label : row.materia}</TableCell>
                                                         <TableCell align="center">{row.codigo_condicion}</TableCell>
                                                         <TableCell align="center">
                                                             {typeof row.config_condicion === 'string' ? row.config_condicion.split('-').map((c, idx) => (
